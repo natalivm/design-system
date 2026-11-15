@@ -216,7 +216,7 @@ button { font-family: var(--font); }
               <div class="pp-head" data-curve>
                 <img src="{{logo}}" alt="2x coins">
                 <div class="pp-eyebrow" id="popSub">Start ahead</div>
-                <span class="bx-pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
+                <span class="bx-pill" role="timer"><img src="{{clock}}" alt=""><span id="popLeft">23:59:59</span></span>
               </div>
               <div class="pp-body">
                 <div class="bx-flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
@@ -303,11 +303,14 @@ button { font-family: var(--font); }
     var cells = el.querySelectorAll("i");
     for (var k = 0; k < cells.length; k++) if (cells[k].textContent !== str[k]) { cells[k].textContent = str[k]; cells[k].classList.remove("tick"); void cells[k].offsetWidth; cells[k].classList.add("tick"); }
   }
-  function leftText(left) { var h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return (h ? h + "h " + (m ? m + "m" : "") : (m || 1) + "m").trim() + " left"; }
+  // The pill counts down in front of the player, so it reads as a clock: 3:14:03.
+  function leftClock(left) { var p = function (n) { return (n < 10 ? "0" : "") + n; }, h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return (h ? h + ":" + p(m) : m) + ":" + p(left % 60); }
+  function leftSpoken(left) { var h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return [h && h + " hours", m && m + " minutes", (left % 60) + " seconds"].filter(Boolean).join(", ") + " left"; }
   function renderTime() {
     var t = hhmm(S.left); setFlip($("evFlip"), t);
     if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
-    $("popLeft").textContent = leftText(S.left);
+    $("popLeft").textContent = leftClock(S.left);
+    $("popLeft").parentNode.setAttribute("aria-label", leftSpoken(S.left));
   }
   function startClock() {
     clearInterval(tickT);

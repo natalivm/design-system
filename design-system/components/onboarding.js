@@ -200,7 +200,8 @@
     for (var k = 0; k < 6; k++) { if (k === 2 || k === 4) kids.push(h("em", { key: "c" + k }, ":")); kids.push(h("i", { key: k }, v.charAt(k))); }
     return h("span", { className: "bx-flip" + (props.size === "small" ? " small" : ""), role: "timer", "aria-label": +v.slice(0, 2) + " hours " + +v.slice(2, 4) + " minutes " + +v.slice(4) + " seconds left" }, kids);
   }
-  function TimePill(props) { return h("span", { className: "bx-pill" }, h("img", { src: A.clock, alt: "" }), props.children || "23h 59m left"); }
+  // A running clock, so it carries the format and the role Countdown uses.
+  function TimePill(props) { return h("span", { className: "bx-pill", role: "timer", "aria-label": props.spoken }, h("img", { src: A.clock, alt: "" }), props.children || "23:59:59"); }
   function AdTag() { return h("span", { className: "pp-adtag", role: "img", "aria-label": "Watch ad", title: "Watch ad" }); }
   function BoostTag() { return h("span", { className: "bx-tag" }, "2x"); }
   // size: "popup" (50pt, fills the body) | "banner" (44pt, hugs its label)

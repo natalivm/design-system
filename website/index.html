@@ -1454,7 +1454,8 @@ main { padding-top: 28px; }
     for (var k = 0; k < 6; k++) { if (k === 2 || k === 4) kids.push(h("em", { key: "c" + k }, ":")); kids.push(h("i", { key: k }, v.charAt(k))); }
     return h("span", { className: "bx-flip" + (props.size === "small" ? " small" : ""), role: "timer", "aria-label": +v.slice(0, 2) + " hours " + +v.slice(2, 4) + " minutes " + +v.slice(4) + " seconds left" }, kids);
   }
-  function TimePill(props) { return h("span", { className: "bx-pill" }, h("img", { src: A.clock, alt: "" }), props.children || "23h 59m left"); }
+  // A running clock, so it carries the format and the role Countdown uses.
+  function TimePill(props) { return h("span", { className: "bx-pill", role: "timer", "aria-label": props.spoken }, h("img", { src: A.clock, alt: "" }), props.children || "23:59:59"); }
   function AdTag() { return h("span", { className: "pp-adtag", role: "img", "aria-label": "Watch ad", title: "Watch ad" }); }
   function BoostTag() { return h("span", { className: "bx-tag" }, "2x"); }
   // size: "popup" (50pt, fills the body) | "banner" (44pt, hugs its label)
@@ -1503,8 +1504,8 @@ main { padding-top: 28px; }
     CoachMark: 'missionRow\n    .coachMark(isPresented: $showFirstTask) {\n        Text("First task: claim your reward!")\n    }\n// Dims the screen, lifts the target and points a hand at it.',
     Popup: 'Popup(size: .standard, dismiss: "Skip") {\n    PopupHeader(curved: true) { Image("2x-coins") }   // free: colour, art, effects\n    Text("You have 24 hours to double your coins.")\n    PopupButton("Start now", tone: .boost, playsAd: true) { start() }\n}\n// Fixed: width, 24pt corners, backdrop, type sizes, 50pt button, dismiss link position.',
     FlipTimer: 'FlipTimer(until: boost.endsAt, size: .large)\n// Hours, minutes and seconds. The seconds card flips every second.\n// .large on the pop-up (40pt digits), .small on the home banner (21pt).',
-    BoostButton: 'BoostButton("Start now", size: .popup) { startBoost() }\n// Flat violet-400, white label, no shadow. Always carries the Watch ad tag.\n// Two ads to start: "Start (1/2)", then "Start (2/2)".',
-    EventTags: 'TimePill("23h 59m left")   // on the pink gradient only\nAdTag()                    // after the label of a button that plays an ad\nBoostTag()                 // next to "Game coins" while the boost runs',
+    BoostButton: 'BoostButton("Start now", size: .popup) { startBoost() }\n// Flat violet-400, white label, no shadow. Always leads with the ad icon.\n// Two ads to start: "Start (1/2)", then "Start (2/2)".',
+    EventTags: 'TimePill("23:59:59")       // a running clock, on the pink gradient only\nAdTag()                    // leads the label of a button that plays an ad\nBoostTag()                 // next to "Game coins" while the boost runs',
     EventBanner: 'EventBanner(state: .offer(endsIn: offer.endsAt)) { startBoost() }\nEventBanner(state: .active(until: boost.endsAt)) { showProgress() }\n// Replaces the home header while the event is on.',
     BoostPopup: 'BoostPopup(.offer, dismiss: "Skip") { startBoost() }\nBoostPopup(.active(until: boost.endsAt), dismiss: "Close")\nBoostPopup(.progress(base: 5_000, until: boost.endsAt), dismiss: "Close")\nBoostPopup(.timeOver(base: 5_000), dismiss: "Tap to continue")\n// Built on Popup: same frame, button height and dismiss link.',
     RewardCard: 'RewardCard(.welcome, coins: 1_000) { collect() }\n    .transition(.scale(scale: 0.5).combined(with: .opacity))\n    .sensoryFeedback(.success, trigger: collected)',
@@ -1541,7 +1542,7 @@ main { padding-top: 28px; }
     { name: "EventBanner", feat: "boost", figma: "BestPlay Design System · 2x coins · EventBanner", sum: "The pink home header while the 2x coins event is on.", pts: ["Offer: Start now with the time the offer ends under it", "Active: a live timer; tapping the banner opens progress", "The top 59pt stays clear for the status bar", "Gold coins drift down it slowly"], specs: [["banner-offer", 393, "Offer", "flush"], ["banner-active", 393, "Active", "flush"]] },
     { name: "FlipTimer", feat: "boost", figma: "BestPlay Design System · 2x coins · FlipTimer", sum: "Hours, minutes and seconds left, as flip cards.", pts: ["Large on the pop-up, Small on the banner", "Digits are tabular so the cards never change width", "The seconds card flips every second"], specs: [["flip-large", 0, "Large", "flush"], ["flip-small", 0, "Small", "flush"]] },
     { name: "BoostButton", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostButton", sum: "Starts the boost by playing an ad.", pts: ["Flat violet-400 with a white label: no gradient, no shadow", "Always leads with the ad icon, which reads as \u201cWatch ad\u201d", "Popup size fills the body; Banner size hugs its label"], specs: [["bbtn-popup", 329, "Popup", "flush"], ["bbtn-banner", 0, "Banner", "flush"]] },
-    { name: "EventTags", feat: "boost", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: time left, on the pink gradient only", "AdTag: the icon that leads a button playing an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
+    { name: "EventTags", feat: "boost", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: a running clock, on the pink gradient only", "AdTag: the icon that leads a button playing an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
     { name: "RewardCard", feat: "onboarding", figma: "BestPlay Design System · Onboarding · RewardCard", sum: "The reward moment, built on Popup: a glowing coin pile, the amount and one button.", pts: ["Hero size on a violet card, gold title", "The amount counts up, then coins fly to the balance", "Get double and Boost now play an ad; the link under the card skips it", "Plays a success haptic"], specs: [["reward-welcome", 361, "Welcome", "flush"], ["reward-congrats", 361, "Congrats", "flush"], ["reward-boost", 361, "2x boost", "flush"]] },
     { name: "TabBar", feat: "core", figma: "TabBar", sum: "The four root destinations, drawn by the system TabView.", pts: ["Use SF Symbols; the selected tab is tinted blue-500", "Never draw the tab bar or safe area into a screen"], specs: [["tabbar", 360, "Tap a tab", "flush"]] }
   ];
@@ -1618,7 +1619,7 @@ main { padding-top: 28px; }
     "flip-small": function () { return h("div", { className: "bx bx-swatch" }, h(C.FlipTimer, { value: "235842", size: "small" })); },
     "bbtn-popup": function () { return h("div", { className: "bx bx-swatch light fill" }, h(C.BoostButton, null, "Start now")); },
     "bbtn-banner": function () { return h("div", { className: "bx bx-swatch" }, h(C.BoostButton, { size: "banner" }, "Start (1/2)")); },
-    "tag-time": function () { return h("div", { className: "bx bx-swatch" }, h(C.TimePill, null, "23h 59m left")); },
+    "tag-time": function () { return h("div", { className: "bx bx-swatch" }, h(C.TimePill, { spoken: "23 hours, 59 minutes, 59 seconds left" }, "23:59:59")); },
     "tag-ad": function () { return h("div", { className: "bx bx-swatch" }, h(C.AdTag)); },
     "tag-boost": function () { return h("div", { className: "bx bx-swatch light" }, h(C.BoostTag)); },
     "reward-welcome": function () { return h(C.RewardCard, { tone: "welcome" }); },
@@ -1847,8 +1848,8 @@ main { padding-top: 28px; }
   ruleRows(document.getElementById("words"), ["", "Say", "Not"], [
     ["Action", "Cash out", "Cashout · Cash-out · cashout"],
     ["Money", "$30.00, formatted by the locale", "$30,00, typed by hand"],
-    ["Timer", "3:14:03, while it ticks", "03h:14m:03s"],
-    ["Time left", "3h 45m \u00b7 23h 59m left \u00b7 3d 8h", "3:45:00 left \u00b7 03d : 32h"],
+    ["Timer", "3:14:03, wherever it counts", "03h:14m:03s \u00b7 23h 59m left"],
+    ["Time left", "3h 45m \u00b7 3d 8h, where it does not", "3:45:00 \u00b7 03d : 32h"],
     ["Icons", "The star image inside the sentence", "“Your ______ will turn” with 15 typed spaces"]
   ]);
   [["Earned", "Well done!", "Earned and ready to cash out.", "Cash out / Keep playing"], ["Empty", "Oh no!", "Play more to earn your first reward.", "Play games / Back to home"], ["Pending", "Almost there", "Your stars are being converted.", "Play games / Back to home"], ["Success", "Cash out successful", "Your money is on the way.", "Done"]].forEach(function (s) {
