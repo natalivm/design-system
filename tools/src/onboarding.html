@@ -125,10 +125,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .dim.on { opacity: 1; pointer-events: auto; }
 .lift { position: relative; z-index: 35; }
 .coach { position: absolute; left: 24px; right: 24px; z-index: 36; text-align: center; color: #fff; font-size: 28px; line-height: 34px; font-weight: 700; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .35s, transform .45s var(--snappy), top .45s var(--smooth); text-shadow: 0 2px 12px rgba(0,0,0,.5); }
-.coach.on { opacity: 1; transform: none; pointer-events: auto; }
+.coach.on { opacity: 1; transform: none; }
 .coach em { font-style: normal; color: var(--gold); } .coach strong { color: var(--mint); font-weight: 700; }
-.coach button[hidden] { display: none; }
-.coach button { display: block; margin: 16px auto 0; font: 600 15px/20px var(--font); color: #fff; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 6px 16px; min-height: 44px; cursor: pointer; }
 .hand { position: absolute; z-index: 37; width: 64px; pointer-events: none; opacity: 0; transition: opacity .3s, left .5s var(--smooth), top .5s var(--smooth); transform-origin: 30% 10%; }
 .hand.on { opacity: 1; animation: poke 1s var(--smooth) infinite; }
 @keyframes poke { 0%, 100% { transform: translate(0, 0) rotate(-8deg); } 50% { transform: translate(-7px, -9px) rotate(-8deg) scale(.94); } }
@@ -274,7 +272,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <div class="tabbar"><img src="{{tabbar}}" alt="Tabs: Home, Tasks, Safe, Roulette, Cash out"></div>
 
         <div class="dim" id="dim"></div>
-        <div class="coach" id="coach" role="status"><span id="coachText"></span><button id="coachNext">Tap to continue</button></div>
+        <div class="coach" id="coach" role="status"><span id="coachText"></span></div>
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
         <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward">
@@ -293,7 +291,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
             <p class="pp-text">Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
             <div class="amount-row"><div class="pp-amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
-            <button class="pp-btn" data-tone="claim" id="congratsOk"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span>Get double</button>
+            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span></button>
           </div></div></div>
           <button class="pp-dismiss" id="congratsClose">Claim 1,500</button>
         </div>
@@ -304,7 +302,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
             <p class="pp-text">Get a 2x coins boost</p>
             <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
             <div class="boost-row"><b>2x coins</b><img src="{{clock}}" alt="">15 min</div>
-            <button class="pp-btn" data-tone="offer" id="boostOk"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span>Boost now</button>
+            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span></button>
           </div></div></div>
           <button class="pp-dismiss" id="boostSkip">Skip</button>
         </div>
@@ -416,12 +414,19 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   function coach(html, target, handTarget, withNext) {
     var targets = [].concat(target); S.coachSeq = (S.coachSeq || 0) + 1; $("mc").classList.remove("collapsed");
     clearLift(); targets.forEach(function (t) { t.classList.add("lift"); }); $("dim").classList.add("on"); $("homeInd").classList.add("light");
-    $("coachText").innerHTML = html; $("coachNext").hidden = !withNext;
+    $("coachText").innerHTML = html; setCoachNext(!!withNext);
     var last = local(targets[targets.length - 1]), c = $("coach"); c.style.top = Math.min(last.y + last.h + 78, 640) + "px"; c.classList.add("on");
     var h = local(handTarget || targets[0]), hand = $("hand");
     hand.style.left = (h.x + h.w * 0.55) + "px"; hand.style.top = (h.y + h.h * 0.55) + "px"; hand.classList.add("on");
   }
-  function uncoach() { if (S) S.coachSeq = (S.coachSeq || 0) + 1; clearLift(); $("dim").classList.remove("on"); $("coach").classList.remove("on"); $("hand").classList.remove("on"); $("homeInd").classList.remove("light"); }
+  // No button to press any more, so the scrim carries the affordance: a tap anywhere
+  // moves on, and it answers Enter and Space for anyone not using a pointer.
+  function setCoachNext(on) {
+    var d = $("dim"); S.coachNext = on;
+    if (on) { d.setAttribute("role", "button"); d.setAttribute("tabindex", "0"); d.setAttribute("aria-label", "Continue"); }
+    else { d.removeAttribute("role"); d.removeAttribute("tabindex"); d.removeAttribute("aria-label"); }
+  }
+  function uncoach() { if (S) { S.coachSeq = (S.coachSeq || 0) + 1; setCoachNext(false); } clearLift(); $("dim").classList.remove("on"); $("coach").classList.remove("on"); $("hand").classList.remove("on"); $("homeInd").classList.remove("light"); }
 
   /* ---------- flying coins ---------- */
   function flyCoins(fromEl, n, add) {
@@ -523,8 +528,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   $("push").onclick = function () { var sc = S; $("push").classList.remove("on"); setTimeout(function () { if (S === sc && S.m[1] === "go") focusSecond(); }, 350); };
   $("boostOk").onclick = function () { endBoost(true); };
   $("boostSkip").onclick = function () { endBoost(false); };
-  $("coachNext").onclick = nextHint;
-  $("dim").onclick = function () { if ($("coachNext").hidden === false) nextHint(); else uncoach(); };
+  $("dim").onclick = function () { if (S && S.coachNext) nextHint(); else uncoach(); };
+  $("dim").onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.click(); } };
   $("rewardOk").onclick = function () {
     if (!isOn("reward") || S.busy) return; var sc = S;
     $("reward").classList.remove("on"); $("homeInd").classList.remove("light");
@@ -657,7 +662,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     if (isOn("reward")) return $("rewardOk");
     if (isOn("congrats")) return $("congratsOk");
     if (isOn("boost")) return $("boostOk");
-    if (isOn("coach") && !$("coachNext").hidden) return $("coachNext");
+    if (isOn("coach") && S.coachNext) return $("dim");
     if (S.ended) return "done";
     for (var i = 0; i < 3; i++) { if (S.m[i] === "progress") return null; if (S.m[i] === "claim" || S.m[i] === "go") return $("btn" + i); }
     return null;
