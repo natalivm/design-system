@@ -1,0 +1,22 @@
+<!-- @dsCard group="Motion" height=420 subtitle="The cash-out sheet slides up while the background dims." page -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+var st=document.createElement('style');st.textContent='@media (max-width:640px){.mo{grid-template-columns:1fr!important}}';document.head.appendChild(st);
+
+function useReplay(){var s=React.useState(0);return [s[0],function(){s[1](s[0]+1)}];}
+
+function SheetDemo(){var r=useReplay(),k=r[0],go=r[1];
+return h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},
+ h('div',{style:{width:217,height:340,overflow:'hidden',borderRadius:28,position:'relative',background:'var(--surface-grouped)',border:'1px solid var(--separator)'}},
+  h('div',{key:'s'+k,className:'co-anim-scrim-in',style:{position:'absolute',inset:0,background:'var(--scrim)'}}),
+  h('div',{key:'m'+k,className:'co-anim-sheet-in',style:{position:'absolute',left:0,right:0,bottom:0}},h('div',{style:{zoom:0.55,width:393}},h(C.CashoutSheet,{amount:0.32})))),
+ h('button',{className:'co-replay',onClick:go},'↻ Replay'));}
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:16,padding:16,alignItems:'start'},className:'mo'},h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},h(SheetDemo)),h('div',{style:{display:'flex',flexDirection:'column',gap:12,minWidth:0}},h('div',{className:'co-chips'},h('span',{className:'co-chip'},"duration-slow 400ms"),h('span',{className:'co-chip'},"easing-smooth"),h('span',{className:'co-chip'},"scrim 250ms"),h('span',{className:'co-chip'},"system .sheet")),h(Copy,{label:'SwiftUI',code:"// The system animates the sheet, the scrim\n// and the drag-to-dismiss. Don't rebuild it.\n.sheet(isPresented: $showCashout) {\n    CashoutSheet(state: .earned, amount: balance)\n        .presentationDetents([.large])\n        .presentationDragIndicator(.visible)\n}"}))));
+</script>
+</body>
+</html>

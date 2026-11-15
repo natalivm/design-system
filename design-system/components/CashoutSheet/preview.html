@@ -1,0 +1,12 @@
+<!-- @dsCard group="Cashout" height=520 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid',style:{flexWrap:'nowrap',overflowX:'auto'}},h(D,{caption:"Earned"},h('div',{style:{zoom:0.55,width:393}},h(C.CashoutSheet,{amount:0.32}))),h(D,{caption:"Pending"},h('div',{style:{zoom:0.55,width:393}},h(C.CashoutSheet,{state:'pending',seconds:11643,live:true}))),h(D,{caption:"Empty"},h('div',{style:{zoom:0.55,width:393}},h(C.CashoutSheet,{state:'empty',amount:0}))),h(D,{caption:"Success"},h('div',{style:{zoom:0.55,width:393}},h(C.CashoutSheet,{state:'success',amount:2.81})))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:".sheet(isPresented: $showCashout) {\n    CashoutSheet(state: .earned, amount: balance)\n        .presentationDetents([.large])\n        .presentationDragIndicator(.visible)\n}"}),h(Copy,{label:'Figma',inline:true,code:"CashoutSheet \u00b7 State=Earned"}))));
+</script>
+</body>
+</html>

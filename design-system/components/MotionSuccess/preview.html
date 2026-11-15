@@ -1,0 +1,20 @@
+<!-- @dsCard group="Motion" height=340 subtitle="Cash out succeeds: the card pops into the success state with a haptic." page -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+var st=document.createElement('style');st.textContent='@media (max-width:640px){.mo{grid-template-columns:1fr!important}}';document.head.appendChild(st);
+
+function useReplay(){var s=React.useState(0);return [s[0],function(){s[1](s[0]+1)}];}
+
+function SuccessDemo(){var r=useReplay(),k=r[0],go=r[1];var done=k%2===1;
+return h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},
+ h('div',{key:k,className:done?'co-anim-pop':'co-anim-fade'},h(C.AmountHero,{className:'co-mini',state:done?'success':'earned',amount:done?2.81:0.32})),
+ h('button',{className:'co-replay',onClick:go},done?'↻ Reset':'▶ Cash out'));}
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:16,padding:16,alignItems:'start'},className:'mo'},h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},h(SuccessDemo)),h('div',{style:{display:'flex',flexDirection:'column',gap:12,minWidth:0}},h('div',{className:'co-chips'},h('span',{className:'co-chip'},"duration-slow 400ms"),h('span',{className:'co-chip'},"easing-bouncy"),h('span',{className:'co-chip'},"scale 0.85 \u2192 1"),h('span',{className:'co-chip'},"haptic .success")),h(Copy,{label:'SwiftUI',code:"if didCashOut {\n    AmountHero(state: .success, amount: paid)\n        .transition(.scale(scale: 0.85).combined(with: .opacity))\n}\n\n// trigger\nwithAnimation(.bouncy) { didCashOut = true }\n.sensoryFeedback(.success, trigger: didCashOut)"}))));
+</script>
+</body>
+</html>

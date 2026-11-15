@@ -1,0 +1,492 @@
+<title>Cashout Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a phone running the flow on the left, a slim scenario panel on the right; stacks on narrow screens. */
+:root {
+  /* page chrome */
+  --page: #eef1f6; --panel: #ffffff; --text: #0f1b3d; --muted: #5b6378; --line: #dde3ee; --chip: #f2f4f7;
+  /* app tokens: Cashout iOS design system (the app itself is light-only, like the Figma) */
+  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --navy-900: #000748;
+  --ink: #02266e; --ink-secondary: #5b6378; --link: #1464ff; --surface: #ffffff; --surface-warm: #f9f8f4;
+  --surface-grouped: #f2f4f7; --surface-info: #eff5fd; --separator: #e3e7ef; --success: #087a5a;
+  --danger: #b42318; --danger-surface: #fff1f0; --strip: #f2f2f2; --strip-ink: #171b20;
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0b1220; --panel: #131c30; --text: #e8edf7; --muted: #a7b3cc; --line: #26314a; --chip: #1b2640; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #0b1220; --panel: #131c30; --text: #e8edf7; --muted: #a7b3cc; --line: #26314a; --chip: #1b2640; color-scheme: dark; }
+
+html, body { height: 100%; }
+body { background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+.page { min-height: 100%; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; align-items: flex-start;
+  padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* ---------- panel ---------- */
+.panel { width: 300px; max-width: 100%; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
+.panel h1 { margin: 0; font-size: 24px; line-height: 30px; font-weight: 800; letter-spacing: -0.3px; text-wrap: balance; }
+.panel p { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.label { font-size: 11px; line-height: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 600 13px/18px var(--font); padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
+.chip:focus-visible, .panel button:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
+.flow { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.flow li { display: flex; align-items: center; gap: 10px; font-size: 13px; line-height: 18px; color: var(--muted); padding: 6px 8px; border-radius: 10px; }
+.flow li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--line); flex: none; }
+.flow li.on { background: var(--chip); color: var(--text); font-weight: 700; }
+.flow li.on::before { background: var(--blue-500); border-color: var(--blue-500); }
+.flow li .new { margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green-700); background: rgba(8,122,90,.12); padding: 1px 6px; border-radius: 999px; }
+.reset { align-self: flex-start; font: 600 13px/18px var(--font); color: var(--link); background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* ---------- device ---------- */
+.device-wrap { flex: none; }
+.device { position: relative; width: 417px; height: 876px; border-radius: 64px; background: #0c0d10; padding: 12px; box-sizing: border-box;
+  box-shadow: 0 0 0 2px #2a2c31, 0 30px 80px rgba(10,20,50,.28); transform-origin: top left; }
+.screen { position: relative; width: 393px; height: 852px; border-radius: 52px; overflow: hidden; background: #eef2f7; isolation: isolate; font-family: var(--font); color: var(--ink); }
+.island { position: absolute; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; z-index: 50; }
+.statusbar { position: absolute; top: 0; left: 0; right: 0; height: 54px; z-index: 45; display: flex; align-items: center; justify-content: space-between; padding: 6px 34px 0 46px; box-sizing: border-box; color: #fff; font: 600 17px/22px -apple-system, "SF Pro Text", var(--font); pointer-events: none; transition: color .3s; }
+.statusbar.dark { color: #000; }
+.statusbar svg { display: block; }
+.home-indicator { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #000; z-index: 60; pointer-events: none; transition: background .3s; }
+.home-indicator.light { background: #fff; }
+
+/* ---------- home ---------- */
+.home { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; }
+.home::-webkit-scrollbar { display: none; }
+.home img.art { display: block; width: 393px; height: auto; user-select: none; -webkit-user-drag: none; }
+.home-top { position: relative; }
+.tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 84px; z-index: 20; background: #fff; }
+.tabbar img { display: block; width: 393px; height: 84px; }
+.hot { position: absolute; background: transparent; border: 0; padding: 0; cursor: pointer; border-radius: 12px; }
+.hot:focus-visible { outline: 3px solid var(--blue-500); }
+
+/* earnings strip, rebuilt from Figma "cash out" (17579:74315) */
+.strip { position: absolute; left: 7px; right: 7px; top: 119px; height: 62px; border-radius: 16px; background: var(--strip); display: flex; align-items: center; padding: 3px; box-sizing: border-box; gap: 4px; }
+.strip-coins { flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--strip-ink); min-width: 0; }
+.strip-coins b { font-size: 20px; line-height: 24px; font-weight: 700; display: flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+.strip-coins b img { width: 22px; height: 22px; }
+.strip-coins span { font-size: 13px; line-height: 16px; font-weight: 600; }
+.strip-conv { flex: none; width: 76px; height: 52px; border-radius: 26px; background: #e5e5e5; box-shadow: inset 0 1px 6px rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--strip-ink); position: relative; }
+.strip-conv img { position: absolute; top: 4px; width: 25px; }
+.strip-conv b { font-size: 15px; line-height: 18px; font-weight: 800; color: var(--green-700); margin-top: 7px; font-variant-numeric: tabular-nums; }
+.strip-conv span { font-size: 11px; line-height: 13px; font-weight: 700; }
+.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: linear-gradient(200deg, #98f73a 0%, #0bdd66 100%); box-shadow: 0 2px 6px rgba(0,0,0,.18); color: var(--strip-ink); font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
+.strip-cash b { font-size: 20px; line-height: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.strip-cash span { font-size: 13px; line-height: 16px; font-weight: 600; }
+.strip-cash:active { transform: scale(0.97); filter: brightness(0.95); }
+.strip-cash:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+.strip-cash.zero { background: linear-gradient(200deg, #e4e7ec, #cfd5df); }
+
+/* ---------- sheet ---------- */
+.scrim { position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 250ms linear; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 232px; z-index: 35; background: var(--surface); border-radius: 32px 32px 0 0; transform: translateY(105%); transition: transform 420ms var(--smooth); display: flex; flex-direction: column; touch-action: none; }
+.sheet.on { transform: translateY(0); }
+.sheet.dragging { transition: none; }
+.sheet-pattern { position: absolute; left: 0; right: 0; bottom: 0; height: 180px; background-size: 393px auto; background-position: bottom center; background-repeat: no-repeat; opacity: .55; pointer-events: none; border-radius: 0 0 0 0; }
+.mascot { position: absolute; left: 50%; bottom: calc(100% - 44px); width: 284px; margin-left: -150px; pointer-events: none; z-index: 1; transform-origin: 50% 100%; opacity: 0; transition: opacity 200ms; }
+.sheet.on .mascot { animation: mascot-in 600ms 180ms var(--bouncy) both; }
+.sheet.on.in-history .mascot { opacity: 0 !important; animation: none; }
+@keyframes mascot-in { from { transform: translateY(40px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
+.grabber { position: absolute; top: 6px; left: 50%; width: 36px; height: 5px; margin-left: -18px; border-radius: 3px; background: rgba(2,38,110,.22); z-index: 3; }
+.sheet-views { position: relative; flex: 1; overflow: hidden; z-index: 2; }
+.view { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; padding: 52px 16px 34px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; transition: transform 380ms var(--smooth), opacity 380ms var(--smooth); }
+.view::-webkit-scrollbar { display: none; }
+.view.back { transform: translateX(-30%); opacity: 0; pointer-events: none; }
+.view.next { transform: translateX(100%); pointer-events: none; }
+.spacer { flex: 1; min-height: 4px; }
+
+.hero { border-radius: 24px; padding: 30px 20px; color: var(--on-accent); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; background: linear-gradient(196deg, #4cd440 -10%, var(--green-500) 35%, var(--green-700) 75%); }
+.hero.navy { background: var(--navy-900); }
+.hero .eyebrow { font-size: 16px; line-height: 21px; font-weight: 500; }
+.hero .amount { font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+.hero .sub { font-size: 15px; line-height: 20px; font-weight: 500; opacity: .92; }
+.hero.compact { padding: 20px; }
+.hero.compact .amount { font-size: 40px; line-height: 46px; }
+
+.pill { align-self: center; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--green-700); color: var(--on-accent); font: 600 13px/16px var(--font); cursor: pointer; position: relative; transition: transform 150ms var(--snappy), opacity 150ms; }
+.pill::after { content: ""; position: absolute; inset: -6px -4px; }
+.pill:active { transform: scale(.96); opacity: .8; }
+.pill.light { background: var(--surface-grouped); color: var(--ink); }
+.pill svg { width: 16px; height: 16px; }
+
+.info { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: var(--surface-info); }
+.info .tile { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--green-700); display: grid; place-items: center; }
+.info .tile img { width: 26px; }
+.info p { margin: 0; font-size: 15px; line-height: 20px; font-weight: 500; color: var(--ink); }
+.info p img { width: 18px; height: 18px; vertical-align: -4px; }
+.games { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 14px 12px; border-radius: 16px; background: var(--surface-info); }
+.games b { font-size: 15px; line-height: 20px; font-weight: 700; color: var(--ink); }
+.games-row { display: flex; gap: 10px; }
+.games-row button { width: 64px; height: 64px; border: 0; padding: 0; border-radius: 14px; cursor: pointer; background-size: 320px auto; background-repeat: no-repeat; box-shadow: 0 2px 6px rgba(2,38,110,.15); transition: transform 150ms var(--snappy); }
+.games-row button:active { transform: scale(.94); }
+
+.msg { display: flex; gap: 8px; align-items: flex-start; padding: 12px 16px; border-radius: 12px; background: var(--danger-surface); color: var(--danger); font-size: 15px; line-height: 20px; font-weight: 500; }
+.msg svg { flex: none; width: 20px; height: 20px; }
+
+.timer-card { border-radius: 24px; background: var(--navy-900); color: var(--on-accent); padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.timer-card img { width: 44px; }
+.timer-card time { font-size: 40px; line-height: 46px; font-weight: 800; font-variant-numeric: tabular-nums; display: flex; }
+.timer-card time span { display: inline-block; }
+.timer-card time span.roll { animation: roll 250ms var(--snappy); }
+@keyframes roll { from { transform: translateY(-45%); opacity: 0; } to { transform: none; opacity: 1; } }
+.bar { width: 100%; max-width: 220px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.18); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--on-accent); border-radius: 3px; transition: width 1s linear; }
+.wait-copy { text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.wait-copy b { font-size: 20px; line-height: 25px; font-weight: 700; color: var(--ink); }
+.wait-copy span { font-size: 15px; line-height: 20px; color: var(--ink-secondary); font-weight: 500; }
+
+.actions { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.btn { font: 600 17px/22px var(--font); border: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px; background: none; color: var(--link); transition: transform 150ms var(--snappy), opacity 150ms var(--snappy); }
+.btn.filled { width: 100%; height: 50px; background: var(--blue-500); color: var(--on-accent); }
+.btn:active:not(:disabled) { transform: scale(.98); opacity: .7; }
+.btn:disabled { cursor: default; }
+.btn:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
+.spin { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hist-head { display: flex; align-items: center; justify-content: center; position: relative; min-height: 44px; }
+.hist-head .pill { position: absolute; left: 0; }
+.hist-head h2 { margin: 0; font-size: 17px; line-height: 22px; font-weight: 700; }
+.list { background: var(--surface-grouped); border-radius: 16px; overflow: hidden; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; min-height: 44px; position: relative; }
+.row + .row::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; height: 1px; background: var(--separator); transform: scaleY(.5); transform-origin: top; }
+.row div { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.row b { font-size: 17px; line-height: 22px; font-weight: 600; }
+.row span { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--success); }
+.row span.pending { color: var(--ink-secondary); }
+.row em { font-style: normal; font-size: 17px; line-height: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.row.fresh { animation: rise 400ms var(--smooth) both; background: rgba(20,100,255,.05); }
+.list-note { font-size: 13px; line-height: 18px; color: var(--ink-secondary); text-align: center; margin: 0; }
+
+.rise { animation: rise 300ms var(--smooth) both; }
+@keyframes rise { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ---------- success ---------- */
+.success { position: absolute; inset: 0; z-index: 40; background: #424242; display: flex; flex-direction: column; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 300ms var(--smooth); }
+.success.on { opacity: 1; pointer-events: auto; }
+.success .art { position: relative; width: 393px; }
+.success .art img { display: block; width: 393px; }
+.success .card { margin: -2px 22px 0; background: var(--surface-warm); border-radius: 0 0 24px 24px; padding: 8px 20px 24px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.success.on .art { animation: pop 520ms var(--bouncy) both; }
+.success.on .card { animation: rise 420ms 120ms var(--smooth) both; }
+@keyframes pop { from { transform: scale(.88); opacity: 0; } to { transform: none; opacity: 1; } }
+.success h2 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 800; color: var(--green-700); text-align: center; }
+.transfer { display: flex; align-items: center; gap: 10px; }
+.transfer img.cash { width: 46px; } .transfer img.wallet { width: 40px; }
+.dots { display: flex; gap: 7px; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: #2b3a8f; opacity: .2; }
+.success.on .dots i { animation: dot 1.2s infinite; }
+.dots i:nth-child(2) { animation-delay: .12s !important; } .dots i:nth-child(3) { animation-delay: .24s !important; }
+.dots i:nth-child(4) { animation-delay: .36s !important; } .dots i:nth-child(5) { animation-delay: .48s !important; }
+@keyframes dot { 0%, 100% { opacity: .2; } 40% { opacity: 1; } }
+.success p { margin: 0; font-size: 15px; line-height: 20px; color: #2b3a8f; font-weight: 500; text-align: center; }
+
+/* ---------- toast ---------- */
+.toast { position: absolute; left: 50%; top: 60px; z-index: 70; transform: translate(-50%, -20px); opacity: 0; background: rgba(20,24,40,.92); color: #fff; font: 600 13px/18px var(--font); padding: 10px 14px; border-radius: 999px; white-space: nowrap; pointer-events: none; transition: opacity 250ms, transform 250ms var(--snappy); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
+}
+</style>
+
+<div class="page">
+  <div class="device-wrap" id="deviceWrap">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="island" aria-hidden="true"></div>
+        <div class="statusbar" id="statusbar" aria-hidden="true">
+          <span>9:41</span>
+          <svg width="76" height="13" viewBox="0 0 76 13" fill="currentColor"><rect x="0" y="8" width="3" height="5" rx="1"/><rect x="5" y="5.5" width="3" height="7.5" rx="1"/><rect x="10" y="3" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="13" rx="1"/><path d="M33 2.6c2.4 0 4.6.9 6.2 2.5l1.2-1.2A10.4 10.4 0 0 0 33 .9c-2.9 0-5.5 1.1-7.4 3l1.2 1.2A8.7 8.7 0 0 1 33 2.6Zm0 3.4c1.5 0 2.8.6 3.8 1.5L38 6.3a7 7 0 0 0-10 0l1.2 1.2c1-.9 2.3-1.5 3.8-1.5Zm0 3.4c.6 0 1.1.2 1.5.6L33 11.5 31.5 10c.4-.4.9-.6 1.5-.6Z"/><rect x="48.5" y="1" width="23" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="50.5" y="3" width="19" height="7" rx="2"/><rect x="73" y="4.5" width="1.5" height="4" rx=".75" opacity=".4"/></svg>
+        </div>
+
+        <!-- HOME -->
+        <div class="home" id="home">
+          <div class="home-top">
+            <img class="art" src="{{home_top}}" alt="The $4,000 Treasure Trove event, starts in 22h 51m">
+            <button class="hot" style="left:330px;top:20px;width:42px;height:30px" data-toast="Menu isn't part of this prototype" aria-label="Menu"></button>
+            <div class="strip">
+              <div class="strip-coins"><b><span id="coins">236,378</span><img src="{{coin}}" alt=""></b><span>Game coins</span></div>
+              <div class="strip-conv" aria-label="Stars convert in"><img src="{{arrow}}" alt=""><b id="convShort">3h 45</b><span>Converts in</span></div>
+              <button class="strip-cash" id="stripCash" aria-label="Cash out"><b id="stripAmount">$2.81</b><span>Cash out</span></button>
+            </div>
+          </div>
+          <img class="art" src="{{home_body}}" alt="Double your coins, invite friends, shortcut to big money and the mission board">
+          <button class="hot" style="left:7px;top:182px;width:379px;height:72px" data-toast="Double your coins isn't wired up" aria-label="Double your coins"></button>
+          <div style="height:84px"></div>
+        </div>
+        <div class="tabbar"><img src="{{tabbar}}" alt="Tabs: Home, Tasks, Safe, Events, Leaderboard"><button class="hot" style="left:80px;top:4px;width:313px;height:50px" data-toast="Only Home is live in this prototype" aria-label="Other tabs"></button></div>
+
+        <!-- SHEET -->
+        <div class="scrim" id="scrim"></div>
+        <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Cash out">
+          <img class="mascot" id="mascot" src="{{fox_briefcase}}" alt="">
+          <div class="grabber" aria-hidden="true"></div>
+          <div class="sheet-pattern" style="background-image:url({{pattern}})"></div>
+          <div class="sheet-views">
+            <div class="view" id="vMain"></div>
+            <div class="view next" id="vHistory"></div>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="success" id="success" role="dialog" aria-label="Cash out successful">
+          <div class="art"><img src="{{success_art}}" alt="The fox relaxing on a beach"></div>
+          <div class="card">
+            <h2>Cash out successful!</h2>
+            <div class="transfer" aria-hidden="true"><img class="cash" src="{{cash}}" alt=""><div class="dots"><i></i><i></i><i></i><i></i><i></i></div><img class="wallet" src="{{wallet}}" alt=""></div>
+            <p id="successCopy">Your $2.81 is on the way.</p>
+            <button class="btn filled" id="successDone">Done</button>
+          </div>
+        </div>
+
+        <div class="toast" id="toast" role="status"></div>
+        <div class="home-indicator" id="homeInd"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div class="group">
+      <h1>Cash out flow</h1>
+      <p>A working version of the Figma flow, rebuilt with the Cashout iOS design system. Tap the green Cash out button on Home to start.</p>
+    </div>
+    <div class="group">
+      <span class="label">Start from</span>
+      <div class="chips" id="scenarios">
+        <button class="chip" data-s="earned" aria-pressed="true">Money to cash out</button>
+        <button class="chip" data-s="empty" aria-pressed="false">Nothing earned</button>
+        <button class="chip" data-s="waiting" aria-pressed="false">Waiting for stars</button>
+        <button class="chip" data-s="limit" aria-pressed="false">Balance limit</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="label">Where you are</span>
+      <ol class="flow" id="flow">
+        <li data-f="home">Home</li>
+        <li data-f="sheet">Cash-out sheet</li>
+        <li data-f="history">History <span class="new">filled in</span></li>
+        <li data-f="loading">Cashing out <span class="new">filled in</span></li>
+        <li data-f="success">Success</li>
+        <li data-f="waiting">Waiting after cash out</li>
+      </ol>
+    </div>
+    <div class="group">
+      <span class="label">Try</span>
+      <p>Drag the sheet down to close it. Open History from the green pill. After a cash out, the balance resets and the next visit shows the wait timer.</p>
+    </div>
+    <button class="reset" id="reset">Reset prototype</button>
+  </aside>
+</div>
+
+<script>
+(function () {
+  var A = { foxEarned: "{{fox_briefcase}}", foxEmpty: "{{fox_think}}", foxLimit: "{{fox_thumb}}", star: "{{star}}", tip: "{{tip}}", timer: "{{timer}}", games: "{{games}}" };
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n); };
+  var HISTORY = [["April 26", 1.30], ["April 3", 0.52], ["March 22", 0.86], ["March 14", 1.12], ["February 27", 2.09]];
+  var ICON_HISTORY = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2h7.5L13 4.5V14H3z"/><path d="M5.5 6.5h5M5.5 9h5M5.5 11.5h3"/></svg>';
+  var ICON_BACK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>';
+  var ICON_ALERT = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8.25" stroke="currentColor" stroke-width="1.5"/><path d="M10 5.5v5.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><circle cx="10" cy="14" r="1.1" fill="currentColor"/></svg>';
+
+  var S;
+  function fresh(scenario) {
+    return { scenario: scenario || "earned", balance: scenario === "empty" || scenario === "waiting" ? 0 : 2.81,
+      convertIn: 13500, waitLeft: scenario === "waiting" ? 11643 : 0, waitTotal: 14400, justPaid: null, open: false, view: "main", step: "home" };
+  }
+  S = fresh("earned");
+
+  /* ---------- helpers ---------- */
+  var toastT;
+  function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("on"); }, 1800); }
+  function short(sec) { var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h + "h " + m + "m"; }
+  function clock(sec) { var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60; return h + ":" + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s; }
+  function spoken(sec) { var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h + " hours, " + m + " minutes"; }
+  function setStep(step) {
+    S.step = step;
+    Array.prototype.forEach.call($("flow").children, function (li) { li.classList.toggle("on", li.getAttribute("data-f") === step); });
+  }
+  function countTo(el, from, to, ms) {
+    var t0 = null;
+    function f(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(from + (to - from) * e); if (p < 1) requestAnimationFrame(f); }
+    requestAnimationFrame(f);
+  }
+  function renderStrip() {
+    $("stripAmount").textContent = fmt(S.balance);
+    $("stripCash").classList.toggle("zero", S.balance === 0);
+    $("convShort").textContent = Math.floor(S.convertIn / 3600) + "h " + Math.floor(S.convertIn % 3600 / 60);
+  }
+
+  /* ---------- sheet content ---------- */
+  function sheetMode() {
+    if (S.waitLeft > 0) return "waiting";
+    if (S.balance === 0) return "empty";
+    if (S.scenario === "limit") return "limit";
+    return "earned";
+  }
+  function infoRow() {
+    return '<div class="info rise" style="animation-delay:60ms"><div class="tile"><img src="' + A.tip + '" alt=""></div><p>Your <img src="' + A.star + '" alt="stars"> turn into rewards in <b>' + short(S.convertIn) + '.</b> The more stars, the higher the reward.</p></div>';
+  }
+  function renderMain() {
+    var mode = sheetMode(), v = $("vMain"), html = "";
+    $("mascot").src = mode === "empty" ? A.foxEmpty : mode === "limit" ? A.foxLimit : A.foxEarned;
+    $("mascot").hidden = mode === "waiting";
+    if (mode === "earned" || mode === "limit") {
+      html += '<section class="hero rise" aria-label="Well done! ' + fmt(S.balance) + ', earned and ready to cash out."><div class="eyebrow">Well done!</div><div class="amount" id="heroAmount">' + fmt(S.balance) + '</div><div class="sub">Earned and ready to cash out.</div></section>';
+      html += '<button class="pill rise" id="openHistory" style="animation-delay:30ms">' + ICON_HISTORY + 'History</button>';
+      html += infoRow();
+      if (mode === "limit") html += '<div class="msg rise" role="alert" style="animation-delay:90ms">' + ICON_ALERT + '<span>You’ve reached the maximum balance. Cash out to keep earning.</span></div>';
+      html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" id="cashOut">Cash out</button><button class="btn" id="keepPlaying">Keep playing</button></div>';
+    } else if (mode === "empty") {
+      html += '<section class="hero navy rise"><div class="eyebrow">Oh no!</div><div class="amount">' + fmt(0) + '</div><div class="sub">Play more to earn your first reward.</div></section>';
+      html += '<button class="pill rise" id="openHistory" style="animation-delay:30ms">' + ICON_HISTORY + 'History</button>';
+      html += infoRow();
+      html += '<div class="games rise" style="animation-delay:90ms"><b>Play now to earn more stars</b><div class="games-row">' +
+        [0, 1, 2, 3].map(function (i) { return '<button aria-label="' + ["Solitaire", "Sort the colors", "Block puzzle", "Word search"][i] + '" style="background-image:url(' + A.games + ');background-position:' + (-(6 + i * 80.5)) + 'px center" data-toast="Games open in the full app"></button>'; }).join("") + '</div></div>';
+      html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" data-toast="Games open in the full app">Play games</button><button class="btn" id="keepPlaying">Back to home</button></div>';
+    } else {
+      var pct = Math.round((1 - S.waitLeft / S.waitTotal) * 100);
+      html += '<div class="timer-card rise" role="timer" aria-label="Next reward in ' + spoken(S.waitLeft) + '"><img src="' + A.timer + '" alt=""><time id="waitClock"></time><div class="bar"><i id="waitBar" style="width:' + pct + '%"></i></div></div>';
+      html += '<div class="wait-copy rise" style="animation-delay:40ms"><b>Please wait</b><span>Your next free reward challenge starts in ' + short(S.waitLeft) + '.</span></div>';
+      html += '<button class="pill rise" id="openHistory" style="animation-delay:60ms">' + ICON_HISTORY + 'History</button>';
+      html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" data-toast="Games open in the full app">Play games</button><button class="btn" id="keepPlaying">Back to home</button></div>';
+    }
+    v.innerHTML = html;
+    if (mode === "waiting") paintClock(false);
+    var c = $("cashOut"); if (c) c.onclick = cashOut;
+    $("keepPlaying").onclick = closeSheet;
+    $("openHistory").onclick = openHistory;
+    wireToasts(v);
+  }
+  function paintClock(roll) {
+    var el = $("waitClock"); if (!el) return;
+    var txt = clock(S.waitLeft), prev = el.getAttribute("data-t") || "";
+    el.innerHTML = txt.split("").map(function (ch, i) { var changed = roll && prev[i] !== ch; return '<span class="' + (changed ? "roll" : "") + '">' + ch + "</span>"; }).join("");
+    el.setAttribute("data-t", txt);
+    var bar = $("waitBar"); if (bar) bar.style.width = Math.round((1 - S.waitLeft / S.waitTotal) * 100) + "%";
+  }
+  function renderHistory() {
+    var total = HISTORY.reduce(function (a, r) { return a + r[1]; }, 0) + (S.justPaid || 0);
+    var rows = (S.justPaid ? '<div class="row fresh"><div><b>Today</b><span class="pending">Pending</span></div><em>' + fmt(S.justPaid) + "</em></div>" : "") +
+      HISTORY.map(function (r) { return '<div class="row"><div><b>' + r[0] + '</b><span>Paid</span></div><em>' + fmt(r[1]) + "</em></div>"; }).join("");
+    $("vHistory").innerHTML =
+      '<div class="hist-head"><button class="pill light" id="histBack">' + ICON_BACK + 'Back</button><h2>History</h2></div>' +
+      '<section class="hero compact"><div class="eyebrow">Cashed out so far</div><div class="amount">' + fmt(total) + "</div></section>" +
+      '<div class="list" role="list">' + rows + "</div>" +
+      '<p class="list-note">Payouts usually arrive within 24 hours.</p>';
+    $("histBack").onclick = closeHistory;
+  }
+
+  /* ---------- navigation ---------- */
+  function openSheet() {
+    S.open = true; S.view = "main"; $("sheet").classList.remove("in-history");
+    $("vMain").className = "view"; $("vHistory").className = "view next";
+    renderMain(); renderHistory();
+    $("scrim").classList.add("on"); $("sheet").classList.add("on");
+    $("sheet").style.transform = "";
+    setStep(sheetMode() === "waiting" ? "waiting" : "sheet");
+    setTimeout(function () { var f = $("vMain").querySelector("button"); if (f) f.focus({ preventScroll: true }); }, 450);
+  }
+  function closeSheet() {
+    S.open = false; $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); $("sheet").style.transform = "";
+    setStep("home"); $("stripCash").focus({ preventScroll: true });
+  }
+  function openHistory() {
+    renderHistory(); S.view = "history";
+    $("sheet").classList.add("in-history"); $("vMain").className = "view back"; $("vHistory").className = "view"; $("vHistory").scrollTop = 0; setStep("history");
+  }
+  function closeHistory() {
+    S.view = "main"; $("sheet").classList.remove("in-history"); $("vMain").className = "view"; $("vHistory").className = "view next";
+    setStep(sheetMode() === "waiting" ? "waiting" : "sheet");
+  }
+  function cashOut() {
+    var b = $("cashOut"); b.disabled = true; b.innerHTML = '<span class="spin" aria-hidden="true"></span>Cashing out…'; b.setAttribute("aria-busy", "true");
+    setStep("loading");
+    setTimeout(function () {
+      var paid = S.balance;
+      S.justPaid = paid; S.balance = 0; S.waitLeft = S.waitTotal - 1; S.scenario = "earned";
+      $("successCopy").textContent = "Your " + fmt(paid) + " is on the way.";
+      $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); S.open = false;
+      $("success").classList.add("on"); $("statusbar").classList.remove("dark"); $("homeInd").classList.add("light");
+      setStep("success");
+      countTo($("stripAmount"), paid, 0, 600); $("stripCash").classList.add("zero");
+      setTimeout(function () { $("successDone").focus({ preventScroll: true }); }, 500);
+    }, 1200);
+  }
+  $("successDone").onclick = function () {
+    $("success").classList.remove("on"); $("homeInd").classList.remove("light");
+    renderStrip(); setStep("home"); toast("Balance cashed out. Tap Cash out to see the timer");
+  };
+  $("stripCash").onclick = openSheet;
+  $("scrim").onclick = closeSheet;
+
+  /* drag to dismiss */
+  (function () {
+    var sheet = $("sheet"), y0 = null, dy = 0, t0 = 0;
+    sheet.addEventListener("pointerdown", function (e) {
+      if (!S.open) return;
+      var view = S.view === "main" ? $("vMain") : $("vHistory");
+      var r = sheet.getBoundingClientRect(), scale = r.height / sheet.offsetHeight;
+      var local = (e.clientY - r.top) / scale;
+      if (view.scrollTop > 0 && local > 60) return;
+      if (e.target.closest("button")) return;
+      y0 = e.clientY; dy = 0; t0 = Date.now(); sheet.classList.add("dragging"); sheet.setPointerCapture(e.pointerId);
+    });
+    sheet.addEventListener("pointermove", function (e) {
+      if (y0 === null) return;
+      var scale = sheet.getBoundingClientRect().height / sheet.offsetHeight;
+      dy = Math.max(0, (e.clientY - y0) / scale);
+      sheet.style.transform = "translateY(" + dy + "px)"; $("scrim").style.opacity = String(Math.max(0, 1 - dy / 500));
+    });
+    function end() {
+      if (y0 === null) return;
+      var v = dy / Math.max(1, Date.now() - t0);
+      sheet.classList.remove("dragging"); $("scrim").style.opacity = ""; y0 = null;
+      if (dy > 140 || v > 0.6) closeSheet(); else sheet.style.transform = "";
+    }
+    sheet.addEventListener("pointerup", end); sheet.addEventListener("pointercancel", end);
+  })();
+
+  /* toasts for parts that aren't wired */
+  function wireToasts(root) { Array.prototype.forEach.call(root.querySelectorAll("[data-toast]"), function (b) { b.onclick = function () { toast(b.getAttribute("data-toast")); }; }); }
+  wireToasts(document);
+
+  /* clocks */
+  setInterval(function () {
+    S.convertIn = Math.max(0, S.convertIn - 1);
+    if (S.waitLeft > 0) { S.waitLeft--; if (S.open && sheetMode() === "waiting") paintClock(true); }
+    if (S.convertIn % 60 === 0) renderStrip();
+  }, 1000);
+
+  /* scenarios */
+  function startScenario(s) {
+    Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
+    $("success").classList.remove("on"); $("homeInd").classList.remove("light");
+    if (S.open) { $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
+    S = fresh(s); renderStrip(); setStep("home"); $("home").scrollTop = 0;
+    setTimeout(openSheet, 350);
+  }
+  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s")); }; });
+  $("reset").onclick = function () { startScenario("earned"); setTimeout(closeSheet, 400); };
+
+  /* status bar color follows what's under it */
+  $("home").addEventListener("scroll", function () { $("statusbar").classList.toggle("dark", $("home").scrollTop > 140); });
+
+  /* fit the phone to the viewport */
+  function fit() {
+    var wrap = $("deviceWrap"), dev = $("device");
+    var availH = window.innerHeight - 48, availW = Math.min(window.innerWidth - 32, 417);
+    var s = Math.min(1, availW / 417, Math.max(0.55, availH / 876));
+    if (window.innerWidth < 700) s = Math.min(1, availW / 417);
+    dev.style.transform = "scale(" + s + ")";
+    wrap.style.width = (417 * s) + "px"; wrap.style.height = (876 * s) + "px";
+  }
+  window.addEventListener("resize", fit); fit();
+
+  renderStrip(); setStep("home");
+})();
+</script>

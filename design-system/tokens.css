@@ -1,0 +1,82 @@
+/* Cashout iOS Design System — generated from tokens.json */
+:root, [data-theme="light"] {
+  --blue-500: #1464ff;
+  --on-accent: #ffffff;
+  --green-700: #087a5a;
+  --green-500: #0c9971;
+  --lime-400: #60e041;
+  --navy-900: #000748;
+  --ink: #02266e;
+  --ink-secondary: #5b6378;
+  --link: #1464ff;
+  --surface: #ffffff;
+  --surface-grouped: #f2f4f7;
+  --surface-info: #eff5fd;
+  --separator: #e3e7ef;
+  --success: #087a5a;
+  --danger: #b42318;
+  --danger-surface: #fff1f0;
+  --grabber: rgba(2,38,110,0.2);
+  --scrim: rgba(0,0,0,0.3);
+  --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
+}
+[data-theme="dark"] {
+  --blue-500: #1464ff;
+  --on-accent: #ffffff;
+  --green-700: #087a5a;
+  --green-500: #0c9971;
+  --lime-400: #60e041;
+  --navy-900: #1a2350;
+  --ink: #e8edf7;
+  --ink-secondary: #a7b3cc;
+  --link: #4d8bff;
+  --surface: #0b1220;
+  --surface-grouped: #161f33;
+  --surface-info: #14233f;
+  --separator: #26314a;
+  --success: #34c48f;
+  --danger: #ff6b5e;
+  --danger-surface: #2a1414;
+  --grabber: rgba(232,237,247,0.3);
+  --scrim: rgba(0,0,0,0.5);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --control-height: 50px;
+  --hit-target: 44px;
+  --pill-height: 32px;
+  --icon-tile: 40px;
+  --tab-bar-height: 49px;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-count: 600ms;
+  --easing-snappy: cubic-bezier(0.2, 0.9, 0.3, 1);
+  --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+}
+.amount { font-family: var(--font-sans); font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; }
+.large-title { font-family: var(--font-sans); font-size: 34px; line-height: 41px; font-weight: 700; }
+.title2 { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 700; }
+.title3 { font-family: var(--font-sans); font-size: 20px; line-height: 25px; font-weight: 600; }
+.headline { font-family: var(--font-sans); font-size: 17px; line-height: 22px; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 17px; line-height: 22px; font-weight: 400; }
+.callout { font-family: var(--font-sans); font-size: 16px; line-height: 21px; font-weight: 500; }
+.subheadline { font-family: var(--font-sans); font-size: 15px; line-height: 20px; font-weight: 500; }
+.footnote { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 500; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; }
+.tab-label { font-family: var(--font-sans); font-size: 10px; line-height: 12px; font-weight: 600; }

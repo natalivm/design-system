@@ -1,0 +1,12 @@
+<!-- @dsCard group="Feedback" height=240 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid'},h(D,{caption:"Danger"},h('div',{style:{width:300}},h(C.InlineMessage,null,"You've reached the maximum balance. Cash out to keep earning."))),h(D,{caption:"Info"},h('div',{style:{width:300}},h(C.InlineMessage,{tone:'info'},'Payouts usually arrive within 24 hours.')))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:"Label(message, systemImage: \"exclamationmark.circle\")\n    .font(.ds(.subheadline))\n    .foregroundStyle(Color.danger)\n    .padding(12)\n    .background(Color.dangerSurface, in: .rect(cornerRadius: 12))"}),h(Copy,{label:'Figma',inline:true,code:"InlineMessage \u00b7 Tone=Danger"}))));
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!-- @dsCard group="Actions" height=210 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid'},h(D,{caption:"Solid"},h(C.Pill)),h(D,{caption:"Glass \u00b7 on green"},h('div',{style:{background:'var(--green-700)',padding:12,borderRadius:'var(--radius-md)'}},h(C.Pill,{glass:true})))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:"Label(\"History\", systemImage: \"list.bullet.rectangle\")\n    .font(.ds(.caption))\n    .padding(.horizontal, 12).frame(height: 32)\n    .background(Color.green700, in: Capsule())\n    .foregroundStyle(Color.onAccent)"}),h(Copy,{label:'Figma',inline:true,code:"Pill \u00b7 Style=Solid"}))));
+</script>
+</body>
+</html>
