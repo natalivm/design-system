@@ -81,7 +81,7 @@ __GLOW__
             props.text ? h("p", { className: "pp-text" }, props.text) : null,
             props.children,
             props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,
-            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.ad ? h(AdTag, { key: "ad" }) : null, props.action) : null))),
+            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.action, props.ad ? h(AdTag, { key: "ad" }) : null) : null))),
       props.dismiss ? h("button", { type: "button", className: "pp-dismiss", onClick: props.onDismiss }, props.dismiss) : null);
   }
   Popup.art = A;
@@ -96,14 +96,14 @@ __GLOW__
     return h("span", { className: "bx-flip" + (props.size === "small" ? " small" : ""), role: "timer", "aria-label": +v.slice(0, 2) + " hours " + +v.slice(2, 4) + " minutes " + +v.slice(4) + " seconds left" }, kids);
   }
   // A running clock, so it carries the format and the role Countdown uses.
-  function TimePill(props) { return h("span", { className: "bx-pill", role: "timer", "aria-label": props.spoken }, h("img", { src: A.clock, alt: "" }), props.children || "23:59:59"); }
+  function TimePill(props) { return h("span", { className: "bx-pill", role: "timer", "aria-label": props.spoken }, props.children || "23:59:59"); }
   function AdTag() { return h("span", { className: "pp-adtag", role: "img", "aria-label": "Watch ad", title: "Watch ad" }); }
   function BoostTag() { return h("span", { className: "bx-tag" }, "2x"); }
   // size: "popup" (50pt, fills the body) | "banner" (44pt, hugs its label)
   function BoostButton(props) {
     var label = props.children || "Start now";
-    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, h(AdTag), label);
-    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, h(AdTag), label);
+    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, label, h(AdTag));
+    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, label, h(AdTag));
   }
   // state: "offer" (Start now plays the ad: onAction) | "active" (tapping opens progress: onOpen)
   function EventBanner(props) {
@@ -111,7 +111,7 @@ __GLOW__
     return h("div", { className: "bx" }, h("div", { className: "bx-ev", role: "group", "aria-label": "2x coins, limited event", onClick: active ? props.onOpen : undefined, style: active && props.onOpen ? { cursor: "pointer" } : undefined },
       h("span", { className: "bx-ev-left" },
         active ? h(FlipTimer, { size: "small", value: props.value == null ? "235842" : props.value }) : h(BoostButton, { size: "banner", onAction: props.onAction }, props.label || "Start now"),
-        active ? null : h("span", { className: "bx-ev-ends" }, h("img", { src: A.clock, alt: "" }), props.endsIn || "Ends in 23h 14m")),
+        active ? null : h("span", { className: "bx-ev-offer bx-ev-ends", role: "timer" }, "Ends in ", props.endsIn || "23:14:00")),
       h("span", { className: "bx-ev-right" }, h("span", null, "Limited event"), h("img", { src: A.logo, alt: "2x coins" }))));
   }
   // state: "offer" | "active" | "progress" | "over" · onAction starts the boost, onDismiss closes

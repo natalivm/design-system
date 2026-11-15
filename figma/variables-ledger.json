@@ -81,7 +81,18 @@
       "Cashout/Display/Large Title",
       "Cashout/Text/Title 1",
       "Cashout/Text/Title 2",
-      "Cashout/Text/Title 3"
-    ]
+      "Cashout/Text/Title 3",
+      "Cashout/Display/Popup Title"
+    ],
+    "added": {
+      "Cashout/Display/Popup Title": "Nunito ExtraBold 37/44 - the hero pop-up title, a size the ramp did not have",
+      "Cashout/Text/Button Large": "Plus Jakarta Sans Bold 22/28 - the 66pt pop-up button label"
+    }
+  },
+  "popupFrame": {
+    "note": "RewardCard, Popup and BoostPopup variants were resized to the code frame on this run.",
+    "card": "345 wide, 26pt corners, 544 tall for hero and the four 2x coins states",
+    "button": "66pt tall, Button Large label, claim tone bound to brand/green-400",
+    "art": "coin pile 300 wide; a 2x/Coins row instance overhangs the top edge by 19pt"
   }
 }

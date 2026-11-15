@@ -128,7 +128,8 @@ def assets_map(folder):
                       'fox_think': 'fox-think.png', 'fox_thumb': 'fox-thumb.png', 'timer': 'timer.png', 'games': 'games.png',
                       'coin': 'coin.svg', 'arrow': 'arrow.svg'},
         'onboarding': {'banner': 'banner.jpg', 'below': 'below.jpg', 'tabbar': 'tabbar.jpg', 'fox': 'fox.png', 'hand': 'hand.png',
-                       'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg', 'handshake': 'handshake.png'},
+                       'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg', 'handshake': 'handshake.png',
+                       'topcoins': '../boost/topcoins.png'},
         'boost': {'banner': 'banner.jpg', 'body': 'body.jpg', 'tabbar': 'tabbar.jpg', 'logo': 'logo.png', 'topcoins': 'topcoins.png',
                   'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg'},
     }[folder]
