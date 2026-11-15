@@ -185,7 +185,7 @@ button { font-family: var(--font); }
               <canvas id="confetti" aria-hidden="true"></canvas>
               <span class="bx-ev-left">
                 <span class="bx-ev-offer bx-ev-start" id="evStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="evStartLabel">Start now</span></span>
-                <span class="bx-ev-offer bx-ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
+                <span class="bx-ev-offer bx-ev-ends" role="timer"><img src="{{clock}}" alt="">Ends in <span id="evEnds">23:14:00</span></span>
                 <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
               <span class="bx-ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
@@ -276,7 +276,7 @@ button { font-family: var(--font); }
   var S, tickT;
   // state: "default" (no event), "offer" (banner with Start now), "active" (boost running), "done" (boost ended)
   function fresh(s) {
-    var o = { scenario: s, state: "default", coins: 236378, ads: s === "two" ? 2 : 1, seen: 0, left: DAY, base: 0, plays: 0, busy: false, sawProgress: false, ff: false, from: "pop" };
+    var o = { scenario: s, state: "default", coins: 236378, ads: s === "two" ? 2 : 1, seen: 0, left: DAY, ends: 83640, base: 0, plays: 0, busy: false, sawProgress: false, ff: false, from: "pop" };
     if (s === "active") { o.state = "active"; o.left = DAY - 120; }
     if (s === "over") { o.state = "active"; o.left = 4; o.base = 5000; o.plays = 2; o.coins += 10000; o.sawProgress = true; o.ff = true; }
     return o;
@@ -311,10 +311,13 @@ button { font-family: var(--font); }
     if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
     $("popLeft").textContent = leftClock(S.left);
     $("popLeft").parentNode.setAttribute("aria-label", leftSpoken(S.left));
+    var ends = $("evEnds");
+    if (ends) { ends.textContent = leftClock(S.ends); ends.parentNode.setAttribute("aria-label", "Offer ends in " + leftSpoken(S.ends).replace(" left", "")); }
   }
   function startClock() {
     clearInterval(tickT);
     tickT = setInterval(function () {
+      if (S.state !== "active" && S.state !== "over") { S.ends = Math.max(0, S.ends - 1); renderTime(); }
       if (S.state !== "active" || S.fast) return;
       S.left = Math.max(0, S.left - 1); renderTime();
       if (S.left === 0) timeOver();
@@ -471,7 +474,7 @@ button { font-family: var(--font); }
     clearInterval(tickT); $("modal").classList.remove("on"); $("ad").classList.remove("on");
     KIT.clearCoins();
     S = fresh(s); S.skipFirst = s === "first"; $("home").scrollTop = 0; render(); bokeh.sync();
-    if (S.state === "active") startClock();
+    startClock();
     setTimeout(function () { if (S.scenario !== s || S.state !== "default") return; openPop("intro", "Skip"); }, 500);
     if (noPlay) KIT.stopPlay(); else autoplay();
   }
