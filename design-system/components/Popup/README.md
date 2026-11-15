@@ -10,7 +10,7 @@ Styles: `tools/src/popup.css` (copied into `design-system/components/onboarding.
 |---|---|
 | Width | Screen width minus 24pt each side (345pt on a 393pt screen) |
 | Corners | 26pt |
-| Backdrop | `rgba(8, 10, 28, 0.84)` over the whole screen |
+| Backdrop | `scrim-strong`, `rgba(8, 10, 28, 0.84)`, over the whole screen. The coach mark dims with the same token |
 | Entrance | Scale 0.7 → 1 and rise 30pt, 500ms, bouncy easing; backdrop fades in 300ms |
 | Body padding | 24pt top, 20pt sides and bottom |
 | Slot order | Header art → title → body → one main button |

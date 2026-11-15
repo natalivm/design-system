@@ -62,11 +62,17 @@
       "value": "#950c3a",
       "use": "TimePill Kind=Clock fill"
     },
-    "scrim-popup": {
+    "scrim-strong": {
       "primitive": "VariableID:31379:763",
       "color": "VariableID:31379:764",
       "value": "rgba(8,10,28,0.84)",
-      "use": "the pop-up backdrop"
+      "use": "the pop-up backdrop and the coach mark"
+    },
+    "chip-dark": {
+      "primitive": "VariableID:31381:761",
+      "color": "VariableID:31381:762",
+      "value": "rgba(0,0,0,0.55)",
+      "use": "AdTag and the missions card timer chip, both bound"
     }
   },
   "textStyles": {
