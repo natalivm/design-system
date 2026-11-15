@@ -34,6 +34,7 @@
   --scrim: rgba(0,0,0,0.3);
   --scrim-strong: rgba(8,10,28,0.84);
   --chip-dark: rgba(0,0,0,0.55);
+  --claim-fill: #77c926;
   --claim-ink: #ffffff;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
@@ -73,6 +74,7 @@
   --scrim: rgba(0,0,0,0.5);
   --scrim-strong: rgba(8,10,28,0.84);
   --chip-dark: rgba(0,0,0,0.55);
+  --claim-fill: #77c926;
   --claim-ink: #ffffff;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(0,0,0,0.4);

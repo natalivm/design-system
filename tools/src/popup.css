@@ -9,6 +9,9 @@
 .pp-scrim.on .pp { animation: pp-in .5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 @keyframes pp-in { from { transform: scale(.7) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
 .pp-over { position: absolute; left: 0; right: 0; top: 0; z-index: 3; pointer-events: none; }
+.bx-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
+.pp-scrim.on .bx-coins { animation: bx-coins-in .7s .15s var(--bouncy) both; }
+@keyframes bx-coins-in { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
 /* One card height for every pop-up built on this frame, so a dismiss link under a card never
    makes it come out shorter than its siblings. The cash-out sheet is a separate component on a
    different frame and keeps its own heights. */
@@ -29,10 +32,10 @@
 .pp-text { margin: 8px 0 0; font-size: 19px; line-height: 25px; font-weight: 500; text-wrap: balance; }
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
 .pp[data-size="hero"] .pp-body, .bpop[data-mode="intro"] .pp-body { padding-bottom: 106px; }
-.pp[data-size="hero"] .pp-btn, .bpop[data-mode="intro"] .pp-btn { position: absolute; left: 20px; right: 20px; bottom: 20px; width: auto; margin-top: 0; }
+.pp[data-size="hero"] .pp-btn, .bpop[data-mode="intro"] .pp-btn { position: absolute; z-index: 3; left: 20px; right: 20px; bottom: 20px; width: auto; margin-top: 0; }
 .pp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; height: var(--control-height, 66px); border: 0; border-radius: 999px; font-family: inherit; font-size: 22px; line-height: 28px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
 .pp-btn:active { transform: scale(.97); }
-.pp-btn, .pp-btn[data-tone="claim"] { background: var(--green-400, #49cc3d); color: var(--claim-ink, #ffffff); }
+.pp-btn, .pp-btn[data-tone="claim"] { background: var(--claim-fill, #77c926); color: var(--claim-ink, #ffffff); }
 .pp-btn[data-tone="boost"] { background: var(--violet-400, #9b51e0); color: var(--on-accent, #fff); }
 .pp-btn[data-tone="offer"] { background: var(--orange-500, #ff7a1a); color: var(--on-accent, #fff); }
 .pp-btn:focus-visible { outline: 3px solid var(--blue-500, #1464ff); outline-offset: 2px; }

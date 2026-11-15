@@ -8,7 +8,7 @@
 :root {
   --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08);
   --mission-top: var(--violet-500); --mission-bottom: var(--indigo-800); --row: #eff4fe; --row-coin: var(--sky-200); --gold: var(--gold-400); --mint: var(--mint-400);
-  --claim-b: var(--green-400); --orange: var(--orange-500);
+  --claim-b: var(--claim-fill); --orange: var(--orange-500);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -135,7 +135,10 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 /* ---------- onboarding pop-ups: what this feature puts in the Popup's free slots ---------- */
 .ob-pop { --pp-bg: linear-gradient(180deg, var(--mission-top) 10%, var(--mission-bottom) 100%); }
 .ob-pop .pp-card { box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.12); }
-.ob-pop .pp-body > :not(.pile) { position: relative; z-index: 3; }
+/* Everything but the pile rides above its glow. The button is left out: the pop-up frame
+   pins it to the bottom of the card, and position:relative here cancelled that and dropped
+   it into the middle, 20px up from where it sat, over the amount. */
+.ob-pop .pp-body > :not(.pile):not(.pp-btn) { position: relative; z-index: 3; }
 .ob-pop .pp-title { color: var(--gold); text-shadow: 0 3px 0 rgba(60,20,0,.5); }
 .ob-pop .pp-text { margin-top: 2px; font-weight: 600; }
 .pile { position: relative; width: 289px; height: 180px; display: grid; place-items: center; }
@@ -279,7 +282,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
         <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward" data-dismiss="rewardOk">
-          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-over"><img class="bx-coins" src="{{topcoins}}" alt=""></div><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Welcome reward!</h2>
             <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
             <div class="pp-amount" id="rewardAmount">+1,000</div>
@@ -289,7 +292,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         </div>
 
         <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete" data-dismiss="congratsClose">
-          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-over"><img class="bx-coins" src="{{topcoins}}" alt=""></div><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
@@ -300,7 +303,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         </div>
 
         <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost" data-dismiss="boostSkip">
-          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-over"><img class="bx-coins" src="{{topcoins}}" alt=""></div><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Get a 2x coins boost</p>
             <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
