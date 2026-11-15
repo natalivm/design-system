@@ -21,7 +21,6 @@
   --f-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --gutter-l: max(20px, env(safe-area-inset-left, 0px));
   --gutter-r: max(20px, env(safe-area-inset-right, 0px));
-  --phone-zoom: .62;
   color-scheme: dark;
 }
 /* @gen tokens.css */
@@ -359,11 +358,6 @@ main { min-width: 0; padding-top: 56px; }
 .copy { font: 500 11px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--site-fg); background: rgba(255,255,255,.14); border: 0; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
 .copy:hover { background: rgba(255,255,255,.24); }
 
-/* ---------- phones ---------- */
-.phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px 24px; justify-items: center; }
-.phone { zoom: var(--phone-zoom); width: 409px; height: 760px; border: 8px solid #06120d; border-radius: 54px; background: var(--surface-grouped); position: relative; overflow: hidden; box-shadow: var(--site-shadow); flex: none; }
-.phone::before { content: ""; position: absolute; inset: 0; background: var(--scrim); }
-.phone > div { position: absolute; left: 0; right: 0; bottom: 0; }
 
 /* ---------- foundations ---------- */
 .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
@@ -630,7 +624,7 @@ main { padding-top: 28px; }
 .counts b { font-size: 24px; }
 .panel { padding: 24px; gap: 18px; }
 .panel > :first-child { order: 2; }
-.panel > .stage, .panel > .phones { margin-top: 0; }
+.panel > .stage { margin-top: 0; }
 .panel h2, .panel h3 { font-size: 17px; letter-spacing: -.01em; }
 .panel h2::before, .panel h3::before { transform: translateY(-2px); }
 .panel .desc, .panel.wide .desc { font-size: 14.5px; line-height: 1.5; letter-spacing: 0; max-width: 62ch; margin: 6px 0 0 18px; text-wrap: pretty; }
@@ -638,8 +632,6 @@ main { padding-top: 28px; }
 .pillbtn { font-size: 13px; min-height: 32px; padding: 7px 14px; }
 .points { font-size: 14px; margin-top: 10px; }
 .chips { margin-top: 12px; }
-.phone { height: 640px; background: radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%); border-color: #020403; }
-.phone::before { background: radial-gradient(60% 30% at 50% 0%, rgba(141,240,111,.12), transparent 70%); }
 .proto-frame { background: transparent; }
 .fig figcaption { margin-top: 10px; }
 .fig figcaption b { font-size: 15px; }
@@ -699,7 +691,6 @@ main { padding-top: 28px; }
   .rule.head { display: none; }
   .ty-row { grid-template-columns: minmax(0, 1fr); }
   .seg span { display: none; }
-  :root { --phone-zoom: .74; }
   .hero-art > :nth-child(2) { margin-top: 200px; }
 }
 @media (max-width: 460px) {
@@ -736,19 +727,6 @@ main { padding-top: 28px; }
 .comp-toggle { margin-left: auto; flex: none; font: 500 12px/1 var(--f-mono); color: var(--site-muted); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 8px 10px; cursor: pointer; }
 .comp-toggle:hover { color: var(--site-fg); }
 .comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
-/* ---------- Screens page: one phone per screen, grouped by feature ---------- */
-#screens { order: 1; align-items: start; }
-#screens .comp-group { justify-self: stretch; }
-.phone.lit::before { display: none; }
-.phone > .scr { top: 0; box-sizing: border-box; display: flex; }
-.phone > .scr > * { width: 100%; }
-.phone > .scr.center { align-items: center; justify-content: center; padding: 0 16px; }
-.phone > .scr.fill { align-items: stretch; }
-.phone > .scr.fill > .ob-coach { justify-content: center; border-radius: 0; }
-.scr-home { display: flex; flex-direction: column; }
-.scr-home-top { padding: 12px 8px 0; }
-.phone > .scr.fill > .scr-card { display: flex; align-items: center; width: 100%; padding: 0 8px; box-sizing: border-box; }
-.scr-home-body { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
 
 #components { align-items: start; }
 .comp-group { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 12px; margin: 10px 0 0; font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-muted); }
@@ -818,7 +796,6 @@ main { padding-top: 28px; }
   <nav class="tabs" aria-label="Design system">
     <a href="#prototype" data-tab="prototypes">Prototypes</a>
     <a href="#components" data-tab="components">Components</a>
-    <a href="#screens" data-tab="screens">Screens</a>
   </nav>
 </div>
 
@@ -913,32 +890,6 @@ main { padding-top: 28px; }
   </div>
   <p class="comp-empty is-off" id="comp-empty">Nothing matches that search. Clear it to see all 20 components.</p>
   <div class="grid dense" id="components"></div>
-</section>
-
-<!-- ============================ SCREENS ============================ -->
-<section class="page" data-page="screens" data-label="Screens" hidden>
-  <div class="page-head">
-    <p class="eyebrow">Screens</p>
-    <h1>Every flow, screen by screen.</h1>
-    <p class="lede">The cash-out sheet, the onboarding missions and the 2x coins event, each as the app presents it. Filter by feature or search for a state; the SwiftUI for the parts sits on the Components page.</p>
-  </div>
-  <div class="comp-bar" id="scr-bar">
-    <div class="comp-find">
-      <label class="vh" for="scr-q">Search screens</label>
-      <input id="scr-q" type="search" placeholder="Search screen or state…" autocomplete="off" spellcheck="false">
-    </div>
-    <label class="comp-pick"><span>Feature</span>
-      <select id="scr-feat">
-        <option value="all">All</option>
-        <option value="cashout">Cash out</option>
-        <option value="onboarding">Onboarding</option>
-        <option value="boost">2x coins</option>
-      </select>
-    </label>
-    <p class="note comp-count" id="scr-count"></p>
-  </div>
-  <p class="comp-empty is-off" id="scr-empty">Nothing matches that search. Clear it to see every screen.</p>
-  <div class="phones" id="screens"></div>
 </section>
 
 <!-- ============================ PROTOTYPES (one tab, a list on the left) ============================ -->
@@ -1528,7 +1479,7 @@ main { padding-top: 28px; }
   /* ---------- component catalogue (summaries and notes from each component README) ---------- */
   var COMPONENTS = [
     { name: "AmountHero", feat: "cashout", figma: "AmountHero · State=Earned", sum: "The balance card: green means money, navy means waiting.", pts: ["Pass a number and currency code, never a formatted string", "Digits are monospaced so the amount does not jump", "Reads as one VoiceOver element"], specs: [["hero-earned", 280, "Earned"], ["hero-empty", 280, "Empty"], ["hero-success", 280, "Success"]] },
-    { name: "CashoutSheet", feat: "cashout", figma: "CashoutSheet · State=Earned", sum: "The cash-out screen as a system sheet, in four states.", pts: ["Earned: Cash out / Keep playing", "Pending and Empty: Play games / Back to home", "Success: Done"], specs: [["sheet-earned-bare", 393, "Earned", "flush"]] },
+    { name: "CashoutSheet", feat: "cashout", figma: "CashoutSheet · State=Earned", sum: "The cash-out screen as a system sheet, in six states.", pts: ["Earned: Cash out / Keep playing", "Pending and Empty: Play games / Back to home", "Success: Done", "Cashing out disables the button; Limit reached explains the block"], specs: [["sheet-earned-bare", 393, "Earned", "flush"], ["sheet-pending", 393, "Pending", "flush"], ["sheet-empty", 393, "Empty", "flush"], ["sheet-success", 393, "Success", "flush"], ["sheet-loading", 393, "Cashing out", "flush"], ["sheet-limit", 393, "Limit reached", "flush"]] },
     { name: "Button", feat: "core", figma: "Button · Style=Filled, State=Default", sum: "Capsule button: one Filled primary action per screen, Plain for the way out.", pts: ["50pt tall, full width minus 16pt margins", "Verbs in sentence case: “Cash out”, “Keep playing”", "Plain buttons still get a 44pt tap area"], specs: [["btn-all", 300, "Filled · Plain · Loading · Disabled"]] },
     { name: "Pill", feat: "core", figma: "Pill · Style=Solid", sum: "Small capsule shortcut, used for History.", pts: ["Solid on light surfaces, Glass on the green hero", "32pt visible, 44pt tap area"], specs: [["pill-solid", 0, "Solid"], ["pill-glass", 0, "Glass on green", "on-green"]] },
     { name: "Countdown", feat: "cashout", figma: "Countdown · Size=Card", sum: "Live timer for the wait before stars convert.", pts: ["Format 3:14:03, not 03h:14m:03s", "VoiceOver reads “3 hours, 14 minutes”"], specs: [["count-card", 280, "Card · live"], ["count-inline", 0, "Inline"]] },
@@ -1576,14 +1527,6 @@ main { padding-top: 28px; }
     var r = useReplay();
     return h("div", { style: col(14) }, h("div", { key: r[0], className: "co-anim-pop", style: { width: "100%" } }, h(C.AmountHero, { state: "success", amount: 2.81 })), h(Replay, { go: r[1] }));
   }
-  /* A home screen behind the event banner, so the banner is shown where it lives. */
-  function homeScreen(top) {
-    return h("div", { className: "scr-home" }, top,
-      h("div", { className: "scr-home-body" },
-        h(C.StatTile, { icon: "star", label: "Game coins", value: "66,378" }),
-        h(C.StatTile, { label: "Ready to cash", value: C.format.money(5378.11) })),
-      h(C.TabBar, { selected: "home" }));
-  }
   var SPECS = {
     "hero-earned": function () { return h(C.AmountHero, { amount: 0.32 }, h(C.Pill, { glass: true })); },
     "hero-empty": function () { return h(C.AmountHero, { state: "empty", amount: 0 }); },
@@ -1628,7 +1571,6 @@ main { padding-top: 28px; }
     "reward-congrats": function () { return h(C.RewardCard, { tone: "congrats", amount: "1,500" }); },
     "reward-boost": function () { return h(C.RewardCard, { tone: "boost", amount: "2x coins · 15 min" }); },
     "sheet-earned-bare": function () { return h(C.CashoutSheet, { amount: 0.32 }); },
-    "sheet-earned": function () { return h(C.CashoutSheet, { amount: 0.32 }); },
     "sheet-pending": function () { return h(C.CashoutSheet, { state: "pending", seconds: 11643, live: true }); },
     "sheet-empty": function () { return h(C.CashoutSheet, { state: "empty", amount: 0 }); },
     "sheet-success": function () { return h(C.CashoutSheet, { state: "success", amount: 2.81 }); },
@@ -1636,24 +1578,7 @@ main { padding-top: 28px; }
     "sheet-limit": function () { return h(C.CashoutSheet, { amount: 0.32, limitReached: true }); },
     "mo-sheet": function () { return h(MoSheet); },
     "mo-count": function () { return h(MoCount); },
-    "mo-pop": function () { return h(MoPop); },
-    /* whole screens, for the Screens page */
-    "scr-coach": function () { return h(C.CoachMark, { target: h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claim" }) }, "First task:", h("br"), "claim your reward!"); },
-    "scr-missions": function () {
-      return h("div", { className: "scr-card" }, h(C.MissionCard, { done: 1 },
-        h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claimed" }),
-        h(C.MissionRow, { title: "Win 1 regular level", coins: 1000, state: "claim" }),
-        h(C.MissionRow, { title: "Play 10 levels in Kitchen Ninja", coins: 1500, state: "go" })));
-    },
-    "scr-welcome": function () { return h(C.RewardCard, { tone: "welcome" }); },
-    "scr-congrats": function () { return h(C.RewardCard, { tone: "congrats", amount: "1,500" }); },
-    "scr-reward-boost": function () { return h(C.RewardCard, { tone: "boost", amount: "2x coins \u00b7 15 min" }); },
-    "scr-banner-offer": function () { return homeScreen(h(C.EventBanner, { state: "offer" })); },
-    "scr-banner-active": function () { return homeScreen(h(C.EventBanner, { state: "active" })); },
-    "scr-bpop-offer": function () { return h(C.BoostPopup, { state: "offer" }); },
-    "scr-bpop-active": function () { return h(C.BoostPopup, { state: "active" }); },
-    "scr-bpop-progress": function () { return h(C.BoostPopup, { state: "progress" }); },
-    "scr-bpop-over": function () { return h(C.BoostPopup, { state: "over" }); }
+    "mo-pop": function () { return h(MoPop); }
   };
 
   /* ---------- build: components page ---------- */
@@ -1746,73 +1671,6 @@ main { padding-top: 28px; }
     compFeat = e.target.value; drawComps();
   });
   drawComps();
-
-  /* ---------- build: screens page ---------- */
-  /* mode: how the screen sits in the frame — "bottom" a system sheet, "center" a pop-up over
-     the game, "fill" a whole screen. lit screens are not modal, so they keep no scrim. */
-  var SCREENS = [
-    { name: "Earned", feat: "cashout", spec: "sheet-earned", mode: "bottom", sum: "Cash out / Keep playing" },
-    { name: "Pending", feat: "cashout", spec: "sheet-pending", mode: "bottom", sum: "Play games / Back to home" },
-    { name: "Empty", feat: "cashout", spec: "sheet-empty", mode: "bottom", sum: "Play games / Back to home" },
-    { name: "Success", feat: "cashout", spec: "sheet-success", mode: "bottom", sum: "Done" },
-    { name: "Cashing out", feat: "cashout", spec: "sheet-loading", mode: "bottom", sum: "The button shows progress and disables" },
-    { name: "Limit reached", feat: "cashout", spec: "sheet-limit", mode: "bottom", sum: "An inline message explains the block" },
-    { name: "First task", feat: "onboarding", spec: "scr-coach", mode: "fill", lit: true, sum: "A coach mark lights one row; the rest of the screen dims" },
-    { name: "Missions", feat: "onboarding", spec: "scr-missions", mode: "fill", lit: true, sum: "The card, with one mission of each state" },
-    { name: "Welcome reward", feat: "onboarding", spec: "scr-welcome", mode: "center", sum: "The first session opens on the welcome coins" },
-    { name: "Missions complete", feat: "onboarding", spec: "scr-congrats", mode: "center", sum: "Claim 1,500 or get double by watching an ad" },
-    { name: "Home banner \u00b7 Offer", feat: "boost", spec: "scr-banner-offer", mode: "fill", lit: true, sum: "Start now, with the time the offer ends under it" },
-    { name: "Home banner \u00b7 Active", feat: "boost", spec: "scr-banner-active", mode: "fill", lit: true, sum: "A live timer; tapping the banner opens progress" },
-    { name: "Boost offer", feat: "boost", spec: "scr-bpop-offer", mode: "center", sum: "Offered on app open, before the ad" },
-    { name: "Boost active", feat: "boost", spec: "scr-bpop-active", mode: "center", sum: "Straight after the ad: the bonus is running" },
-    { name: "Boost progress", feat: "boost", spec: "scr-bpop-progress", mode: "center", sum: "Opened from the banner: time left and coins so far" },
-    { name: "Time over", feat: "boost", spec: "scr-bpop-over", mode: "center", sum: "What the boost earned, doubled" },
-    { name: "2x boost reward", feat: "boost", spec: "scr-reward-boost", mode: "center", sum: "The onboarding reward that starts a boost" }
-  ];
-
-  var scrRoot = document.getElementById("screens");
-  var SCARDS = SCREENS.map(function (s) {
-    var fig = el("figure", "fig"), cap = el("figcaption");
-    cap.appendChild(el("b", null, s.name));
-    cap.appendChild(document.createTextNode(s.sum));
-    var phone = el("div", "phone ui" + (s.lit ? " lit" : ""));
-    var box = el("div", s.mode === "bottom" ? null : "scr " + s.mode);
-    box.setAttribute("data-spec", s.spec);
-    phone.appendChild(box);
-    fig.appendChild(cap); fig.appendChild(phone);
-    scrRoot.appendChild(fig);
-    return { s: s, node: fig, hay: (s.name + " " + s.feat + " " + FEAT_NAME[s.feat] + " " + s.sum).toLowerCase() };
-  });
-
-  var scrQ = "", scrFeat = "all";
-  var scrCount = document.getElementById("scr-count"), scrEmpty = document.getElementById("scr-empty");
-  function drawScreens() {
-    var list = SCARDS.filter(function (x) {
-      return (scrFeat === "all" || x.s.feat === scrFeat) && (!scrQ || x.hay.indexOf(scrQ) > -1);
-    });
-    /* The sort is stable, so screens keep the order of the flow inside their feature. */
-    list.sort(function (a, b) { return FEAT_ORDER[a.s.feat] - FEAT_ORDER[b.s.feat]; });
-    SCARDS.forEach(function (x) { x.node.classList.add("is-off"); });
-    scrRoot.querySelectorAll(".comp-group").forEach(function (g) { scrRoot.removeChild(g); });
-    var group = null;
-    list.forEach(function (x) {
-      if (scrFeat === "all" && x.s.feat !== group) {
-        group = x.s.feat;
-        scrRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
-      }
-      x.node.classList.remove("is-off");
-      scrRoot.appendChild(x.node);
-    });
-    scrCount.textContent = list.length + (list.length === 1 ? " screen" : " screens");
-    scrEmpty.classList.toggle("is-off", list.length > 0);
-  }
-  document.getElementById("scr-q").addEventListener("input", function (e) {
-    scrQ = e.target.value.trim().toLowerCase(); drawScreens();
-  });
-  document.getElementById("scr-feat").addEventListener("change", function (e) {
-    scrFeat = e.target.value; drawScreens();
-  });
-  drawScreens();
 
   /* ---------- build: overview ---------- */
   var T = TOKENS, colorN = T.color.tokens.length, typeN = T.type.groups.reduce(function (n, g) { return n + g.styles.length; }, 0);
@@ -1930,7 +1788,7 @@ main { padding-top: 28px; }
 
   /* ---------- pages: the hero is always on top; the #hash picks the tab and, for Prototypes, the prototype ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
-  var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", components: "components", screens: "screens" };
+  var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", components: "components" };
   var tabsWrap = document.getElementById("tabs"), protos = document.getElementById("protos");
   document.getElementById("explore-go").onclick = function () { tabsWrap.scrollIntoView({ behavior: "smooth", block: "start" }); };
   var bar = document.querySelector(".bar");
