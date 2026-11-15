@@ -42,6 +42,17 @@ Both pages are private until shared from their Share menu.
 - Source page: https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=16671-42948
 - The page "BestPlay Design System" in the same file holds the variables, text styles and components.
 
+## Syncing from Figma
+
+Figma is the source of truth for colours, spacing, radii, sizes and text styles (the `Cashout/*` variables and text styles on the "BestPlay Design System" page). After changing them in Figma, ask Claude to "sync from Figma". It will:
+
+1. Run `tools/figma_snapshot.js` in the Figma file and save the result as `figma/snapshot.json`.
+2. Run `python3 tools/figma_sync.py figma/snapshot.json` to list what differs, then the same with `--apply` to write it.
+
+`--apply` updates `tokens.json`, `tokens.css`, `DesignTokens.swift` and the website, replaces old colour values in the prototype and component sources, and rebuilds everything. It reports what it cannot place on its own: a colour value still shared by another token, and sizes or font sizes the prototypes hard-code. Changes to how a component is laid out in Figma are applied by hand.
+
+`python3 tools/figma_sync.py --rebuild` rebuilds the prototypes, components and site without reading Figma.
+
 ## Rebuilding
 
 `tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_boost.py`, `tools/build_onboarding.py` and `tools/build_onboarding_components.py` rebuild the onboarding prototype and its components from `tools/src/` and `tools/assets/onboarding/`. `tools/src/popup.css` holds the shared Popup styles; the onboarding and 2x coins builds copy it in, and the rules are in `design-system/components/Popup/README.md`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.

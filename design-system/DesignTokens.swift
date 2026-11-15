@@ -31,6 +31,8 @@ extension Color {
     static let success        = Color("success")
     static let danger         = Color("danger")
     static let dangerSurface  = Color("danger-surface")
+    static let claimInk       = Color("claim-ink")
+    static let overlay        = Color("overlay")
 }
 
 extension ShapeStyle where Self == LinearGradient {
