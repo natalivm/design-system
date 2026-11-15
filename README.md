@@ -1,4 +1,4 @@
-# Cashout iOS design system and prototype
+# BestPlay design system and prototypes
 
 Design system and clickable prototype for the cash-out flow, rebuilt from the Figma page "Cashout Button Rework" with iOS fixes.
 
@@ -10,7 +10,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Scripts and source art used to generate the files above. |
-| `website/index.html` | The website's home page: the green Cashout Design System page, with Overview, Foundations, Components, Screens, Prototype, Motion and Writing pages. The prototype runs inside its Prototype page. |
+| `website/index.html` | The website's home page: the green BestPlay Design System page, with Overview, Foundations, Components, Screens, Prototype, Motion and Writing pages. The prototype runs inside its Prototype page. |
 | `site/` | Build for GitHub Pages. It publishes `website/index.html` as the home page, the prototype at `prototype/`, and an extra React + Three.js showcase at `showcase/`. |
 
 ## Website (GitHub Pages)
@@ -40,8 +40,8 @@ Both pages are private until shared from their Share menu.
 ## Figma
 
 - Source page: https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=16671-42948
-- The page "Cashout iOS Design System" in the same file holds the variables, text styles and components.
+- The page "BestPlay Design System" in the same file holds the variables, text styles and components.
 
 ## Rebuilding
 
-`tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_boost.py`, `tools/build_onboarding.py` and `tools/build_onboarding_components.py` rebuild the onboarding prototype and its components from `tools/src/` and `tools/assets/onboarding/`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.
+`tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_boost.py`, `tools/build_onboarding.py` and `tools/build_onboarding_components.py` rebuild the onboarding prototype and its components from `tools/src/` and `tools/assets/onboarding/`. `tools/src/popup.css` holds the shared Popup styles; the onboarding and 2x coins builds copy it in, and the rules are in `design-system/components/Popup/README.md`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.

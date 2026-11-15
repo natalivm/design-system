@@ -7,6 +7,7 @@ def uri(name):
     mime = {'png': 'image/png', 'jpg': 'image/jpeg', 'svg': 'image/svg+xml'}[name.rsplit('.', 1)[1]]
     return 'data:%s;base64,%s' % (mime, base64.b64encode(open(os.path.join(A, name), 'rb').read()).decode())
 h = open(os.path.join(root, 'tools', 'src', 'boost.html')).read()
+h = h.replace('{{popup_css}}', open(os.path.join(root, 'tools', 'src', 'popup.css')).read())
 for key, name in {'banner': 'banner.jpg', 'body': 'body.jpg', 'tabbar': 'tabbar.jpg', 'logo': 'logo.png', 'topcoins': 'topcoins.png',
                   'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg'}.items():
     h = h.replace('{{%s}}' % key, uri(name))

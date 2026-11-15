@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Cashout Design System</title>
+<title>BestPlay Design System</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
@@ -436,7 +436,7 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .mr.claimed { background: var(--green-700); color: #fff; box-shadow: inset 0 0 0 2px var(--mint); }
 .mr.claimed .mr-coin { background: rgba(0,0,0,.18); opacity: .7; }
 .mr.claimed .mr-btn { background: none; color: #fff; animation: none; padding: 0 6px; }
-.mr-btn:focus-visible, .mc-toggle:focus-visible, .cta:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mr-btn:focus-visible, .mc-toggle:focus-visible, .pp-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
 
 /* ---------- CoachMark ---------- */
@@ -465,6 +465,39 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .ob-reward-congrats .ob-amount { color: #fff; }
 .ob-cta { margin-top: 16px; width: 100%; height: 50px; border: 0; border-radius: 999px; font: 600 17px/22px var(--font-sans); cursor: pointer; background: linear-gradient(200deg, var(--claim-a), var(--claim-b)); color: var(--claim-ink); box-shadow: 0 4px 0 rgba(0,0,0,.25); }
 @media (prefers-reduced-motion: reduce) { .ob-coach-hand, .ob .mr-btn { animation: none !important; } }
+/* ---------- Popup ----------
+   The one frame for every centered pop-up. The cash-out sheet slides up and is not a Popup.
+   Fixed: width, corners, backdrop, entrance, type sizes, button height, where the dismiss link sits.
+   Free: the header (colour, art, effects), art that pokes out above the card, and what goes in the body. */
+.pp-scrim { position: absolute; inset: 0; z-index: 50; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 32px 72px; background: rgba(8,10,28,.84); opacity: 0; pointer-events: none; transition: opacity .3s cubic-bezier(0.4, 0, 0.2, 1); }
+.pp-scrim.on { opacity: 1; pointer-events: auto; }
+.pp { position: relative; width: 100%; max-width: 329px; }
+.pp-scrim.on .pp { animation: pp-in .5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes pp-in { from { transform: scale(.7) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+.pp-over { position: absolute; left: 0; right: 0; top: 0; z-index: 3; pointer-events: none; }
+.pp-card { position: relative; border-radius: 24px; overflow: hidden; background: var(--pp-bg, #fff); color: var(--pp-ink, #02266e); text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.5); transition: background .3s; }
+.pp[data-theme="dark"] .pp-card { --pp-ink: #fff; }
+.pp-head { position: relative; box-sizing: border-box; min-height: 150px; padding: 22px 20px 0; color: #fff; background: var(--pp-head, linear-gradient(180deg, #a712f1, #0017aa)); }
+.pp-head[data-curve]::after { content: ""; position: absolute; left: -45%; right: -45%; bottom: -190px; height: 220px; border-radius: 50%; background: var(--pp-bg, #fff); transition: background .3s; }
+.pp-body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 24px 20px 20px; }
+.pp-eyebrow { font-size: 15px; line-height: 20px; font-weight: 600; }
+.pp-title { margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; }
+.pp[data-size="hero"] .pp-title { font-size: 28px; line-height: 34px; }
+.pp-text { margin: 8px 0 0; font-size: 17px; line-height: 22px; font-weight: 500; text-wrap: balance; }
+.pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.pp-btn { margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.pp-btn:active { transform: scale(.97) translateY(2px); }
+.pp-btn, .pp-btn[data-tone="claim"] { background: linear-gradient(200deg, #98f73a, #0bdd66); color: #0b2a12; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+.pp-btn[data-tone="boost"] { background: linear-gradient(180deg, #b06bf0, #9b51e0); color: #fff; box-shadow: 0 4px 0 #7a35c4; }
+.pp-btn[data-tone="offer"] { background: linear-gradient(200deg, #ffb347, #ff7a1a); color: #2a1200; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+.pp-dismiss { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; padding: 0 12px; background: none; border: 0; color: #fff; font-family: inherit; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; cursor: pointer; }
+/* popup:end */
+/* Popup preview frame for the Components page */
+.pp-demo { position: relative; display: flex; flex-direction: column; align-items: center; padding: 28px 16px; border-radius: 24px; background: #080a1c; font-family: var(--font-sans); }
+.pp-demo.has-dismiss { padding-bottom: 76px; } .pp-demo .pp-dismiss { bottom: 16px; }
+.pp-demo .pp-title { font-family: var(--font-sans); }
+.pp-adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+.pp-demo-art { display: block; margin: 0 auto; }
 
 /* ---------- visuals first: screens and examples lead, small text follows ---------- */
 main { padding-top: 28px; }
@@ -536,7 +569,7 @@ main { padding-top: 28px; }
 
 <header class="bar">
   <div class="bar-in">
-    <a class="brand" href="#overview">Cashout Design System <small>iOS · v1</small></a>
+    <a class="brand" href="#overview">BestPlay Design System <small>iOS · v1</small></a>
     <span class="bar-sp"></span>
     <div class="seg" role="group" aria-label="Theme of the app examples">
       <span>App UI</span>
@@ -1032,7 +1065,7 @@ main { padding-top: 28px; }
 
   /* ---------- SwiftUI snippets (from the component previews) ---------- */
   /* onboarding components */
-/* Onboarding components for the Cashout design system: MissionRow, MissionCard, CoachMark, RewardCard.
+/* Onboarding components for the Cashout design system: MissionRow, MissionCard, CoachMark, RewardCard, Popup.
    Generated by tools/build_onboarding_components.py. Adds to window.Cashout. */
 (function () {
   var React = window.React, h = React.createElement;
@@ -1197,13 +1230,33 @@ main { padding-top: 28px; }
       h("button", { type: "button", className: "ob-cta" + (tone === "boost" ? " ob-cta-boost" : ""), onClick: props.onAction }, props.cta || (tone === "boost" ? "Boost now" : tone === "congrats" ? "Claim now" : "Awesome!")));
   }
 
-  window.Cashout = Object.assign(window.Cashout || {}, { MissionRow: MissionRow, MissionCard: MissionCard, CoachMark: CoachMark, RewardCard: RewardCard });
+  // Popup: the one frame for centered pop-ups. Fixed frame, free header art and body content.
+  // size: "compact" | "standard" | "hero" · theme: "light" | "dark" · tone: "claim" | "boost" | "offer"
+  function Popup(props) {
+    var style = {}; if (props.bg) style["--pp-bg"] = props.bg; if (props.headBg) style["--pp-head"] = props.headBg;
+    var hasHead = props.head != null || props.eyebrow != null;
+    return h("div", { className: "pp-demo" + (props.dismiss ? " has-dismiss" : "") },
+      h("div", { className: "pp", "data-size": props.size || "standard", "data-theme": props.theme || "light", style: style },
+        props.over ? h("div", { className: "pp-over" }, props.over) : null,
+        h("div", { className: "pp-card" },
+          hasHead ? h("div", { className: "pp-head", "data-curve": props.curve ? "" : undefined }, props.head, props.eyebrow ? h("div", { className: "pp-eyebrow" }, props.eyebrow) : null) : null,
+          h("div", { className: "pp-body" },
+            props.title ? h("h4", { className: "pp-title" }, props.title) : null,
+            props.text ? h("p", { className: "pp-text" }, props.text) : null,
+            props.children,
+            props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,
+            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.action, props.ad ? h("span", { className: "pp-adtag" }, "Watch ad") : null) : null))),
+      props.dismiss ? h("button", { type: "button", className: "pp-dismiss", onClick: props.onDismiss }, props.dismiss) : null);
+  }
+  Popup.art = A;
+  window.Cashout = Object.assign(window.Cashout || {}, { MissionRow: MissionRow, MissionCard: MissionCard, CoachMark: CoachMark, RewardCard: RewardCard, Popup: Popup });
 })();
 
   var CODE = {
     MissionCard: 'MissionCard(title: "Fast track to max earnings!", endsAt: deadline, done: 1) {\n    MissionRow(mission: welcomeBonus)\n    MissionRow(mission: winLevel)\n    MissionRow(mission: kitchenNinja)\n}\n.background(.mission, in: .rect(cornerRadius: 16))',
     MissionRow: 'MissionRow(title: "Win 1 regular level", coins: 1_000, state: .claim) {\n    claim(mission)\n}\n// state: .go, .progress(1, of: 10), .claim, .claimed',
     CoachMark: 'missionRow\n    .coachMark(isPresented: $showFirstTask) {\n        Text("First task: claim your reward!")\n    }\n// Dims the screen, lifts the target and points a hand at it.',
+    Popup: 'Popup(size: .standard, dismiss: "Skip") {\n    PopupHeader(curved: true) { Image("2x-coins") }   // free: colour, art, effects\n    Text("You have 24 hours to double your coins.")\n    PopupButton("Start now", tone: .boost, playsAd: true) { start() }\n}\n// Fixed: width, 24pt corners, backdrop, type sizes, 50pt button, dismiss link position.',
     RewardCard: 'RewardCard(.welcome, coins: 1_000) { collect() }\n    .transition(.scale(scale: 0.5).combined(with: .opacity))\n    .sensoryFeedback(.success, trigger: collected)',
     Button: 'Button("Cash out", action: cashOut)\n    .buttonStyle(PrimaryButtonStyle())   // 50pt, Capsule, blue500\n\nButton("Keep playing", action: dismiss)\n    .font(.ds(.headline)).tint(.link)\n    .frame(minHeight: 44)',
     AmountHero: 'AmountHero(state: .earned, amount: 0.32) {\n    HistoryPill()\n}\n// amount → Text(amount, format: .currency(code: "USD"))\n//          .font(.ds(.amount)).monospacedDigit()',
@@ -1233,6 +1286,7 @@ main { padding-top: 28px; }
     { name: "MissionCard", figma: "Missions group · deployed", sum: "The onboarding missions card: a timer, three progress dots and the mission rows.", pts: ["Violet to indigo gradient; white text only", "A dot fills with a check as each mission is claimed", "The chevron collapses the rows; it collapses by itself when all are done"], specs: [["mission-card", 378, "In progress · tap the chevron", "flush"]] },
     { name: "MissionRow", figma: "Mission 1 / Mission 2 / Mission 3", sum: "One mission: its coin reward, title and a single action.", pts: ["Go is blue, Claim is the green gradient and pulses", "Progress shows a bar with a count, never a bare percentage", "Claimed rows turn green with a check and no button"], specs: [["row-go", 351, "Go", "flush"], ["row-progress", 351, "In progress", "flush"], ["row-claim", 351, "Claim", "flush"], ["row-claimed", 351, "Claimed", "flush"]] },
     { name: "CoachMark", figma: "Onboarding MainMenu deployed 7", sum: "A first-session hint: the screen dims, one control stays lit and a hand points at it.", pts: ["One short sentence, at most two lines", "Only the lit control is tappable", "Fades out as soon as the player taps the control"], specs: [["coach", 380, "First task", "flush"]] },
+    { name: "Popup", figma: "Onboarding Components · Popup", sum: "The one frame for every centered pop-up. The frame is fixed; the header art and the body are free.", pts: ["Fixed: width (screen minus 32pt a side), 24pt corners, backdrop, type sizes, one 50pt button", "One dismiss link under the card, never an X in the corner", "Free: header colour and art, art above the card, effects, body content", "Button tone: green to claim, violet to start a boost, orange for an extra on dark cards", "The cash-out sheet is not a Popup"], specs: [["popup-compact", 361, "Compact", "flush"], ["popup-standard", 361, "Standard", "flush"], ["popup-hero", 361, "Hero", "flush"]] },
     { name: "RewardCard", figma: "welcome Reward · Coins1", sum: "The reward moment: a coin pile, the amount and one green button.", pts: ["Welcome sits on the dimmed screen; Congrats is a violet card", "The amount counts up, then coins fly to the balance", "Plays a success haptic"], specs: [["reward-welcome", 300, "Welcome", "flush"], ["reward-congrats", 300, "Congrats", "flush"], ["reward-boost", 300, "2x boost", "flush"]] },
     { name: "TabBar", figma: "TabBar", sum: "The four root destinations, drawn by the system TabView.", pts: ["Use SF Symbols; the selected tab is tinted blue-500", "Never draw the tab bar or safe area into a screen"], specs: [["tabbar", 360, "Tap a tab", "flush"]] }
   ];
@@ -1288,6 +1342,9 @@ main { padding-top: 28px; }
     "row-claim": function () { return h(C.MissionRow, { title: "Win 1 regular level", coins: 1000, state: "claim" }); },
     "row-claimed": function () { return h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claimed" }); },
     "coach": function () { return h(C.CoachMark, { target: h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claim" }) }, "First task:", h("br"), "claim your reward!"); },
+    "popup-compact": function () { return h(C.Popup, { size: "compact", title: "Leave the game?", text: "Coins from this round will not be saved.", action: "Keep playing", tone: "claim", dismiss: "Leave" }); },
+    "popup-standard": function () { return h(C.Popup, { size: "standard", curve: true, headBg: "linear-gradient(180deg, #f4517c, #dd1a5c)", head: h("img", { className: "pp-demo-art", src: C.Popup.art.coin, width: 64, height: 64, alt: "" }), eyebrow: "Start ahead", text: "You have 24 hours to double all the coins you earn.", action: "Start now", tone: "boost", ad: true, dismiss: "Skip" }); },
+    "popup-hero": function () { return h(C.Popup, { size: "hero", theme: "dark", bg: "linear-gradient(180deg, #a712f1 10%, #0017aa 100%)", title: "Congrats!", text: "Missions complete!", amount: "1,500", action: "Claim now", tone: "claim", dismiss: "Not now" }, h("img", { className: "pp-demo-art", src: C.Popup.art.pile, width: 220, alt: "" })); },
     "reward-welcome": function () { return h(C.RewardCard, { tone: "welcome" }); },
     "reward-congrats": function () { return h(C.RewardCard, { tone: "congrats", amount: "1,500" }); },
     "reward-boost": function () { return h(C.RewardCard, { tone: "boost", amount: "2x coins · 15 min" }); },
