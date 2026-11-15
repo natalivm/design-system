@@ -704,12 +704,9 @@ main { padding-top: 28px; }
 .comp-find input { width: 100%; box-sizing: border-box; font: 400 14px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 11px 16px; }
 .comp-find input::placeholder { color: var(--site-faint); }
 .comp-find input:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
-.comp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.comp-chips button { font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 13px; cursor: pointer; }
-.comp-chips button:hover { color: var(--site-fg); }
-.comp-chips button[aria-pressed="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
-.comp-sort { display: inline-flex; align-items: center; gap: 8px; font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); }
-.comp-sort select { font: 400 12.5px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 12px; cursor: pointer; }
+.comp-pick { display: inline-flex; align-items: center; gap: 8px; font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); }
+.comp-pick select { font: 400 12.5px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 12px; cursor: pointer; }
+.comp-pick select:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
 .comp-count { margin-left: auto; }
 .comp-empty { order: 1; font-size: 15px; color: var(--site-muted); }
 .is-off { display: none !important; }
@@ -720,8 +717,9 @@ main { padding-top: 28px; }
 .comp > .comp-code { order: 3; }
 .comp > .note { order: 4; }
 .comp .comp-head h2 { align-items: center; flex-wrap: wrap; gap: 8px 10px; }
-.comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; }
-.comp-feat { font: 400 11px/1 var(--f-mono); color: var(--site-muted); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; white-space: nowrap; }
+.comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
+.comp-vars:hover { color: var(--site-fg); }
+.comp-vars[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
 .comp-toggle { margin-left: auto; flex: none; font: 500 12px/1 var(--f-mono); color: var(--site-muted); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 8px 10px; cursor: pointer; }
 .comp-toggle:hover { color: var(--site-fg); }
 .comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
@@ -751,6 +749,7 @@ main { padding-top: 28px; }
 #components.dense .comp .points, #components.dense .comp > .note { display: none; }
 #components.dense .comp > .stage { zoom: .5; gap: 14px; }
 #components.dense .comp > .stage .fig ~ .fig { display: none; }
+#components.dense .comp.show-vars > .stage .fig ~ .fig { display: flex; }
 #components.dense .comp .fig figcaption { margin-top: 6px; font-size: 22px; }
 #components.dense .comp-vars { display: inline-block; }
 #components.dense .comp-code pre { font-size: 11.5px; max-height: 320px; overflow: auto; }
@@ -887,23 +886,15 @@ main { padding-top: 28px; }
       <label class="vh" for="comp-q">Search components</label>
       <input id="comp-q" type="search" placeholder="Search name, summary or rule…" autocomplete="off" spellcheck="false">
     </div>
-    <div class="comp-chips" role="group" aria-label="Filter by feature">
-      <button type="button" data-feat="all" aria-pressed="true">All</button>
-      <button type="button" data-feat="core" aria-pressed="false">Core</button>
-      <button type="button" data-feat="cashout" aria-pressed="false">Cash out</button>
-      <button type="button" data-feat="onboarding" aria-pressed="false">Onboarding</button>
-      <button type="button" data-feat="boost" aria-pressed="false">2x coins</button>
-    </div>
-    <label class="comp-sort"><span>Sort</span>
-      <select id="comp-sort">
-        <option value="feature">Feature</option>
-        <option value="name">A–Z</option>
+    <label class="comp-pick"><span>Feature</span>
+      <select id="comp-feat">
+        <option value="all">All</option>
+        <option value="core">Core</option>
+        <option value="cashout">Cash out</option>
+        <option value="onboarding">Onboarding</option>
+        <option value="boost">2x coins</option>
       </select>
     </label>
-    <div class="seg" role="group" aria-label="Card size">
-      <button type="button" data-dense="1" aria-pressed="true">Compact</button>
-      <button type="button" data-dense="0" aria-pressed="false">Full</button>
-    </div>
     <p class="note comp-count" id="comp-count"></p>
   </div>
   <p class="comp-empty is-off" id="comp-empty">Nothing matches that search. Clear it to see all 20 components.</p>
@@ -922,16 +913,12 @@ main { padding-top: 28px; }
       <label class="vh" for="scr-q">Search screens</label>
       <input id="scr-q" type="search" placeholder="Search screen or state…" autocomplete="off" spellcheck="false">
     </div>
-    <div class="comp-chips" role="group" aria-label="Filter by feature">
-      <button type="button" data-feat="all" aria-pressed="true">All</button>
-      <button type="button" data-feat="cashout" aria-pressed="false">Cash out</button>
-      <button type="button" data-feat="onboarding" aria-pressed="false">Onboarding</button>
-      <button type="button" data-feat="boost" aria-pressed="false">2x coins</button>
-    </div>
-    <label class="comp-sort"><span>Sort</span>
-      <select id="scr-sort">
-        <option value="feature">Feature</option>
-        <option value="name">A–Z</option>
+    <label class="comp-pick"><span>Feature</span>
+      <select id="scr-feat">
+        <option value="all">All</option>
+        <option value="cashout">Cash out</option>
+        <option value="onboarding">Onboarding</option>
+        <option value="boost">2x coins</option>
       </select>
     </label>
     <p class="note comp-count" id="scr-count"></p>
@@ -1665,8 +1652,19 @@ main { padding-top: 28px; }
   var CARDS = COMPONENTS.map(function (c) {
     var a = el("article", "panel comp"), head = el("div", "comp-head");
     var h2 = el("h2", null, c.name);
-    h2.appendChild(el("span", "comp-feat", FEAT_NAME[c.feat]));
-    if (c.specs.length > 1) h2.appendChild(el("span", "comp-vars", c.specs.length + " variants"));
+    if (c.specs.length > 1) {
+      /* With no Full view, this is how the other variants are reached. */
+      var vars = el("button", "comp-vars", c.specs.length + " variants");
+      vars.type = "button";
+      vars.setAttribute("aria-expanded", "false");
+      vars.title = "Show every variant";
+      vars.addEventListener("click", function () {
+        var open = a.classList.toggle("show-vars");
+        vars.setAttribute("aria-expanded", open ? "true" : "false");
+        vars.title = open ? "Show one variant" : "Show every variant";
+      });
+      h2.appendChild(vars);
+    }
     var tog = el("button", "comp-toggle", "</>");
     tog.type = "button"; tog.setAttribute("aria-expanded", "false");
     tog.setAttribute("aria-label", "Show the SwiftUI for " + c.name);
@@ -1701,14 +1699,14 @@ main { padding-top: 28px; }
     return { c: c, node: a, hay: (c.name + " " + c.feat + " " + FEAT_NAME[c.feat] + " " + c.sum + " " + c.pts.join(" ") + " " + c.figma).toLowerCase() };
   });
 
-  var compQ = "", compFeat = "all", compSort = "feature";
+  var compQ = "", compFeat = "all";
   var compCount = document.getElementById("comp-count"), compEmpty = document.getElementById("comp-empty");
   function drawComps() {
     var list = CARDS.filter(function (x) {
       return (compFeat === "all" || x.c.feat === compFeat) && (!compQ || x.hay.indexOf(compQ) > -1);
     });
     list.sort(function (a, b) {
-      if (compSort === "feature" && a.c.feat !== b.c.feat) return FEAT_ORDER[a.c.feat] - FEAT_ORDER[b.c.feat];
+      if (a.c.feat !== b.c.feat) return FEAT_ORDER[a.c.feat] - FEAT_ORDER[b.c.feat];
       return a.c.name.localeCompare(b.c.name);
     });
     CARDS.forEach(function (x) { x.node.classList.add("is-off"); });
@@ -1716,7 +1714,7 @@ main { padding-top: 28px; }
     var group = null;
     list.forEach(function (x) {
       /* Moving a card keeps its node, so the live previews mounted inside it keep running. */
-      if (compSort === "feature" && compFeat === "all" && x.c.feat !== group) {
+      if (compFeat === "all" && x.c.feat !== group) {
         group = x.c.feat;
         compRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
       }
@@ -1729,20 +1727,9 @@ main { padding-top: 28px; }
   document.getElementById("comp-q").addEventListener("input", function (e) {
     compQ = e.target.value.trim().toLowerCase(); drawComps();
   });
-  document.getElementById("comp-sort").addEventListener("change", function (e) {
-    compSort = e.target.value; drawComps();
+  document.getElementById("comp-feat").addEventListener("change", function (e) {
+    compFeat = e.target.value; drawComps();
   });
-  function press(sel, pick) {
-    var all = document.querySelectorAll(sel);
-    all.forEach(function (b) {
-      b.addEventListener("click", function () {
-        all.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
-        pick(b);
-      });
-    });
-  }
-  press("#comp-bar [data-feat]", function (b) { compFeat = b.getAttribute("data-feat"); drawComps(); });
-  press("#comp-bar [data-dense]", function (b) { compRoot.classList.toggle("dense", b.getAttribute("data-dense") === "1"); });
   drawComps();
 
   /* ---------- build: screens page ---------- */
@@ -1782,22 +1769,19 @@ main { padding-top: 28px; }
     return { s: s, node: fig, hay: (s.name + " " + s.feat + " " + FEAT_NAME[s.feat] + " " + s.sum).toLowerCase() };
   });
 
-  var scrQ = "", scrFeat = "all", scrSort = "feature";
+  var scrQ = "", scrFeat = "all";
   var scrCount = document.getElementById("scr-count"), scrEmpty = document.getElementById("scr-empty");
   function drawScreens() {
     var list = SCARDS.filter(function (x) {
       return (scrFeat === "all" || x.s.feat === scrFeat) && (!scrQ || x.hay.indexOf(scrQ) > -1);
     });
     /* The sort is stable, so screens keep the order of the flow inside their feature. */
-    list.sort(function (a, b) {
-      if (scrSort === "name") return a.s.name.localeCompare(b.s.name);
-      return FEAT_ORDER[a.s.feat] - FEAT_ORDER[b.s.feat];
-    });
+    list.sort(function (a, b) { return FEAT_ORDER[a.s.feat] - FEAT_ORDER[b.s.feat]; });
     SCARDS.forEach(function (x) { x.node.classList.add("is-off"); });
     scrRoot.querySelectorAll(".comp-group").forEach(function (g) { scrRoot.removeChild(g); });
     var group = null;
     list.forEach(function (x) {
-      if (scrSort === "feature" && scrFeat === "all" && x.s.feat !== group) {
+      if (scrFeat === "all" && x.s.feat !== group) {
         group = x.s.feat;
         scrRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
       }
@@ -1810,10 +1794,9 @@ main { padding-top: 28px; }
   document.getElementById("scr-q").addEventListener("input", function (e) {
     scrQ = e.target.value.trim().toLowerCase(); drawScreens();
   });
-  document.getElementById("scr-sort").addEventListener("change", function (e) {
-    scrSort = e.target.value; drawScreens();
+  document.getElementById("scr-feat").addEventListener("change", function (e) {
+    scrFeat = e.target.value; drawScreens();
   });
-  press("#scr-bar [data-feat]", function (b) { scrFeat = b.getAttribute("data-feat"); drawScreens(); });
   drawScreens();
 
   /* ---------- build: overview ---------- */
