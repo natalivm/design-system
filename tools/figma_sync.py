@@ -2,7 +2,8 @@
 
   python3 tools/figma_sync.py figma/snapshot.json            report what differs, change nothing
   python3 tools/figma_sync.py figma/snapshot.json --apply    write the changes and rebuild
-  python3 tools/figma_sync.py --rebuild                      only rebuild prototypes, components and the site
+  add --site to either to also run the Vite build (needs `npm install` in site/ once)
+  python3 tools/build.py                                     rebuild without reading Figma
 
 The snapshot comes from tools/figma_snapshot.js run in the Figma file. Figma is the source of truth for
 colours (Cashout/Color, both modes), spacing, radii and sizes (Cashout/Layout) and text styles (Cashout/*).
@@ -11,13 +12,15 @@ replaced in the prototype and component sources, unless another token still uses
 reported for a person to place). Layout and text changes update the tokens and Swift; places in the
 prototypes that hard-code those sizes are not changed and are listed instead.
 """
-import glob, json, os, re, subprocess, sys
+import glob, importlib.util, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(ROOT, *a)
 TOKENS = P('design-system', 'tokens.json')
+_spec = importlib.util.spec_from_file_location('build', P('tools', 'build.py'))
+build = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(build)
+WEB = re.compile(r'var\(--([\w-]+)\)')
 SWIFT = P('design-system', 'DesignTokens.swift')
-CSS_MARK = '/* Cashout iOS Design System — generated from tokens.json */'
 WEIGHT = {'Regular': 400, 'Medium': 500, 'SemiBold': 600, 'Bold': 700, 'ExtraBold': 800}
 SWIFT_WEIGHT = {400: '.regular', 500: '.medium', 600: '.semibold', 700: '.bold', 800: '.heavy'}
 TEXT_NAME = {'Amount': 'amount', 'Large Title': 'large-title', 'Title 1': 'title1', 'Title 2': 'title2', 'Title 3': 'title3',
@@ -26,7 +29,7 @@ TEXT_NAME = {'Amount': 'amount', 'Large Title': 'large-title', 'Title 1': 'title
 # Sources that hard-code token hex values. Generated files are rebuilt from these.
 SOURCES = ['tools/src/*.html', 'tools/src/*.css', 'tools/src/*.js', 'tools/build_onboarding_components.py',
            'design-system/components/bundle.css', 'design-system/components/*/preview.html',
-           'prototype/cashout-prototype.html', 'website/index.html']
+           'site/src/*.css', 'site/src/*.jsx']
 
 
 def read(p): return open(p, encoding='utf-8').read()
@@ -56,8 +59,9 @@ def diff(snap, tok):
     colors = {c['name']: c for c in tok['color']['tokens']}
     seen = set()
     for v in snap['collections'].get('Cashout/Color', {}).get('vars', []):
-        if not v.get('web'): out['figma_only'].append(v['name'] + ' (no web code name)'); continue
-        name = v['web'][len('var(--'):-1]; seen.add(name)
+        m = WEB.fullmatch(v.get('web') or '')
+        if not m: out['figma_only'].append('%s (web code name %r is not var(--name))' % (v['name'], v.get('web'))); continue
+        name = m.group(1); seen.add(name)
         fig = {'light': v['values'].get('Light'), 'dark': v['values'].get('Dark', v['values'].get('Light'))}
         if name not in colors:
             out['new_color'].append({'name': name, 'figma': v['name'], 'value': {k: css_value(rgba(x)) for k, x in fig.items()}, 'usage': v.get('description') or 'Added from Figma (%s).' % v['name']}); continue
@@ -69,18 +73,21 @@ def diff(snap, tok):
     out['code_only'] += [n for n in colors if n not in seen]
     fam = lambda n: 'spacing' if n.startswith('space-') else 'radius' if n.startswith('radius-') else 'size'
     layout = {c['name']: (f, c) for f in ('spacing', 'radius', 'size') for c in tok[f]['tokens']}
+    seen_layout = set()
     for v in snap['collections'].get('Cashout/Layout', {}).get('vars', []):
-        if not v.get('web'): continue
-        name = v['web'][len('var(--'):-1]; val = '%gpx' % list(v['values'].values())[0]
+        m = WEB.fullmatch(v.get('web') or '')
+        if not m: out['figma_only'].append('%s (web code name %r is not var(--name))' % (v['name'], v.get('web'))); continue
+        name = m.group(1); seen_layout.add(name); val = '%gpx' % list(v['values'].values())[0]
         if name not in layout: out['layout'].append({'name': name, 'family': fam(name), 'old': None, 'new': val})
         elif layout[name][1]['value'] != val: out['layout'].append({'name': name, 'family': layout[name][0], 'old': layout[name][1]['value'], 'new': val})
+    out['code_only'] += [n for n in layout if n not in seen_layout]
     styles = {s['name']: s for g in tok['type']['groups'] for s in g['styles']}
     for s in snap.get('textStyles', []):
         key = TEXT_NAME.get(s['name'].split('/')[-1])
         if not key or key not in styles: continue
         want = {'fontSize': '%gpx' % s['size'], 'lineHeight': ('%gpx' % s['lineHeight']) if isinstance(s['lineHeight'], (int, float)) else styles[key]['lineHeight'],
                 'fontWeight': WEIGHT.get(s['style'], styles[key]['fontWeight'])}
-        if s.get('letterSpacing'): want['letterSpacing'] = s['letterSpacing']
+        want['letterSpacing'] = s['letterSpacing'] if s.get('letterSpacing') else None
         changes = {k: (styles[key].get(k), v) for k, v in want.items() if styles[key].get(k) != v}
         if changes: out['text'].append({'name': key, 'figma': s['name'], 'changes': changes})
     return out
@@ -112,9 +119,10 @@ def apply(d, tok):
         else: fam.append({'name': c['name'], 'value': c['new']})
     styles = {s['name']: s for g in tok['type']['groups'] for s in g['styles']}
     for c in d['text']:
-        for k, (_, v) in c['changes'].items(): styles[c['name']][k] = v
+        for k, (_, v) in c['changes'].items():
+            if v is None: styles[c['name']].pop(k, None)
+            else: styles[c['name']][k] = v
     write(TOKENS, json.dumps(tok, indent=2, ensure_ascii=False) + '\n')
-    subprocess.run([sys.executable, '-I', P('tools', 'css.py'), TOKENS, P('design-system', 'tokens.css')], check=True)
 
     # Swift
     sw = read(SWIFT)
@@ -156,33 +164,15 @@ def apply(d, tok):
     return notes
 
 
-def rebuild():
-    for script in ('build_onboarding.py', 'build_boost.py', 'build_onboarding_components.py'):
-        subprocess.run([sys.executable, '-I', P('tools', script)], check=True, stdout=subprocess.DEVNULL)
-    site = read(P('website', 'index.html'))
-    css = read(P('design-system', 'tokens.css'))
-    a = site.index(CSS_MARK); e = site.index('\n', site.index('\n.tab-label {', a) + 1)
-    site = site[:a] + css + site[e + 1:]
-    comp_css = read(P('design-system', 'components', 'onboarding.css')); comp_js = read(P('design-system', 'components', 'onboarding.js'))
-    a = site.index('/* Onboarding components. Generated by'); b = site.index('/* ---------- visuals first:')
-    site = site[:a] + comp_css.rstrip() + '\n\n' + site[b:]
-    a = site.index('/* Onboarding components for the Cashout design system'); b = site.index('  var CODE = {')
-    site = site[:a] + comp_js.rstrip() + '\n\n' + site[b:]
-    tok = json.load(open(TOKENS, encoding='utf-8'))
-    site, n = re.subn(r'var TOKENS = \{.*?\};\n', lambda m: 'var TOKENS = ' + json.dumps(tok) + ';\n', site, count=1, flags=re.S)
-    assert n == 1, 'TOKENS block not found in website/index.html'
-    write(P('website', 'index.html'), site)
-    subprocess.run(['npm', 'run', 'build'], cwd=P('site'), check=True, stdout=subprocess.DEVNULL)
-    print('rebuilt prototypes, components, website and site/dist')
-
-
 if __name__ == '__main__':
-    args = sys.argv[1:]
-    if args == ['--rebuild']: rebuild(); sys.exit(0)
-    if not args: sys.exit(__doc__)
-    snap = json.load(open(args[0], encoding='utf-8')); tok = json.load(open(TOKENS, encoding='utf-8'))
+    flags = [a for a in sys.argv[1:] if a.startswith('--')]
+    paths = [a for a in sys.argv[1:] if not a.startswith('--')]
+    if '--rebuild' in flags: build.build_all('--site' in flags); sys.exit(0)
+    if len(paths) != 1: sys.exit(__doc__)
+    snap = json.load(open(paths[0], encoding='utf-8')); tok = json.load(open(TOKENS, encoding='utf-8'))
     d = diff(snap, tok)
     print(report(d))
-    if '--apply' in args and any(d[k] for k in ('color', 'new_color', 'layout', 'text')):
+    if '--apply' in flags and any(d[k] for k in ('color', 'new_color', 'layout', 'text')):
         for n in apply(d, tok): print('note: ' + n)
-        rebuild()
+        build.build_all('--site' in flags)
+        print('rebuilt everything from the new tokens')

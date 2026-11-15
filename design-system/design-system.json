@@ -5,7 +5,7 @@
     "v": 1,
     "at": "2026-11-15T09:27:52Z"
   },
-  "title": "Cashout iOS Design System",
+  "title": "BestPlay Design System",
   "namespace": "Cashout",
   "libraries": [
     {
@@ -22,7 +22,7 @@
   "assetGroups": {},
   "blobs": {},
   "docs": {
-    "readme": "project/README.md",
+    "readme": "README.md",
     "sections": []
   },
   "lastChange": {

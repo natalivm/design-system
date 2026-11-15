@@ -62,7 +62,7 @@
     success: { eyebrow: "Cash out successful", sub: "Your money is on the way." }
   };
   function AmountHero(props) {
-    var state = props.state || "earned", copy = HERO_COPY[state];
+    var state = HERO_COPY[props.state] ? props.state : "earned", copy = HERO_COPY[state];
     var value = props.display != null ? props.display : money(props.amount || 0, props.currency, props.locale);
     return h("section", { className: cx("co-hero", "co-hero-" + state, props.className), "aria-label": (props.eyebrow || copy.eyebrow) + " " + value },
       h("div", { className: "co-hero-eyebrow" }, props.eyebrow || copy.eyebrow),
@@ -88,6 +88,7 @@
   function Countdown(props) {
     var start = props.seconds == null ? 11643 : props.seconds;
     var st = React.useState(start), left = st[0], set = st[1];
+    React.useEffect(function () { set(start); }, [start]);
     React.useEffect(function () {
       if (!props.live) return;
       var id = setInterval(function () { set(function (s) { return s > 0 ? s - 1 : 0; }); }, 1000);
@@ -138,8 +139,9 @@
   function TabBar(props) {
     var tabs = props.tabs || [{ id: "home", label: "Home" }, { id: "cashout", label: "Cash out" }, { id: "history", label: "History" }, { id: "profile", label: "Profile" }];
     var st = React.useState(props.selected || "home"), sel = st[0], set = st[1];
+    React.useEffect(function () { if (props.selected) set(props.selected); }, [props.selected]);
     return h("nav", { className: "co-tabbar", role: "tablist" }, tabs.map(function (t) {
-      return h("button", { key: t.id, type: "button", role: "tab", className: "co-tab", "aria-selected": sel === t.id ? "true" : "false", onClick: function () { set(t.id); } }, tabIcon(t.id), t.label);
+      return h("button", { key: t.id, type: "button", role: "tab", className: "co-tab", "aria-selected": sel === t.id ? "true" : "false", onClick: function () { set(t.id); if (props.onSelect) props.onSelect(t.id); } }, tabIcon(t.id), t.label);
     }));
   }
 
