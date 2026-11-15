@@ -375,8 +375,8 @@ main { min-width: 0; padding-top: 56px; }
 .chips span { font: 400 12.5px/1 var(--f-mono); border: 1px solid var(--site-line); border-radius: 999px; padding: 7px 11px; color: var(--site-muted); }
 
 .proto-panel { padding: 0; overflow: hidden; }
-.proto-frame { display: block; width: 100%; height: 940px; border: 0; background: #eef1f6; }
-@media (max-width: 860px) { .proto-frame { height: 780px; } }
+/* The frame is never taller than the window (minus the sticky bar), so the phone inside scales to fit. */
+.proto-frame { display: block; width: 100%; height: min(940px, calc(100vh - 96px)); height: min(940px, calc(100dvh - 96px)); min-height: 540px; border: 0; background: #eef1f6; scroll-margin-top: 80px; }
 footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-line); font: 400 12.5px/1.6 var(--f-mono); color: var(--site-faint); display: flex; flex-wrap: wrap; gap: 6px 28px; }
 
 /* ---------- responsive ---------- */

@@ -480,8 +480,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   function fit() {
     var wrap = $("deviceWrap"), dev = $("device");
     var availH = window.innerHeight - 48, availW = Math.min(window.innerWidth - 32, 417);
-    var s = Math.min(1, availW / 417, Math.max(0.55, availH / 876));
-    if (window.innerWidth < 700) s = Math.min(1, availW / 417);
+    // Always fit the phone inside the window height, so it is never cut off (also when embedded in a frame).
+    var s = Math.min(1, availW / 417, Math.max(0.42, availH / 876));
     dev.style.transform = "scale(" + s + ")";
     wrap.style.width = (417 * s) + "px"; wrap.style.height = (876 * s) + "px";
   }
