@@ -402,7 +402,9 @@ main { padding-top: 28px; }
 .pillbtn { font-size: 13px; min-height: 32px; padding: 7px 14px; }
 .points { font-size: 14px; margin-top: 10px; }
 .chips { margin-top: 12px; }
-.phone { height: 640px; }
+.phone { height: 640px; background: radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%); border-color: #020403; }
+.phone::before { background: radial-gradient(60% 30% at 50% 0%, rgba(141,240,111,.12), transparent 70%); }
+.proto-frame { background: #07090c; }
 .fig figcaption { margin-top: 10px; }
 .fig figcaption b { font-size: 15px; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
@@ -948,7 +950,7 @@ main { padding-top: 28px; }
   function MoSheet() {
     var r = useReplay(), k = r[0];
     return h("div", { style: col(14) },
-      h("div", { style: { width: 248, height: 380, overflow: "hidden", borderRadius: 30, position: "relative", background: "var(--surface-grouped)", boxShadow: "var(--site-shadow)" } },
+      h("div", { style: { width: 248, height: 380, overflow: "hidden", borderRadius: 30, position: "relative", background: "radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%)", boxShadow: "var(--site-shadow)" } },
         h("div", { key: "s" + k, className: "co-anim-scrim-in", style: { position: "absolute", inset: 0, background: "var(--scrim)" } }),
         h("div", { key: "m" + k, className: "co-anim-sheet-in", style: { position: "absolute", left: 0, right: 0, bottom: 0 } }, h("div", { style: { zoom: 0.631, width: 393 } }, h(C.CashoutSheet, { amount: 0.32 })))),
       h(Replay, { go: r[1] }));
