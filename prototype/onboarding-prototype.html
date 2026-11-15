@@ -189,7 +189,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .mr-btn:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 
 /* ---------- CoachMark ---------- */
-.dim { position: absolute; inset: 0; z-index: 30; background: rgba(8,10,28,.78); opacity: 0; pointer-events: none; transition: opacity .45s var(--smooth); }
+.dim { position: absolute; inset: 0; z-index: 30; background: var(--scrim-strong, rgba(8,10,28,.84)); opacity: 0; pointer-events: none; transition: opacity .45s var(--smooth); }
 .dim.on { opacity: 1; pointer-events: auto; }
 .lift { position: relative; z-index: 35; }
 .coach { position: absolute; left: 24px; right: 24px; z-index: 36; text-align: center; color: #fff; font-size: 28px; line-height: 34px; font-weight: 700; opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .35s, transform .45s var(--snappy), top .45s var(--smooth); text-shadow: 0 2px 12px rgba(0,0,0,.5); }
