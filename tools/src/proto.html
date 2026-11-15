@@ -6,7 +6,7 @@
 /* Layout: a phone running the flow on the left, a slim scenario panel on the right; stacks on narrow screens. */
 :root {
   /* page chrome */
-  --page: #eef1f6; --panel: #ffffff; --text: #0f1b3d; --muted: #5b6378; --line: #dde3ee; --chip: #f2f4f7;
+  --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
   /* app tokens: Cashout iOS design system (the app itself is light-only, like the Figma) */
   --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --navy-900: #000748;
   --ink: #02266e; --ink-secondary: #5b6378; --link: #1464ff; --surface: #ffffff; --surface-warm: #f9f8f4;
@@ -15,8 +15,8 @@
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0b1220; --panel: #131c30; --text: #e8edf7; --muted: #a7b3cc; --line: #26314a; --chip: #1b2640; color-scheme: dark; } }
-:root[data-theme="dark"] { --page: #0b1220; --panel: #131c30; --text: #e8edf7; --muted: #a7b3cc; --line: #26314a; --chip: #1b2640; color-scheme: dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25; color-scheme: dark; }
 
 html, body { height: 100%; }
 body { background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
@@ -39,12 +39,12 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .flow li.on { background: var(--chip); color: var(--text); font-weight: 700; }
 .flow li.on::before { background: var(--blue-500); border-color: var(--blue-500); }
 .flow li .new { margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green-700); background: rgba(8,122,90,.12); padding: 1px 6px; border-radius: 999px; }
-.reset { align-self: flex-start; font: 600 13px/18px var(--font); color: var(--link); background: none; border: 0; padding: 0; cursor: pointer; }
+.reset { align-self: flex-start; font: 600 13px/18px var(--font); color: #6ea1ff; background: none; border: 0; padding: 0; cursor: pointer; }
 
 /* ---------- device ---------- */
 .device-wrap { flex: none; }
 .device { position: relative; width: 417px; height: 876px; border-radius: 64px; background: #0c0d10; padding: 12px; box-sizing: border-box;
-  box-shadow: 0 0 0 2px #2a2c31, 0 30px 80px rgba(10,20,50,.28); transform-origin: top left; }
+  box-shadow: 0 0 0 2px #2a2c31, 0 30px 80px rgba(0,0,0,.6), 0 0 120px rgba(11,221,102,.08); transform-origin: top left; }
 .screen { position: relative; width: 393px; height: 852px; border-radius: 52px; overflow: hidden; background: #eef2f7; isolation: isolate; font-family: var(--font); color: var(--ink); }
 .island { position: absolute; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; z-index: 50; }
 .statusbar { position: absolute; top: 0; left: 0; right: 0; height: 54px; z-index: 45; display: flex; align-items: center; justify-content: space-between; padding: 6px 34px 0 46px; box-sizing: border-box; color: #fff; font: 600 17px/22px -apple-system, "SF Pro Text", var(--font); pointer-events: none; transition: color .3s; }
