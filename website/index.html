@@ -405,7 +405,7 @@ main { min-width: 0; padding-top: 56px; }
 
 .proto-panel { padding: 0; overflow: hidden; }
 /* The frame is never taller than the window (minus the sticky bar), so the phone inside scales to fit. */
-.proto-frame { display: block; width: 100%; height: min(940px, calc(100vh - 96px)); height: min(940px, calc(100dvh - 96px)); min-height: 540px; border: 0; background: #eef1f6; scroll-margin-top: 80px; }
+.proto-frame { display: block; width: 100%; height: min(940px, calc(100vh - 96px)); height: min(940px, calc(100dvh - 96px)); min-height: 540px; border: 0; background: transparent; scroll-margin-top: 80px; }
 footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-line); font: 400 12.5px/1.6 var(--f-mono); color: var(--site-faint); display: flex; flex-wrap: wrap; gap: 6px 28px; }
 
 /* @gen onboarding.css */
@@ -616,7 +616,7 @@ main { padding-top: 28px; }
 .chips { margin-top: 12px; }
 .phone { height: 640px; background: radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%); border-color: #020403; }
 .phone::before { background: radial-gradient(60% 30% at 50% 0%, rgba(141,240,111,.12), transparent 70%); }
-.proto-frame { background: #07090c; }
+.proto-frame { background: transparent; }
 .fig figcaption { margin-top: 10px; }
 .fig figcaption b { font-size: 15px; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
@@ -631,18 +631,35 @@ main { padding-top: 28px; }
 @media (max-width: 600px) { .hero .hero-art { margin-right: 0; margin-left: 0; margin-bottom: 40px; } .hero-art > :nth-child(2) { right: -6px; bottom: -34px; width: 220px; } }
 
 /* ---------- landing: the Overview is a full-screen hero with the navigation under it ---------- */
-body[data-route="overview"] main { padding-top: 0; }
 .landing .hero { min-height: calc(100svh - var(--bar-h, 66px)); box-sizing: border-box; padding-block: 40px; align-items: center; align-content: center; }
-.explore { order: 3; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-bottom: 24px; background: var(--site-line); border: 1px solid var(--site-line); border-radius: 20px; overflow: hidden; counter-reset: ex; scroll-margin-top: calc(var(--bar-h, 66px) + 24px); }
-.explore a { counter-increment: ex; display: flex; flex-direction: column; gap: 6px; min-height: 132px; padding: 20px 22px; background: var(--site-canvas); text-decoration: none; transition: background .15s; }
-.explore a::before { content: counter(ex, decimal-leading-zero); font: 500 11px/14px var(--f-mono); letter-spacing: .1em; color: var(--site-faint); }
-.explore b { margin-top: auto; font: 600 19px/1.25 var(--f-display); letter-spacing: -.01em; }
-.explore span { font: 400 13px/1.45 var(--f-mono); color: var(--site-muted); }
-.explore a:hover { background: #0b5a40; }
-.explore a:hover b::after { content: " \2192"; }
-.explore a:focus-visible { outline-offset: -4px; }
-@media (max-width: 1180px) { .explore { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 460px) { .explore { grid-template-columns: minmax(0, 1fr); } .explore a { min-height: 0; } }
+.shell > main { padding-top: 0; }
+/* tabs under the hero; they stay under the top bar while you scroll */
+.tabs-wrap { position: sticky; top: var(--bar-h, 66px); z-index: 15; background: var(--site-canvas); border-bottom: 1px solid var(--site-line); margin-bottom: 32px; scroll-margin-top: var(--bar-h, 66px); }
+.tabs { display: flex; flex-wrap: wrap; gap: 0 36px; }
+.tabs a { position: relative; padding: 18px 0 16px; font: 600 20px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-faint); text-decoration: none; }
+.tabs a:hover { color: var(--site-fg); }
+.tabs a[aria-current="page"] { color: var(--site-fg); }
+.tabs a[aria-current="page"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--site-spark); }
+/* the Prototypes tab: the three prototypes stacked as bordered sections, a list on the left that follows the scroll */
+.protos { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start; }
+.protos[hidden] { display: none; }
+.sublist { position: sticky; top: calc(var(--bar-h, 66px) + var(--tabs-h, 58px) + 24px); display: flex; flex-direction: column; }
+.sublist a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; font: 400 16px/1.3 var(--f-mono); color: var(--site-faint); text-decoration: none; }
+.sublist a::after { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; border: 1px solid currentColor; }
+.sublist a:hover, .sublist a[aria-current="page"] { color: var(--site-fg); }
+.sublist a[aria-current="page"]::after { background: var(--site-spark); border-color: var(--site-spark); }
+.protos-main { min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.proto-sec { scroll-margin-top: calc(var(--bar-h, 66px) + var(--tabs-h, 58px) + 24px); }
+.proto-sec .proto-panel { padding: 0; gap: 0; }
+.proto-head { padding: 26px 30px 22px; }
+.proto-head .desc { margin: 8px 0 0 18px; max-width: 60ch; font-size: 15px; line-height: 1.5; letter-spacing: 0; }
+@media (max-width: 860px) {
+  .protos { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .sublist { position: static; flex-direction: row; gap: 24px; overflow-x: auto; scrollbar-width: none; }
+  .sublist a { flex: none; flex-direction: row-reverse; gap: 8px; font-size: 14px; padding: 4px 0; }
+  .proto-head { padding: 20px 18px 16px; }
+  .tabs { gap: 0 24px; } .tabs a { font-size: 17px; }
+}
 
 /* ---------- responsive ---------- */
 @media (max-width: 1180px) {
@@ -687,9 +704,9 @@ body[data-route="overview"] main { padding-top: 0; }
   <main>
 <!-- =====================================================================
      ADD A PAGE: copy one <section class="page" data-page="name" data-label="Name"> block.
-     The navigation under the Overview builds itself from these sections, in source order.
-     data-page is the link (#name): lowercase letters, digits and hyphens. data-desc is the
-     one-line summary on the Overview's navigation.
+     data-page is the link (#name): lowercase letters, digits and hyphens. Show a page in the
+     navigation by adding it to the tabs under the Overview (and to TAB in the script below);
+     a new prototype goes inside #protos with a line in its list.
      Put app UI inside <div class="ui float" data-spec="..."> and register the
      spec in the SPECS table at the bottom of this file.
      ===================================================================== -->
@@ -709,11 +726,18 @@ body[data-route="overview"] main { padding-top: 0; }
       <div class="ui float" data-spec="count-card"></div>
     </div>
   </div>
-  <nav class="explore" id="explore" aria-label="Explore the design system"></nav>
 </section>
 
+<div class="tabs-wrap" id="tabs">
+  <nav class="tabs" aria-label="Design system">
+    <a href="#prototype" data-tab="prototypes">Prototypes</a>
+    <a href="#components" data-tab="components">Components</a>
+    <a href="#screens" data-tab="screens">Screens</a>
+  </nav>
+</div>
+
 <!-- ============================ FOUNDATIONS ============================ -->
-<section class="page" data-page="foundations" data-label="Foundations" data-desc="Colour, type, space and shape" hidden>
+<section class="page" data-page="foundations" data-label="Foundations" hidden>
   <div class="page-head">
     <p class="eyebrow">Foundations</p>
     <h1>Color, type, space and shape.</h1>
@@ -779,7 +803,7 @@ body[data-route="overview"] main { padding-top: 0; }
 </section>
 
 <!-- ============================ COMPONENTS ============================ -->
-<section class="page" data-page="components" data-label="Components" data-desc="Live components and SwiftUI code" hidden>
+<section class="page" data-page="components" data-label="Components" hidden>
   <div class="page-head">
     <p class="eyebrow">Components</p>
     <h1>Every view, built once.</h1>
@@ -789,7 +813,7 @@ body[data-route="overview"] main { padding-top: 0; }
 </section>
 
 <!-- ============================ SCREENS ============================ -->
-<section class="page" data-page="screens" data-label="Screens" data-desc="Every state of the cash-out sheet" hidden>
+<section class="page" data-page="screens" data-label="Screens" hidden>
   <div class="page-head">
     <p class="eyebrow">Screens</p>
     <h1>One sheet, every state.</h1>
@@ -812,44 +836,46 @@ body[data-route="overview"] main { padding-top: 0; }
   </article>
 </section>
 
-<!-- ============================ PROTOTYPE ============================ -->
-<section class="page" data-page="prototype" data-label="Cash out flow" data-desc="Clickable cash-out prototype" hidden>
-  <div class="page-head">
-    <p class="eyebrow">Prototype</p>
-    <h1>Tap through the whole flow.</h1>
-    <p class="lede">Home, the cash-out sheet, History, cashing out, success and the wait timer.</p>
-  </div>
+<!-- ============================ PROTOTYPES (one tab, a list on the left) ============================ -->
+<div class="protos" id="protos">
+  <nav class="sublist" aria-label="Prototypes">
+    <a href="#prototype" data-sub="prototype">Cash out</a>
+    <a href="#onboarding" data-sub="onboarding">Onboarding</a>
+    <a href="#boost" data-sub="boost">2x coins</a>
+  </nav>
+  <div class="protos-main">
+<section class="page proto-sec" data-page="prototype" data-label="Cash out flow" hidden>
   <article class="panel proto-panel">
+    <div class="proto-head">
+      <h2>Cash out</h2>
+      <p class="desc">Home, the cash-out sheet, History, cashing out, success and the wait timer.</p>
+    </div>
     <iframe class="proto-frame" title="Cashout prototype" src="prototype/index.html" loading="lazy"></iframe>
   </article>
 </section>
-
-<!-- ============================ ONBOARDING ============================ -->
-<section class="page" data-page="onboarding" data-label="Onboarding flow" data-desc="Clickable onboarding prototype" hidden>
-  <div class="page-head">
-    <p class="eyebrow">Prototype</p>
-    <h1>A new player's first session.</h1>
-    <p class="lede">Coach marks point at the missions, the welcome reward pops, and coins fly into the balance.</p>
-  </div>
+<section class="page proto-sec" data-page="onboarding" data-label="Onboarding flow" hidden>
   <article class="panel proto-panel">
+    <div class="proto-head">
+      <h2>Onboarding</h2>
+      <p class="desc">A new player's first session: coach marks, the welcome reward and coins flying into the balance.</p>
+    </div>
     <iframe class="proto-frame" title="Onboarding prototype" src="prototype/onboarding.html" loading="lazy"></iframe>
   </article>
 </section>
-
-<!-- ============================ 2X COINS ============================ -->
-<section class="page" data-page="boost" data-label="2x coins flow" data-desc="Clickable 2x coins prototype" hidden>
-  <div class="page-head">
-    <p class="eyebrow">Prototype</p>
-    <h1>Double coins for 24 hours.</h1>
-    <p class="lede">The offer pop-up, the home banner, the live timer, progress and the time-over summary.</p>
-  </div>
+<section class="page proto-sec" data-page="boost" data-label="2x coins flow" hidden>
   <article class="panel proto-panel">
+    <div class="proto-head">
+      <h2>2x coins</h2>
+      <p class="desc">Double coins for 24 hours: the offer, the home banner, the live timer, progress and time over.</p>
+    </div>
     <iframe class="proto-frame" title="2x coins prototype" src="prototype/boost.html" loading="lazy"></iframe>
   </article>
 </section>
+  </div>
+</div>
 
 <!-- ============================ MOTION ============================ -->
-<section class="page" data-page="motion" data-label="Motion" data-desc="Durations, curves and springs" hidden>
+<section class="page" data-page="motion" data-label="Motion" hidden>
   <div class="page-head">
     <p class="eyebrow">Motion</p>
     <h1>System springs, nothing custom.</h1>
@@ -904,7 +930,7 @@ body[data-route="overview"] main { padding-top: 0; }
 </section>
 
 <!-- ============================ WRITING ============================ -->
-<section class="page" data-page="writing" data-label="Writing" data-desc="Copy rules and the words we ship" hidden>
+<section class="page" data-page="writing" data-label="Writing" hidden>
   <div class="page-head">
     <p class="eyebrow">Writing</p>
     <h1>“Cash out” is a verb.</h1>
@@ -1635,27 +1661,63 @@ body[data-route="overview"] main { padding-top: 0; }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
 
-  /* ---------- pages: one shows at a time, chosen by the #hash ---------- */
-  var pages = [].slice.call(document.querySelectorAll(".page"));
-  // The Overview's navigation: every other page, with its one-line summary.
-  var explore = document.getElementById("explore");
-  pages.slice(1).forEach(function (p) {
-    var a = el("a"); a.href = "#" + p.getAttribute("data-page");
-    a.appendChild(el("b", null, p.getAttribute("data-label"))); a.appendChild(el("span", null, p.getAttribute("data-desc") || ""));
-    explore.appendChild(a);
-  });
-  document.getElementById("explore-go").onclick = function () { explore.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  /* ---------- pages: the hero is always on top; the #hash picks the tab and, for Prototypes, the prototype ---------- */
+  var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
+  var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", components: "components", screens: "screens" };
+  var tabsWrap = document.getElementById("tabs"), protos = document.getElementById("protos");
+  document.getElementById("explore-go").onclick = function () { tabsWrap.scrollIntoView({ behavior: "smooth", block: "start" }); };
   var bar = document.querySelector(".bar");
-  function barHeight() { document.documentElement.style.setProperty("--bar-h", bar.offsetHeight + "px"); }
+  function barHeight() {
+    document.documentElement.style.setProperty("--bar-h", bar.offsetHeight + "px");
+    document.documentElement.style.setProperty("--tabs-h", tabsWrap.offsetHeight + "px");
+  }
   window.addEventListener("resize", barHeight); barHeight();
   function show(scroll) {
-    var id = location.hash.slice(1), cur = pages.filter(function (p) { return p.getAttribute("data-page") === id; })[0] || pages[0];
-    pages.forEach(function (p) { p.hidden = p !== cur; });
-    document.body.setAttribute("data-route", cur.getAttribute("data-page"));
-    if (scroll) window.scrollTo(0, 0);
+    var id = location.hash.slice(1), top = !id || id === "overview";
+    if (!TAB[id]) id = "prototype";
+    var tab = TAB[id];
+    pages.forEach(function (p) {
+      if (p === overview) return;
+      var pid = p.getAttribute("data-page");
+      p.hidden = tab === "prototypes" ? TAB[pid] !== "prototypes" : pid !== id;
+    });
+    protos.hidden = tab !== "prototypes";
+    tabsWrap.querySelectorAll("a").forEach(function (a) { if (a.getAttribute("data-tab") === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    markProto(id);
+    document.body.setAttribute("data-route", id);
+    if (scroll) land(top, id);
+  }
+  function markProto(id) {
+    protos.querySelectorAll(".sublist a").forEach(function (a) { if (a.getAttribute("data-sub") === id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  }
+  function land(top, id) {
+    if (top) window.scrollTo(0, 0);
+    else if (TAB[id] === "prototypes" && id !== "prototype") document.querySelector('[data-page="' + id + '"]').scrollIntoView({ block: "start" });
+    else tabsWrap.scrollIntoView({ block: "start" });
+  }
+  // Clicking the link you are already on still takes you there.
+  [].forEach.call(document.querySelectorAll(".tabs a, .sublist a"), function (a) {
+    a.addEventListener("click", function (e) { if (location.hash === a.getAttribute("href")) { e.preventDefault(); show(true); } });
+  });
+  // While you scroll the Prototypes tab, the list marks the section you are reading.
+  if (window.IntersectionObserver) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting || protos.hidden) return;
+        var pid = en.target.getAttribute("data-page");
+        markProto(pid);
+        if (location.hash !== "#" + pid && history.replaceState) history.replaceState(null, "", "#" + pid);
+      });
+    }, { rootMargin: "-35% 0px -60% 0px" });
+    [].forEach.call(protos.querySelectorAll(".proto-sec"), function (p) { spy.observe(p); });
   }
   window.addEventListener("hashchange", function () { show(true); });
   show(false);
+  // A link straight to a tab (e.g. #onboarding) lands on it once the page has finished laying out.
+  if (location.hash && location.hash !== "#overview") {
+    var first = location.hash.slice(1), go = function () { land(false, TAB[first] ? first : "prototype"); };
+    if (document.readyState === "complete") setTimeout(go, 0); else window.addEventListener("load", function () { setTimeout(go, 0); });
+  }
 })();
 </script>
 

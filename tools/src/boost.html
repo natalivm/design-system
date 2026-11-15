@@ -6,7 +6,7 @@
 <style>
 /* Layout: a phone running the 2x coins boost flow, with a scenario panel beside it. */
 :root {
-  --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35;
+  --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2);
   --gold: var(--gold-400);
   --claim-b: var(--mint-400);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
@@ -21,7 +21,7 @@ button { font-family: var(--font); }
   padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
 /* panel */
-.panel { width: 320px; max-width: 100%; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.panel { width: 320px; max-width: 100%; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); overflow: hidden; }
 .panel .group { display: flex; flex-direction: column; }
 .panel .group:first-child { padding: 22px 22px 20px; }
 .panel h1 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
@@ -35,11 +35,11 @@ button { font-family: var(--font); }
 .chip[aria-pressed="true"] { background: rgba(255,255,255,.05); color: #fff; font-weight: 600; }
 .chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
 .chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
-.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: #05070a; border: 1px solid var(--line); }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: rgba(0,0,0,.2); border: 1px solid var(--line); }
 .playbtn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: 600 16px/20px var(--font); cursor: pointer; transition: background .18s, color .18s; }
 .playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
 .playbtn:hover { color: var(--text); }
-.playbtn[aria-pressed="true"] { background: #fff; color: #07090c; }
+.playbtn[aria-pressed="true"] { background: #fff; color: #05493a; }
 .reset { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; border: 0; background: none; cursor: pointer; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
 .reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
 .reset:hover { color: #fff; }
