@@ -722,10 +722,11 @@ main { padding-top: 28px; }
 .comp > .note { order: 4; }
 .comp .comp-head h2 { align-items: center; flex-wrap: wrap; gap: 8px 10px; font-size: 15px; font-weight: 500; letter-spacing: -.005em; }
 .comp .comp-head h2::before { width: 5px; height: 5px; transform: translateY(-1px); }
+.comp-chips { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
 .comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
 .comp-vars:hover { color: var(--site-fg); }
 .comp-vars[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
-.comp-toggle { margin-left: auto; flex: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
+.comp-toggle { flex: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
 .comp-toggle:hover { color: var(--site-fg); }
 .comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
 
@@ -1591,7 +1592,7 @@ main { padding-top: 28px; }
   var compRoot = document.getElementById("components");
   var CARDS = COMPONENTS.map(function (c) {
     var a = el("article", "panel comp"), head = el("div", "comp-head");
-    var h2 = el("h2", null, c.name);
+    var h2 = el("h2", null, c.name), chips = el("span", "comp-chips");
     if (c.specs.length > 1) {
       /* With no Full view, this is how the other variants are reached. */
       var vars = el("button", "comp-vars", c.specs.length + " variants");
@@ -1603,13 +1604,14 @@ main { padding-top: 28px; }
         vars.setAttribute("aria-expanded", open ? "true" : "false");
         vars.title = open ? "Show one variant" : "Show every variant";
       });
-      h2.appendChild(vars);
+      chips.appendChild(vars);
     }
     var tog = el("button", "comp-toggle", "</>");
     tog.type = "button"; tog.setAttribute("aria-expanded", "false");
     tog.setAttribute("aria-label", "Show the SwiftUI for " + c.name);
     tog.title = "Show the SwiftUI";
-    h2.appendChild(tog);
+    chips.appendChild(tog);
+    h2.appendChild(chips);
     head.appendChild(h2);
     var ul = el("ul", "points"); c.pts.forEach(function (p) { ul.appendChild(el("li", null, p)); }); head.appendChild(ul);
     a.appendChild(head);
