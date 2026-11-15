@@ -1,7 +1,7 @@
 """Build everything generated in this repo from its sources.
 
   python3 tools/build.py           tokens.css, components, prototypes, previews and the home page
-  python3 tools/build.py --site    the same, then the Vite build into site/dist (run `npm install` in site/ once)
+  python3 tools/build.py --site    the same, then the published site in dist/ (what GitHub Pages serves)
   python3 tools/build.py --check   rebuild, then fail if a committed file changed (CI runs this)
 
 Sources                                   Generated
@@ -16,7 +16,7 @@ tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
 """
-import base64, json, os, re, subprocess, sys
+import base64, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def P(*a): return os.path.join(ROOT, *a)
@@ -195,9 +195,17 @@ def home_page():
 
 
 def site():
-    if not os.path.isdir(P('site', 'node_modules')):
-        sys.exit('site/node_modules is missing: run `npm install` in site/ once, then build with --site again.')
-    subprocess.run(['npm', 'run', 'build'], cwd=P('site'), check=True)
+    """dist/: the home page at the root and the three prototypes under prototype/, as GitHub Pages serves them."""
+    out = P('dist')
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(os.path.join(out, 'prototype'))
+    shutil.copyfile(P('website', 'index.html'), os.path.join(out, 'index.html'))
+    for src, name in (('cashout-prototype.html', 'index.html'), ('onboarding-prototype.html', 'onboarding.html'), ('boost-prototype.html', 'boost.html')):
+        body = read(P('prototype', src))
+        if not body.lstrip().lower().startswith('<!doctype'):
+            body = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+                    '<style>html,body{margin:0}</style>\n</head>\n<body>\n' + body + '\n</body>\n</html>\n')
+        write(os.path.join(out, 'prototype', name), body)
 
 
 def build_all(with_site=False):
@@ -212,4 +220,4 @@ if __name__ == '__main__':
         r = subprocess.run(['git', 'status', '--porcelain', '--'] + GENERATED, cwd=ROOT, capture_output=True, text=True)
         if r.stdout.strip():
             sys.exit('Generated files are out of date. Run `python3 tools/build.py` and commit the result:\n' + r.stdout)
-    print('built: tokens.css, components, 3 prototypes, previews, website/index.html' + (', site/dist' if '--site' in args else ''))
+    print('built: tokens.css, components, 3 prototypes, previews, website/index.html' + (', dist/' if '--site' in args else ''))
