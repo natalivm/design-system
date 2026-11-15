@@ -15,7 +15,7 @@
       h("div", { className: "mr-main" }, h("div", { className: "mr-title" }, props.title),
         h("div", { className: "mr-bar" }, h("i", { style: { width: (total ? p / total * 100 : 0) + "%" } }), h("span", null, p + "/" + total))),
       h("button", { type: "button", className: "mr-btn", disabled: st === "claimed" || st === "progress", onClick: props.onAction },
-        st === "claimed" ? h("span", { style: { marginRight: 4, verticalAlign: -2, display: "inline-block" } }, check("#baffc6")) : null, label));
+        st === "claimed" ? h("span", { style: { marginRight: 4, verticalAlign: -2, display: "inline-block" } }, check("#fff")) : null, label));
   }
 
   function MissionCard(props) {

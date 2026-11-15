@@ -41,12 +41,13 @@ extension ShapeStyle where Self == LinearGradient {
 
 // MARK: Type — Plus Jakarta Sans, scaled like the system text styles
 enum DSTextStyle {
-    case amount, largeTitle, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
+    case amount, largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
 
     var spec: (size: CGFloat, weight: Font.Weight, relativeTo: Font.TextStyle) {
         switch self {
         case .amount:      (54, .heavy,    .largeTitle)
         case .largeTitle:  (34, .bold,     .largeTitle)
+        case .title1:      (28, .bold,     .title)
         case .title2:      (22, .bold,     .title2)
         case .title3:      (20, .semibold, .title3)
         case .headline:    (17, .semibold, .headline)

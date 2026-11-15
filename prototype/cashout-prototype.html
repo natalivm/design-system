@@ -197,6 +197,10 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 @keyframes ripple { from { transform: scale(.5); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
 .ring { position: absolute; z-index: 79; pointer-events: none; opacity: 0; transform: scale(1.08); box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(20,100,255,.95), 0 8px 24px rgba(20,100,255,.35); transition: opacity .25s, transform .35s var(--snappy); }
 .ring.show { opacity: 1; transform: none; }
+.playbtn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: 600 15px/20px var(--font); cursor: pointer; }
+.playbtn[aria-pressed="true"] { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
+.playbtn:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
+.playnote[hidden] { display: none; }
 .playnote { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--text); }
 .playnote::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0bdd66; animation: dot 1s infinite; }
 
@@ -290,7 +294,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     </div>
     <div class="group">
       <span class="label">Try</span>
-      <p>The flow plays by itself and loops through every state, outlining each control before it's tapped. Pick a state to jump to it. Tap the phone at any time to take over.</p>
+      <p>Press Play to watch the flow, or Pause and tap through it yourself. Picking a state jumps to it. Tapping the phone also pauses.</p>
+      <button class="playbtn" id="playBtn" aria-pressed="false">▶ Play</button>
       <p class="playnote" id="playNote" hidden>Playing. Tap the phone to take over.</p>
     </div>
     <button class="reset" id="reset">Reset prototype</button>
@@ -495,7 +500,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     limit: [["stripCash", 2000], ["cashOut", 3400], ["successDone", 0]]
   };
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function setPlaying(on) { $("playNote").hidden = !on; if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
+  var playing = false;
+  function setPlaying(on) { playing = on; $("playNote").hidden = !on; var b = $("playBtn"); b.textContent = on ? "\u23f8 Pause" : "\u25b6 Play"; b.setAttribute("aria-pressed", on ? "true" : "false"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
   function stopPlay() { runId++; setPlaying(false); }
   function tapOn(el, id) {
     if (!el || id !== runId) return Promise.resolve();
@@ -515,17 +521,13 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   function autoplay(s) {
     var id = ++runId, p = sleep(500); setPlaying(true);
     SCRIPTS[s].forEach(function (st) { p = p.then(function () { if (id !== runId) return; return tapOn($(st[0]), id).then(function () { return sleep(st[1]); }); }); });
-    // Loop: when a scenario ends, pause, then play the next one.
-    p.then(function () { if (id !== runId) return; return sleep(2600).then(function () {
-      if (id !== runId) return;
-      var order = ["earned", "empty", "waiting", "limit"];
-      startScenario(order[(order.indexOf(s) + 1) % order.length]);
-    }); });
+    p.then(function () { if (id === runId) setPlaying(false); });   // plays once, no loop
   }
   // Start playing on load.
   setTimeout(function () { if (runId === 0) startScenario("earned"); }, 1200);
   $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
-  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s")); }; });
+  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
+  $("playBtn").onclick = function () { if (playing) stopPlay(); else startScenario(S.scenario); };
   $("reset").onclick = function () { startScenario("earned", true); };
 
   /* status bar color follows what's under it */
