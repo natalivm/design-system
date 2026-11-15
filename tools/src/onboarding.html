@@ -2,13 +2,13 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the onboarding missions flow, with a slim scenario panel beside it. */
 :root {
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
-  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --navy-900: #000748; --ink: #02266e; --ink-secondary: #5b6378;
-  --mission-top: #a712f1; --mission-bottom: #0017aa; --row: #eff4fe; --row-coin: #8bd3ff; --gold: #ffdd20; --mint: #0bdd66;
-  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #0b2a12; --orange: #ff7a1a; /* orange-500 */
+  --mission-top: var(--violet-500); --mission-bottom: var(--indigo-800); --row: #eff4fe; --row-coin: var(--sky-200); --gold: var(--gold-400); --mint: var(--mint-400);
+  --claim-b: var(--mint-400); --orange: var(--orange-500);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -64,7 +64,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .s-conv { flex: none; width: 76px; background: var(--gold); align-items: center; }
 .s-conv b { font-size: 13px; line-height: 18px; font-weight: 700; }
 .s-cash { flex: 1; }
-.s-go { flex: none; width: 48px; background: linear-gradient(200deg, var(--claim-a), var(--claim-b)); align-items: center; padding: 0 !important; }
+.s-go { flex: none; width: 48px; background: var(--claim-b); align-items: center; padding: 0 !important; }
 .bump { animation: bump .28s var(--bouncy); }
 @keyframes bump { 50% { transform: scale(1.35); } }
 .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 87px; z-index: 20; background: #fff; }
@@ -111,13 +111,14 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .mr-btn::after { content: ""; position: absolute; inset: -6px -4px; }
 .mr-btn:active { transform: scale(.95); opacity: .8; }
 .mr-btn:disabled { cursor: default; }
-.mr.claim .mr-btn { background: linear-gradient(200deg, var(--claim-a), var(--claim-b)); color: var(--claim-ink); animation: pulse 1.2s var(--smooth) infinite; }
-@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(11,221,102,.28); } }
+.mr.claim .mr-btn { background: var(--claim-b); color: var(--claim-ink); animation: ob-pulse 1.2s var(--smooth) infinite; }
+@keyframes ob-pulse { 50% { box-shadow: 0 0 0 6px rgba(11,221,102,.28); } }
 .mr.progress .mr-btn { opacity: .45; }
 .mr.claimed { background: var(--green-700); color: #fff; box-shadow: inset 0 0 0 2px var(--mint); }
 .mr.claimed .mr-coin { background: rgba(0,0,0,.18); opacity: .7; }
 .mr.claimed .mr-btn { background: none; color: #fff; animation: none; padding: 0 6px; }
-.mr-btn:focus-visible, .mc-toggle:focus-visible, .pp-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mc-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mr-btn:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 
 /* ---------- CoachMark ---------- */
 .dim { position: absolute; inset: 0; z-index: 30; background: rgba(8,10,28,.78); opacity: 0; pointer-events: none; transition: opacity .45s var(--smooth); }
@@ -177,7 +178,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 /* ---------- Congrats extras, boost offer, rewarded video ---------- */
 .amount-row { display: flex; align-items: flex-start; justify-content: center; gap: 8px; }
 .x2 { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--gold); transform: rotate(-8deg); text-shadow: 0 2px 0 rgba(60,20,0,.5); }
-.adtag { display: inline-block; margin-left: 10px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
 .boost-row { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 22px; line-height: 28px; font-weight: 700; }
 .boost-row b { color: var(--gold); font-weight: 800; text-shadow: 0 2px 0 rgba(60,20,0,.5); }
 .boost-row img { width: 32px; height: 32px; }
@@ -188,7 +188,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .ad-bar i { display: block; height: 100%; width: 0; background: #fff; }
 .ad.on .ad-bar i { width: 100%; transition: width 1.7s linear; }
 .mc-boost { display: none; position: absolute; left: 132px; right: 12px; top: 72px; justify-content: center; }
-.mc-boost span { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 999px; background: linear-gradient(200deg, #ffb347, var(--orange)); color: #2a1200; font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mc-boost span { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .mc.boosted .mc-done { display: none; } .mc.boosted .mc-boost { display: flex; }
 
 /* ---------- push notification ---------- */
@@ -212,7 +212,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .ring { position: absolute; z-index: 91; pointer-events: none; opacity: 0; transform: scale(1.08); box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(20,100,255,.95); transition: opacity .25s, transform .35s var(--snappy); }
 .ring.show { opacity: 1; transform: none; }
 
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; } }
 /* panel:start */
 .panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
 .panel .group { gap: 0; }
@@ -251,7 +251,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
               <div class="s-coins" id="cellCoins"><small>Game coins</small><b><span id="coins">236,378</span><img id="coinTarget" src="{{coin}}" alt=""></b></div>
               <div class="s-conv" id="cellConv"><small>Convert in:</small><b>3h 45m</b></div>
               <div class="s-cash" id="cellCash"><small>Cash out</small><b>$5.37</b></div>
-              <div class="s-go" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0b2a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="8"/><path d="M11 9v8M13.5 10.5h-3.2a1.5 1.5 0 0 0 0 3h1.4a1.5 1.5 0 0 1 0 3H8.5M16 3h5v5M21 3l-5 5"/></svg></div>
+              <div class="s-go" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="8"/><path d="M11 9v8M13.5 10.5h-3.2a1.5 1.5 0 0 0 0 3h1.4a1.5 1.5 0 0 1 0 3H8.5M16 3h5v5M21 3l-5 5"/></svg></div>
             </div>
           </div>
           <div class="mc-wrap">
@@ -278,7 +278,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
         <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Welcome reward!</h2>
             <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
             <div class="pp-amount" id="rewardAmount">+1,000</div>
@@ -288,23 +288,23 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         </div>
 
         <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
             <div class="amount-row"><div class="pp-amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
-            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="adtag">Watch ad</span></button>
+            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="pp-adtag">Watch ad</span></button>
           </div></div></div>
           <button class="pp-dismiss" id="congratsClose">Claim 1,500</button>
         </div>
 
         <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Get a 2x coins boost</p>
             <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
             <div class="boost-row"><b>2x coins</b><img src="{{clock}}" alt="">15 min</div>
-            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="adtag">Watch ad</span></button>
+            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="pp-adtag">Watch ad</span></button>
           </div></div></div>
           <button class="pp-dismiss" id="boostSkip">Skip</button>
         </div>
@@ -370,6 +370,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   </aside>
 </div>
 
+<script>{{kit_js}}</script>
 <script>
 (function () {
   var COIN = "{{coin}}";
@@ -391,15 +392,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   /* ---------- helpers ---------- */
   var toastT;
   function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("on"); }, 1700); }
-  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function setStep(f) { Array.prototype.forEach.call(($("flow") || { children: [] }).children, function (li) { li.classList.toggle("on", li.getAttribute("data-f") === f); }); }
-  function scale() { var scr = $("screen"); return scr.getBoundingClientRect().width / scr.offsetWidth; }
-  function local(el) { var sr = $("screen").getBoundingClientRect(), k = scale(), r = el.getBoundingClientRect(); return { x: (r.left - sr.left) / k, y: (r.top - sr.top) / k, w: r.width / k, h: r.height / k }; }
-  function countCoins(to, ms) {
-    var from = S.coins, t0 = null; S.coins = to;
-    function f(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / ms); $("coins").textContent = nf.format(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(f); }
-    requestAnimationFrame(f);
-  }
+  var sleep = KIT.sleep, local = KIT.local;
+  function isOn(id) { return $(id).classList.contains("on"); }
 
   /* ---------- render ---------- */
   function renderRows() {
@@ -420,7 +414,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   /* ---------- coach marks ---------- */
   function clearLift() { Array.prototype.forEach.call(document.querySelectorAll(".lift"), function (e) { e.classList.remove("lift"); }); }
   function coach(html, target, handTarget, withNext) {
-    var targets = [].concat(target); S.coachSeq = (S.coachSeq || 0) + 1;
+    var targets = [].concat(target); S.coachSeq = (S.coachSeq || 0) + 1; $("mc").classList.remove("collapsed");
     clearLift(); targets.forEach(function (t) { t.classList.add("lift"); }); $("dim").classList.add("on"); $("homeInd").classList.add("light");
     $("coachText").innerHTML = html; $("coachNext").hidden = !withNext;
     var last = local(targets[targets.length - 1]), c = $("coach"); c.style.top = Math.min(last.y + last.h + 78, 640) + "px"; c.classList.add("on");
@@ -431,54 +425,40 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 
   /* ---------- flying coins ---------- */
   function flyCoins(fromEl, n, add) {
-    var a = local(fromEl), t = local($("coinTarget")), scr = $("screen");
-    var sx = a.x + a.w / 2 - 15, sy = a.y + a.h / 2 - 15, tx = t.x + t.w / 2 - 15, ty = t.y + t.h / 2 - 15;
-    setStep("fly");
-    for (var i = 0; i < n; i++) (function (i) {
-      var c = document.createElement("img"); c.src = COIN; c.className = "fly"; c.alt = "";
-      var ox = (Math.random() - .5) * 120, oy = (Math.random() - .5) * 70;
-      c.style.left = sx + "px"; c.style.top = sy + "px"; scr.appendChild(c);
-      var mx = (tx - sx) * 0.35 + ox * 1.6 - 60, my = (ty - sy) * 0.45 + oy;
-      var an = c.animate([
-        { transform: "translate(0,0) scale(.3) rotate(0deg)", opacity: 0 },
-        { transform: "translate(" + ox + "px," + oy + "px) scale(1.15) rotate(120deg)", opacity: 1, offset: .22, easing: "cubic-bezier(.3,0,.4,1)" },
-        { transform: "translate(" + mx + "px," + my + "px) scale(1) rotate(300deg)", opacity: 1, offset: .62, easing: "cubic-bezier(.5,0,.8,.6)" },
-        { transform: "translate(" + (tx - sx) + "px," + (ty - sy) + "px) scale(.55) rotate(540deg)", opacity: 1 }
-      ], { duration: 900 + Math.random() * 250, delay: i * 45, fill: "both" });
-      an.onfinish = function () { c.remove(); var tg = $("coinTarget"); tg.classList.remove("bump"); void tg.offsetWidth; tg.classList.add("bump"); };
-    })(i);
-    setTimeout(function () { countCoins(S.coins + add, 700 + n * 40); }, 700);
-    return sleep(1000 + n * 45 + 450);
+    var sc = S, from = S.coins; S.coins += add;
+    setTimeout(function () { if (S === sc) KIT.countTo($("coins"), from, sc.coins, 700 + n * 40, function (v) { return nf.format(Math.round(v)); }, function () { return S === sc; }); }, 700);
+    return KIT.flyCoins(fromEl, $("coinTarget"), n, COIN);
   }
 
   /* ---------- flow ---------- */
   // First session: three hints the player taps through, then the first task.
   var INTRO = [
-    function () { setStep("balance"); coach("Collect <em>game coins!</em>", $("cellCoins"), $("cellCoins"), true); },
-    function () { setStep("balance"); coach("In <em>3h 45m</em> your coins<br>turn into <strong>money</strong>", [$("cellConv"), $("cellCash")], $("cellConv"), true); },
-    function () { setStep("intro"); coach("Complete your <em>tasks</em><br>to earn <strong>big!</strong>", $("mc"), $("row2"), true); }
+    function () { coach("Collect <em>game coins!</em>", $("cellCoins"), $("cellCoins"), true); },
+    function () { coach("In <em>3h 45m</em> your coins<br>turn into <strong>money</strong>", [$("cellConv"), $("cellCash")], $("cellConv"), true); },
+    function () { coach("Complete your <em>tasks</em><br>to earn <strong>big!</strong>", $("mc"), $("row2"), true); }
   ];
   function intro() { S.intro = 0; INTRO[0](); }
   function nextHint() { if (S.intro == null) return; S.intro++; if (S.intro < INTRO.length) INTRO[S.intro](); else { S.intro = null; focusFirst(); } }
-  function focusFirst() { setStep("first"); coach("First task:<br>claim your reward!", $("row0"), $("btn0"), false); }
+  function focusFirst() { coach("First task:<br>claim your reward!", $("row0"), $("btn0"), false); }
   function focusSecond() {
-    setStep("second"); coach("Now start your<br>second task!", $("row1"), $("btn1"), false);
+    coach("Now start your<br>second task!", $("row1"), $("btn1"), false);
     // The overlay fades by itself; the hand keeps pointing until the player taps Go.
     var seq = S.coachSeq;
     setTimeout(function () { if (S.coachSeq !== seq || S.m[1] !== "go") return; clearLift(); $("dim").classList.remove("on"); $("coach").classList.remove("on"); $("homeInd").classList.remove("light"); }, 2600);
   }
   function showReward() {
-    uncoach(); setStep("reward"); $("homeInd").classList.add("light");
+    uncoach(); $("homeInd").classList.add("light");
     $("reward").classList.add("on"); glowReward.start();
     var el = $("rewardAmount"), t0 = null;
     (function f(ts) { if (!t0) t0 = ts || performance.now(); var p = Math.min(1, ((ts || t0) - t0) / 800); el.textContent = "+" + nf.format(Math.round(1000 * (1 - Math.pow(1 - p, 3))));  if (p < 1) requestAnimationFrame(f); })();
   }
   function claimRow(i, fromEl) {
-    S.busy = true;
+    S.busy = true; var sc = S;
     return flyCoins(fromEl, i === 2 ? 16 : 12, MISSIONS[i].coins).then(function () {
+      if (S !== sc) return;
       S.m[i] = "claimed"; S.busy = false; S.settle = Date.now() + 1400; renderRows();
-      if (S.m.every(function (x) { return x === "claimed"; })) return sleep(700).then(showCongrats);
-      setStep("play");
+      if (S.m.every(function (x) { return x === "claimed"; })) return sleep(700).then(function () { if (S === sc) showCongrats(); });
+     
     });
   }
   function onRow(i) {
@@ -488,19 +468,19 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       if (i === 0) { showReward(); return; }
       uncoach(); claimRow(i, $("btn" + i));
     } else if (st === "go") {
-      uncoach(); setStep("play");
+      uncoach();
       var m = MISSIONS[i]; S.m[i] = "progress"; renderRows();
       toast(i === 1 ? "Playing Water Sort…" : "Playing Kitchen Ninja…");
-      var n = 0, row = i;
+      var n = 0, row = i, sc = S;
       var iv = setInterval(function () {
-        if (S.m[row] !== "progress") { clearInterval(iv); return; }
+        if (S !== sc || S.m[row] !== "progress") { clearInterval(iv); return; }
         n++; S.p[row] = n;
         var bar = $("row" + row).querySelector(".mr-bar"); bar.firstChild.style.width = (n / m.total * 100) + "%"; bar.lastChild.textContent = n + "/" + m.total;
-        if (n >= m.total) { clearInterval(iv); setTimeout(function () { if (S.m[row] === "progress") { S.m[row] = "claim"; renderRows(); toast("Mission done. Claim your coins!"); } }, 450); }
+        if (n >= m.total) { clearInterval(iv); setTimeout(function () { if (S === sc && S.m[row] === "progress") { S.m[row] = "claim"; renderRows(); toast("Mission done. Claim your coins!"); } }, 450); }
       }, m.total > 1 ? 190 : 900);
     }
   }
-  function showCongrats() { uncoach(); setStep("congrats"); $("homeInd").classList.add("light"); $("congrats").classList.add("on"); glowCongrats.start(); }
+  function showCongrats() { uncoach(); $("homeInd").classList.add("light"); $("congrats").classList.add("on"); glowCongrats.start(); }
   // A rewarded video stands in for the ad; the reward unlocks when it ends.
   function watchVideo() {
     var ad = $("ad"); ad.classList.add("on");
@@ -519,32 +499,36 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       return sleep(500).then(function () { if (S === sc) showBoost(); });
     });
   }
-  function showBoost() { setStep("boost"); $("homeInd").classList.add("light"); $("boost").classList.add("on"); glowBoost.start(); }
+  function showBoost() { $("homeInd").classList.add("light"); $("boost").classList.add("on"); glowBoost.start(); }
   var boostT = 0;
   function endBoost(taken) {
     if (S.busy || !isOn("boost")) return; var sc = S;
     var done = function () {
       if (S !== sc) return;
-      S.busy = false; S.ended = true; $("boost").classList.remove("on"); $("homeInd").classList.remove("light"); setStep("done");
+      S.busy = false; S.ended = true; $("boost").classList.remove("on"); $("homeInd").classList.remove("light");
       if (taken) {
         $("mc").classList.add("boosted"); toast("2x coins for 15 minutes"); var left = 900; clearInterval(boostT);
-        boostT = setInterval(function () { left = Math.max(0, left - 1); $("boostClock").textContent = Math.floor(left / 60) + ":" + (left % 60 < 10 ? "0" : "") + left % 60; }, 1000);
+        boostT = setInterval(function () {
+          left = Math.max(0, left - 1); $("boostClock").textContent = Math.floor(left / 60) + ":" + (left % 60 < 10 ? "0" : "") + left % 60;
+          if (!left) { clearInterval(boostT); $("mc").classList.remove("boosted"); toast("2x coins has ended"); }
+        }, 1000);
       } else toast("All missions complete");
     };
     if (taken) { S.busy = true; watchVideo().then(done); } else done();
   }
-  function showTerms() { setStep("terms"); $("terms").classList.add("on"); }
-  $("termsOk").onclick = function () { $("terms").classList.remove("on"); setStep("trust"); $("trust").classList.add("on"); };
-  function leaveTrust() { $("trust").classList.remove("on"); setTimeout(function () { if (S.scenario === "first") intro(); }, 450); }
+  function showTerms() { $("terms").classList.add("on"); }
+  $("termsOk").onclick = function () { if (!isOn("terms")) return; $("terms").classList.remove("on"); $("trust").classList.add("on"); };
+  function leaveTrust() { if (!isOn("trust")) return; var sc = S; $("trust").classList.remove("on"); setTimeout(function () { if (S === sc && S.scenario === "first") intro(); }, 450); }
   $("trustOk").onclick = leaveTrust; $("trustSkip").onclick = leaveTrust;
-  $("push").onclick = function () { $("push").classList.remove("on"); setTimeout(focusSecond, 350); };
+  $("push").onclick = function () { var sc = S; $("push").classList.remove("on"); setTimeout(function () { if (S === sc && S.m[1] === "go") focusSecond(); }, 350); };
   $("boostOk").onclick = function () { endBoost(true); };
   $("boostSkip").onclick = function () { endBoost(false); };
   $("coachNext").onclick = nextHint;
-  $("dim").onclick = function () { if ($("coachNext").hidden === false) nextHint(); };
+  $("dim").onclick = function () { if ($("coachNext").hidden === false) nextHint(); else uncoach(); };
   $("rewardOk").onclick = function () {
+    if (!isOn("reward") || S.busy) return; var sc = S;
     $("reward").classList.remove("on"); $("homeInd").classList.remove("light");
-    claimRow(0, $("rewardPile")).then(function () { return sleep(500); }).then(function () { if (S.m[1] === "go" && S.scenario === "first") focusSecond(); });
+    claimRow(0, $("rewardPile")).then(function () { return sleep(500); }).then(function () { if (S === sc && S.m[1] === "go" && S.scenario === "first") focusSecond(); });
   };
   $("congratsOk").onclick = function () { finish(2); };
   $("congratsClose").onclick = function () { finish(1); };
@@ -664,70 +648,36 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   var glowBoost = makeGlow($("boostPile"), shown("boost"), [1.0, 0.62, 0.22]);
 
   /* ---------- scenarios and autoplay ---------- */
-  var runId = 0;
-  var playing = false;
-  function setPlaying(on) { playing = on; $("playBtn").setAttribute("aria-pressed", on ? "true" : "false"); $("pauseBtn").setAttribute("aria-pressed", on ? "false" : "true"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
-  function stopPlay() { runId++; setPlaying(false); }
-  function tapOn(el, id) {
-    if (!el || id !== runId) return Promise.resolve();
-    var tap = $("tap"), ring = $("ring"), r = local(el), pad = 5, rad = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 12;
-    tap.style.left = (r.x + r.w / 2) + "px"; tap.style.top = (r.y + r.h / 2) + "px"; tap.classList.add("show");
-    ring.style.left = (r.x - pad) + "px"; ring.style.top = (r.y - pad) + "px"; ring.style.width = (r.w + pad * 2) + "px"; ring.style.height = (r.h + pad * 2) + "px";
-    ring.style.borderRadius = Math.min(rad + pad, (r.h + pad * 2) / 2) + "px";
-    setTimeout(function () { if (id === runId) ring.classList.add("show"); }, 350);
-    return sleep(950).then(function () { if (id !== runId) return; tap.classList.add("down"); return sleep(220); })
-      .then(function () { if (id !== runId) return; tap.classList.remove("down"); ring.classList.remove("show"); el.click(); return sleep(300); })
-      .then(function () { if (id === runId) tap.classList.remove("show"); });
-  }
   // Autoplay looks at what is on screen and taps the next control, so Play can start from any state.
-  function isOn(id) { return $(id).classList.contains("on"); }
   function nextTarget() {
-    if (isOn("ad")) return null;
+    if (isOn("ad") || S.entering || S.busy || Date.now() < (S.settle || 0)) return null;
     if (isOn("terms")) return $("termsOk");
     if (isOn("trust")) return $("trustOk");
     if (isOn("push")) return $("push");
     if (isOn("reward")) return $("rewardOk");
     if (isOn("congrats")) return $("congratsOk");
     if (isOn("boost")) return $("boostOk");
-    if (S.busy || Date.now() < (S.settle || 0)) return null;
     if (isOn("coach") && !$("coachNext").hidden) return $("coachNext");
     if (S.ended) return "done";
     for (var i = 0; i < 3; i++) { if (S.m[i] === "progress") return null; if (S.m[i] === "claim" || S.m[i] === "go") return $("btn" + i); }
     return null;
   }
-  function autoplay() {
-    var id = ++runId, idle = 0; setPlaying(true);
-    (function step() {
-      if (id !== runId) return;
-      var t = nextTarget();
-      if (t === "done" || idle > 60) { setPlaying(false); return; }
-      if (!t) { idle++; sleep(300).then(step); return; }
-      idle = 0; tapOn(t, id).then(function () { return sleep(900); }).then(step);
-    })();
-  }
+  function autoplay() { KIT.autoplay(nextTarget); }
   function startScenario(s, noPlay) {
     Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
     ["reward", "congrats", "boost", "ad", "terms", "trust", "push"].forEach(function (id) { $(id).classList.remove("on"); }); uncoach(); clearInterval(boostT);
-    Array.prototype.forEach.call(document.querySelectorAll(".fly"), function (c) { c.remove(); });
-    S = fresh(s); $("mc").classList.remove("collapsed", "finished", "boosted"); $("boostClock").textContent = "15:00"; renderRows(); $("home").scrollTop = 0;
-    setTimeout(function () { if (S.scenario !== s) return; if (s === "first") showTerms(); else if (s === "progress") focusSecond(); else if (s === "push") { setStep("second"); $("push").classList.add("on"); } else showCongrats(); }, 500);
-    if (noPlay) stopPlay(); else autoplay(s);
+    KIT.clearCoins();
+    S = fresh(s); S.entering = true; $("mc").classList.remove("collapsed", "finished", "boosted"); $("boostClock").textContent = "15:00"; renderRows(); $("home").scrollTop = 0;
+    var sc = S;
+    setTimeout(function () { if (S !== sc) return; S.entering = false; if (s === "first") showTerms(); else if (s === "progress") focusSecond(); else if (s === "push") { $("push").classList.add("on"); } else showCongrats(); }, 500);
+    if (noPlay) KIT.stopPlay(); else autoplay();
   }
-  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
-  $("playBtn").onclick = function () { if (!playing) autoplay(); };
-  $("pauseBtn").onclick = function () { if (playing) stopPlay(); };
-  $("reset").onclick = function () { startScenario("first", true); };
-  $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
+  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !KIT.playing); }; });
+  KIT.wire(autoplay, function () { startScenario("first", true); });
+  KIT.overlays(["terms", "trust", "reward", "congrats", "boost", "ad", "push", "coach", "dim"], { noFocus: ["push", "dim"] });
+  KIT.fit();
 
-  /* fit the phone to the window */
-  function fit() {
-    var availH = window.innerHeight - 48, availW = Math.min(window.innerWidth - 32, 417);
-    var s = Math.min(1, availW / 417, Math.max(0.42, availH / 876));
-    $("device").style.transform = "scale(" + s + ")"; $("deviceWrap").style.width = (417 * s) + "px"; $("deviceWrap").style.height = (876 * s) + "px";
-  }
-  window.addEventListener("resize", fit); fit();
-
-  S = fresh("first"); renderRows(); setStep("terms");
+  S = fresh("first"); renderRows();
   startScenario("first", true);   // starts paused on the first screen; Play runs it
 })();
 </script>

@@ -9,7 +9,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `prototype/boost-prototype.html` | Clickable prototype of the 2x coins boost: the offer pop-up, the home banner with a live timer, progress and the time-over summary. |
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
-| `tools/` | Scripts and source art used to generate the files above. |
+| `tools/` | Sources (`tools/src/`), art (`tools/assets/`) and the build (`tools/build.py`) that generates the files above. |
 | `website/index.html` | The website's home page: the green BestPlay Design System page, with Overview, Foundations, Components, Screens, Prototype, Motion and Writing pages. The prototype runs inside its Prototype page. |
 | `site/` | Build for GitHub Pages. It publishes `website/index.html` as the home page, the prototype at `prototype/`, and an extra React + Three.js showcase at `showcase/`. |
 
@@ -18,17 +18,19 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 Live at **https://natalivm.github.io/design-system/** once Pages is turned on.
 
 1. In the repo on GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**.
-2. Merge this branch into `main`. The workflow in `.github/workflows/pages.yml` builds `site/` and deploys it on every push to `main`. You can also run it by hand from the **Actions** tab.
+2. Merge into `main`. The workflow in `.github/workflows/pages.yml` first checks that the committed generated files match their sources (`python3 tools/build.py --check`), then builds `site/` and deploys it. You can also run it by hand from the **Actions** tab.
 
-Run it locally:
+Run it locally (the first time, run `npm install` in `site/`):
 
 ```bash
-cd site
-npm install
-npm run dev
+python3 tools/build.py --site
 ```
 
-Open the address Vite prints (it ends in `/design-system/`).
+```bash
+npm --prefix site run preview
+```
+
+Open the address Vite prints (it ends in `/design-system/`). `npm run dev` serves only the React showcase, not the home page.
 
 ## Live pages
 
@@ -42,6 +44,34 @@ Both pages are private until shared from their Share menu.
 - Source page: https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=16671-42948
 - The page "BestPlay Design System" in the same file holds the variables, text styles and components.
 
+## Syncing from Figma
+
+Figma is the source of truth for colours, spacing, radii, sizes and text styles (the `Cashout/*` variables and text styles on the "BestPlay Design System" page). After changing them in Figma, ask Claude to "sync from Figma". It will:
+
+1. Run `tools/figma_snapshot.js` in the Figma file and save the result as `figma/snapshot.json`.
+2. Run `python3 tools/figma_sync.py figma/snapshot.json` to list what differs, then the same with `--apply` to write it.
+
+`--apply` updates `tokens.json`, `tokens.css`, `DesignTokens.swift` and the website, replaces old colour values in the prototype and component sources, and rebuilds everything. It reports what it cannot place on its own: a colour value still shared by another token, and sizes or font sizes the prototypes hard-code. Changes to how a component is laid out in Figma are applied by hand.
+
+Add `--site` to also run the Vite build.
+
 ## Rebuilding
 
-`tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_boost.py`, `tools/build_onboarding.py` and `tools/build_onboarding_components.py` rebuild the onboarding prototype and its components from `tools/src/` and `tools/assets/onboarding/`. `tools/src/popup.css` holds the shared Popup styles; the onboarding and 2x coins builds copy it in, and the rules are in `design-system/components/Popup/README.md`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.
+Edit the sources, never the generated files, then run:
+
+```bash
+python3 tools/build.py
+```
+
+| Source | Generated |
+|---|---|
+| `design-system/tokens.json` | `design-system/tokens.css` |
+| `tools/src/bundle.src.js` and `tools/assets/icons/` | `design-system/components/bundle.js` |
+| `tools/src/onboarding-components.src.js` and `tools/src/components.css` | `design-system/components/onboarding.js` and `.css` |
+| `tools/src/proto.html`, `onboarding.html`, `boost.html` and `tools/assets/` | `prototype/*.html` |
+| `tools/src/popup.css` | copied into the onboarding and 2x coins prototypes and into `onboarding.css` |
+| `tools/src/kit.js` | copied into all three prototypes: autoplay, the tap marker, coin flights, overlays, fitting the phone to the window |
+| `design-system/DesignTokens.swift` | the SwiftTokens and Typography previews |
+| all of the above | the blocks between `/* @gen … */` and `/* @end … */` in `website/index.html` |
+
+`python3 tools/build.py --check` rebuilds and fails if a committed file changed; CI runs it on every push.

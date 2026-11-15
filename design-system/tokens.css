@@ -31,6 +31,8 @@
   --danger-surface: #fff1f0;
   --grabber: rgba(2,38,110,0.2);
   --scrim: rgba(0,0,0,0.3);
+  --claim-ink: #ffffff;
+  --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
 }
 [data-theme="dark"] {
@@ -65,6 +67,8 @@
   --danger-surface: #2a1414;
   --grabber: rgba(232,237,247,0.3);
   --scrim: rgba(0,0,0,0.5);
+  --claim-ink: #ffffff;
+  --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
 }
 :root {

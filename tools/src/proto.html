@@ -2,16 +2,15 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the flow on the left, a slim scenario panel on the right; stacks on narrow screens. */
 :root {
   /* page chrome */
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
-  /* app tokens: Cashout iOS design system (the app itself is light-only, like the Figma) */
-  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --green-400: #49cc3d; --navy-900: #000748;
-  --ink: #02266e; --ink-secondary: #5b6378; --link: #1464ff; --surface: #ffffff; --surface-warm: #f9f8f4;
-  --surface-grouped: #f2f4f7; --surface-info: #eff5fd; --separator: #e3e7ef; --success: #087a5a;
-  --danger: #b42318; --danger-surface: #fff1f0; --strip: #f2f2f2; --strip-ink: #171b20;
+  /* app colours that are not tokens; token colours come from design-system/tokens.css at build time */
+  --surface-warm: #f9f8f4;
+  --strip: #f2f2f2; --strip-ink: #171b20;
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -73,12 +72,12 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .strip-conv img { position: absolute; top: 4px; width: 25px; }
 .strip-conv b { font-size: 15px; line-height: 18px; font-weight: 800; color: var(--green-700); margin-top: 7px; font-variant-numeric: tabular-nums; }
 .strip-conv span { font-size: 12px; line-height: 14px; letter-spacing: -.01em; font-weight: 700; }
-.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: linear-gradient(200deg, #98f73a 0%, #0bdd66 100%); box-shadow: 0 2px 6px rgba(0,0,0,.18); color: var(--strip-ink); font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
+.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: #0bdd66; color: #fff; font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
 .strip-cash b { font-size: 20px; line-height: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .strip-cash span { font-size: 13px; line-height: 16px; font-weight: 600; }
 .strip-cash:active { transform: scale(0.97); filter: brightness(0.95); }
 .strip-cash:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
-.strip-cash.zero { background: linear-gradient(200deg, #e4e7ec, #cfd5df); }
+.strip-cash.zero { background: #dfe3ea; color: var(--strip-ink); }
 
 /* ---------- sheet ---------- */
 .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 250ms linear; }
@@ -203,7 +202,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .playbtn:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
 }
 /* panel:start */
 .panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
@@ -260,7 +259,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 
         <!-- SHEET -->
         <div class="scrim" id="scrim"></div>
-        <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Cash out">
+        <div class="sheet" id="sheet" role="dialog" aria-label="Cash out">
           <img class="mascot" id="mascot" src="{{fox_briefcase}}" alt="">
           <div class="grabber" aria-hidden="true"></div>
           <div class="sheet-pattern" style="background-image:url({{pattern}})"></div>
@@ -310,6 +309,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   </aside>
 </div>
 
+<script>{{kit_js}}</script>
 <script>
 (function () {
   var A = { foxEarned: "{{fox_briefcase}}", foxEmpty: "{{fox_think}}", foxLimit: "{{fox_thumb}}", star: "{{star}}", tip: "{{tip}}", timer: "{{timer}}", games: "{{games}}" };
@@ -323,7 +323,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   var S;
   function fresh(scenario) {
     return { scenario: scenario || "earned", balance: scenario === "empty" || scenario === "waiting" ? 0 : 2.81,
-      convertIn: 13500, waitLeft: scenario === "waiting" ? 11643 : 0, waitTotal: 14400, justPaid: null, open: false, view: "main", step: "home" };
+      convertIn: 13500, waitLeft: scenario === "waiting" ? 11643 : 0, waitTotal: 14400, justPaid: null, open: false, view: "main", step: "home", cashing: false };
   }
   S = fresh("earned");
 
@@ -335,17 +335,13 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   function spoken(sec) { var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h + " hours, " + m + " minutes"; }
   function setStep(step) {
     S.step = step;
-    Array.prototype.forEach.call(($("flow") || { children: [] }).children, function (li) { li.classList.toggle("on", li.getAttribute("data-f") === step); });
-  }
-  function countTo(el, from, to, ms) {
-    var t0 = null;
-    function f(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / ms), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(from + (to - from) * e); if (p < 1) requestAnimationFrame(f); }
-    requestAnimationFrame(f);
   }
   function renderStrip() {
     $("stripAmount").textContent = fmt(S.balance);
     $("stripCash").classList.toggle("zero", S.balance === 0);
     $("convShort").textContent = Math.floor(S.convertIn / 3600) + "h " + Math.floor(S.convertIn % 3600 / 60);
+    var info = $("convInfo"); if (info) info.textContent = short(S.convertIn) + ".";
+    var wait = $("waitShort"); if (wait) wait.textContent = short(S.waitLeft) + ".";
   }
 
   /* ---------- sheet content ---------- */
@@ -356,7 +352,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     return "earned";
   }
   function infoRow() {
-    return '<div class="info rise" style="animation-delay:60ms"><div class="tile"><img src="' + A.tip + '" alt=""></div><p>Your <img src="' + A.star + '" alt="stars"> turn into rewards in <b>' + short(S.convertIn) + '.</b> The more stars, the higher the reward.</p></div>';
+    return '<div class="info rise" style="animation-delay:60ms"><div class="tile"><img src="' + A.tip + '" alt=""></div><p>Your <img src="' + A.star + '" alt="stars"> turn into rewards in <b id="convInfo">' + short(S.convertIn) + '.</b> The more stars, the higher the reward.</p></div>';
   }
   function renderMain() {
     var mode = sheetMode(), v = $("vMain"), html = "";
@@ -367,7 +363,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
       html += '<button class="pill rise" id="openHistory" style="animation-delay:30ms">' + ICON_HISTORY + 'History</button>';
       html += infoRow();
       if (mode === "limit") html += '<div class="msg rise" role="alert" style="animation-delay:90ms">' + ICON_ALERT + '<span>You’ve reached the maximum balance. Cash out to keep earning.</span></div>';
-      html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" id="cashOut">Cash out</button><button class="btn" id="keepPlaying">Keep playing</button></div>';
+      html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" id="cashOut"' + (S.cashing ? ' disabled aria-busy="true"><span class="spin" aria-hidden="true"></span>Cashing out…' : '>Cash out') + '</button><button class="btn" id="keepPlaying">Keep playing</button></div>';
     } else if (mode === "empty") {
       html += '<section class="hero navy rise"><div class="eyebrow">Oh no!</div><div class="amount">' + fmt(0) + '</div><div class="sub">Play more to earn your first reward.</div></section>';
       html += '<button class="pill rise" id="openHistory" style="animation-delay:30ms">' + ICON_HISTORY + 'History</button>';
@@ -378,7 +374,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     } else {
       var pct = Math.round((1 - S.waitLeft / S.waitTotal) * 100);
       html += '<div class="timer-card rise" role="timer" aria-label="Next reward in ' + spoken(S.waitLeft) + '"><img src="' + A.timer + '" alt=""><time id="waitClock"></time><div class="bar"><i id="waitBar" style="width:' + pct + '%"></i></div></div>';
-      html += '<div class="wait-copy rise" style="animation-delay:40ms"><b>Please wait</b><span>Your next free reward challenge starts in ' + short(S.waitLeft) + '.</span></div>';
+      html += '<div class="wait-copy rise" style="animation-delay:40ms"><b>Please wait</b><span>Your next free reward challenge starts in <span id="waitShort">' + short(S.waitLeft) + '.</span></span></div>';
       html += '<button class="pill rise" id="openHistory" style="animation-delay:60ms">' + ICON_HISTORY + 'History</button>';
       html += '<div class="spacer"></div><div class="actions rise" style="animation-delay:120ms"><button class="btn filled" data-toast="Games open in the full app">Play games</button><button class="btn" id="keepPlaying">Back to home</button></div>';
     }
@@ -416,7 +412,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     $("scrim").classList.add("on"); $("sheet").classList.add("on");
     $("sheet").style.transform = "";
     setStep(sheetMode() === "waiting" ? "waiting" : "sheet");
-    setTimeout(function () { var f = $("vMain").querySelector("button"); if (f) f.focus({ preventScroll: true }); }, 450);
+    var sc = S;
+    setTimeout(function () { if (S !== sc || !S.open) return; var f = $("vMain").querySelector("button"); if (f) f.focus({ preventScroll: true }); }, 450);
   }
   function closeSheet() {
     S.open = false; $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); $("sheet").style.transform = "";
@@ -431,20 +428,24 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     setStep(sheetMode() === "waiting" ? "waiting" : "sheet");
   }
   function cashOut() {
+    if (S.cashing || !S.balance) return;
+    S.cashing = true; var sc = S;
     var b = $("cashOut"); b.disabled = true; b.innerHTML = '<span class="spin" aria-hidden="true"></span>Cashing out…'; b.setAttribute("aria-busy", "true");
     setStep("loading");
     setTimeout(function () {
-      var paid = S.balance;
+      if (S !== sc) return;   // the scenario changed while this was loading
+      var paid = S.balance; S.cashing = false;
       S.justPaid = paid; S.balance = 0; S.waitLeft = S.waitTotal - 1; S.scenario = "earned";
       $("successCopy").textContent = "Your " + fmt(paid) + " is on the way.";
       $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); S.open = false;
       $("success").classList.add("on"); $("statusbar").classList.remove("dark"); $("homeInd").classList.add("light");
       setStep("success");
-      countTo($("stripAmount"), paid, 0, 600); $("stripCash").classList.add("zero");
-      setTimeout(function () { $("successDone").focus({ preventScroll: true }); }, 500);
+      KIT.countTo($("stripAmount"), paid, 0, 600, fmt, function () { return S === sc; }); $("stripCash").classList.add("zero");
+      setTimeout(function () { if (S === sc && $("success").classList.contains("on")) $("successDone").focus({ preventScroll: true }); }, 500);
     }, 1200);
   }
   $("successDone").onclick = function () {
+    if (!$("success").classList.contains("on")) return;
     $("success").classList.remove("on"); $("homeInd").classList.remove("light");
     renderStrip(); setStep("home"); toast("Balance cashed out. Tap Cash out to see the timer");
   };
@@ -486,7 +487,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   setInterval(function () {
     S.convertIn = Math.max(0, S.convertIn - 1);
     if (S.waitLeft > 0) { S.waitLeft--; if (S.open && sheetMode() === "waiting") paintClock(true); }
-    if (S.convertIn % 60 === 0) renderStrip();
+    renderStrip();
   }, 1000);
 
   /* scenarios */
@@ -496,30 +497,10 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     if (S.open) { $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
     $("sheet").classList.remove("in-history");
     S = fresh(s); renderStrip(); setStep("home"); $("home").scrollTop = 0;
-    if (noPlay) stopPlay(); else autoplay(s);
+    if (noPlay) KIT.stopPlay(); else autoplay();
   }
 
   /* ---------- autoplay: walks the flow with a visible tap marker ---------- */
-  var runId = 0;
-  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  var playing = false;
-  function setPlaying(on) { playing = on; $("playBtn").setAttribute("aria-pressed", on ? "true" : "false"); $("pauseBtn").setAttribute("aria-pressed", on ? "false" : "true"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
-  function stopPlay() { runId++; setPlaying(false); }
-  function tapOn(el, id) {
-    if (!el || id !== runId) return Promise.resolve();
-    var tap = $("tap"), scr = $("screen"), sr = scr.getBoundingClientRect(), k = sr.width / scr.offsetWidth, r = el.getBoundingClientRect();
-    tap.style.left = ((r.left + r.width / 2 - sr.left) / k) + "px"; tap.style.top = ((r.top + r.height / 2 - sr.top) / k) + "px";
-    tap.classList.add("show");
-    // Outline the control that is about to be tapped.
-    var ring = $("ring"), pad = 5, rad = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 12;
-    ring.style.left = ((r.left - sr.left) / k - pad) + "px"; ring.style.top = ((r.top - sr.top) / k - pad) + "px";
-    ring.style.width = (r.width / k + pad * 2) + "px"; ring.style.height = (r.height / k + pad * 2) + "px";
-    ring.style.borderRadius = Math.min(rad + pad, (r.height / k + pad * 2) / 2) + "px";
-    setTimeout(function () { if (id === runId) ring.classList.add("show"); }, 350);
-    return sleep(950).then(function () { if (id !== runId) return; tap.classList.add("down"); return sleep(220); })
-      .then(function () { if (id !== runId) return; tap.classList.remove("down"); ring.classList.remove("show"); el.click(); return sleep(300); })
-      .then(function () { if (id === runId) tap.classList.remove("show"); });
-  }
   // Autoplay looks at what is on screen and taps the next control, so Play can start from any state.
   var run = {};
   function nextTarget() {
@@ -536,35 +517,15 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     if (S.justPaid || run.reopened) return "done";
     run.end = true; return $("keepPlaying");
   }
-  function autoplay() {
-    var id = ++runId, idle = 0; run = {}; setPlaying(true);
-    (function step() {
-      if (id !== runId) return;
-      var t = nextTarget();
-      if (t === "done" || idle > 60) { setPlaying(false); return; }
-      if (!t) { idle++; sleep(300).then(step); return; }
-      idle = 0; tapOn(t, id).then(function () { return sleep(900); }).then(step);
-    })();
-  }
-  $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
-  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
-  $("playBtn").onclick = function () { if (!playing) autoplay(); };
-  $("pauseBtn").onclick = function () { if (playing) stopPlay(); };
-  $("reset").onclick = function () { startScenario("earned", true); };
+  function autoplay() { run = {}; KIT.autoplay(nextTarget); }
+  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !KIT.playing); }; });
+  KIT.wire(autoplay, function () { startScenario("earned", true); });
+  KIT.overlays(["sheet", "scrim", "success"], { noFocus: ["sheet", "success"] });
 
   /* status bar color follows what's under it */
   $("home").addEventListener("scroll", function () { $("statusbar").classList.toggle("dark", $("home").scrollTop > 140); });
 
-  /* fit the phone to the viewport */
-  function fit() {
-    var wrap = $("deviceWrap"), dev = $("device");
-    var availH = window.innerHeight - 48, availW = Math.min(window.innerWidth - 32, 417);
-    // Always fit the phone inside the window height, so it is never cut off (also when embedded in a frame).
-    var s = Math.min(1, availW / 417, Math.max(0.42, availH / 876));
-    dev.style.transform = "scale(" + s + ")";
-    wrap.style.width = (417 * s) + "px"; wrap.style.height = (876 * s) + "px";
-  }
-  window.addEventListener("resize", fit); fit();
+  KIT.fit();
 
   renderStrip(); setStep("home");
 })();
