@@ -6,6 +6,7 @@ extension Color {
     static let onAccent       = Color("on-accent")
     static let green700       = Color("green-700")
     static let green500       = Color("green-500")
+    static let green400       = Color("green-400")
     static let lime400        = Color("lime-400")
     static let navy900        = Color("navy-900")
     static let violet500      = Color("violet-500")
@@ -27,9 +28,9 @@ extension Color {
 }
 
 extension ShapeStyle where Self == LinearGradient {
-    /// AmountHero fill. Text sits over the green-700 end.
+    /// AmountHero fill: green-400 at the top-right corner into green-500. Only large text sits on it.
     static var reward: LinearGradient {
-        LinearGradient(colors: [.green500, .green700], startPoint: .topTrailing, endPoint: .bottom)
+        LinearGradient(colors: [.green400, .green500], startPoint: .topTrailing, endPoint: .bottom)
     }
 }
 
