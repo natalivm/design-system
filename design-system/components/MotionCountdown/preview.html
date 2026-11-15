@@ -1,0 +1,13 @@
+<!-- @dsCard group="Motion" height=280 subtitle="Each second the changing digits roll in; the rest stay still." page -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+var st=document.createElement('style');st.textContent='@media (max-width:640px){.mo{grid-template-columns:1fr!important}}';document.head.appendChild(st);
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:16,padding:16,alignItems:'start'},className:'mo'},h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},h('div',{style:{width:260}},h(C.Countdown,{size:'card',seconds:11643,live:true}))),h('div',{style:{display:'flex',flexDirection:'column',gap:12,minWidth:0}},h('div',{className:'co-chips'},h('span',{className:'co-chip'},"duration-base 250ms"),h('span',{className:'co-chip'},"easing-snappy"),h('span',{className:'co-chip'},"countsDown: true"),h('span',{className:'co-chip'},"monospaced digits")),h(Copy,{label:'SwiftUI',code:"Text(timerInterval: .now...unlockDate, countsDown: true)\n    .font(.ds(.largeTitle))\n    .monospacedDigit()\n    .contentTransition(.numericText(countsDown: true))"}))));
+</script>
+</body>
+</html>

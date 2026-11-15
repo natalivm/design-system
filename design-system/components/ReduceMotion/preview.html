@@ -1,0 +1,13 @@
+<!-- @dsCard group="Motion" height=260 subtitle="With Reduce Motion on, every move becomes a short crossfade." page -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+var st=document.createElement('style');st.textContent='@media (max-width:640px){.mo{grid-template-columns:1fr!important}}';document.head.appendChild(st);
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:16,padding:16,alignItems:'start'},className:'mo'},h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},h('div',{style:{display:'grid',gap:8,justifyItems:'center'}},h('span',{className:'co-chip'},'Slide → Fade'),h('span',{className:'co-chip'},'Pop → Fade'),h('span',{className:'co-chip'},'Digit roll → Fade'),h('span',{className:'co-chip'},'Haptics stay'))),h('div',{style:{display:'flex',flexDirection:'column',gap:12,minWidth:0}},h('div',{className:'co-chips'},h('span',{className:'co-chip'},"@Environment"),h('span',{className:'co-chip'},"accessibilityReduceMotion")),h(Copy,{label:'SwiftUI',code:"@Environment(\\.accessibilityReduceMotion) private var reduceMotion\n\n.transition(reduceMotion\n    ? .opacity\n    : .scale(scale: 0.85).combined(with: .opacity))"}))));
+</script>
+</body>
+</html>

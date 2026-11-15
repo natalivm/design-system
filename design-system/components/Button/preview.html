@@ -1,0 +1,12 @@
+<!-- @dsCard group="Actions" height=300 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid'},h(D,{caption:"Filled"},h(C.Button,{style:{width:220}},'Cash out')),h(D,{caption:"Plain"},h(C.Button,{variant:'plain'},'Keep playing')),h(D,{caption:"Loading"},h(C.Button,{loading:true,style:{width:220}})),h(D,{caption:"Disabled"},h(C.Button,{disabled:true,style:{width:220}},'Cash out'))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:"Button(\"Cash out\", action: cashOut)\n    .buttonStyle(PrimaryButtonStyle())   // 50pt, Capsule, blue500\n\nButton(\"Keep playing\", action: dismiss)\n    .font(.ds(.headline)).tint(.link)\n    .frame(minHeight: 44)"}),h(Copy,{label:'Figma',inline:true,code:"Button \u00b7 Style=Filled, State=Default"}))));
+</script>
+</body>
+</html>

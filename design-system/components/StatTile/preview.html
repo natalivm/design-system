@@ -1,0 +1,12 @@
+<!-- @dsCard group="Home" height=220 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid'},h(D,{caption:"With icon"},h('div',{style:{width:180,display:'flex'}},h(C.StatTile,{icon:'star',label:'Game coins',value:'66,378'}))),h(D,{caption:"Money"},h('div',{style:{width:180,display:'flex'}},h(C.StatTile,{label:'Ready to cash',value:C.format.money(5378.11)})))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:"StatTile(label: \"Game coins\",\n         value: coins.formatted(),\n         icon: Image(.star))"}),h(Copy,{label:'Figma',inline:true,code:"StatTile"}))));
+</script>
+</body>
+</html>

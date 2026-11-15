@@ -1,0 +1,12 @@
+<!-- @dsCard group="Cashout" height=330 -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',null,h('div',{className:'co-grid'},h(D,{caption:"Paid \u00b7 Pending \u00b7 Failed"},h('div',{style:{width:340}},h(C.HistoryList,{items:[{date:'April 26',amount:1.3},{date:'April 3',amount:0.32},{date:'March 22',amount:0.86,status:'pending'},{date:'March 14',amount:1.12,status:'failed'}]})))),h('div',{className:'co-codes'},h(Copy,{label:'SwiftUI',code:"List(payouts) { p in\n    LabeledContent {\n        Text(p.amount, format: .currency(code: p.currency))\n    } label: {\n        Text(p.date, format: .dateTime.month(.wide).day())\n        Text(p.status.label).foregroundStyle(p.status.color)\n    }\n}\n.listStyle(.insetGrouped)"}),h(Copy,{label:'Figma',inline:true,code:"HistoryList"}))));
+</script>
+</body>
+</html>

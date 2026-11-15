@@ -1,0 +1,21 @@
+<!-- @dsCard group="Motion" height=360 subtitle="Sheet content rises in one after another, 50ms apart." page -->
+<!doctype html>
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+<div id="root"></div>
+<script>
+var C = window.Cashout, h = React.createElement, D = C.Demo, Copy = C.Copy;
+var st=document.createElement('style');st.textContent='@media (max-width:640px){.mo{grid-template-columns:1fr!important}}';document.head.appendChild(st);
+
+function useReplay(){var s=React.useState(0);return [s[0],function(){s[1](s[0]+1)}];}
+
+function RevealDemo(){var r=useReplay(),k=r[0],go=r[1];
+var parts=[h(C.InfoRow,{secondsLeft:13500}),h(C.Button,{fullWidth:true},'Cash out'),h(C.Button,{variant:'plain'},'Keep playing')];
+return h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},
+ h('div',{key:k,style:{width:300,display:'flex',flexDirection:'column',gap:10,alignItems:'center'}},parts.map(function(p,i){return h('div',{key:i,className:'co-anim-rise',style:{animationDelay:(i*50)+'ms',width:'100%',display:'flex',justifyContent:'center'}},p);})),
+ h('button',{className:'co-replay',onClick:go},'↻ Replay'));}
+ReactDOM.createRoot(document.getElementById('root')).render(h('div',{style:{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1fr)',gap:16,padding:16,alignItems:'start'},className:'mo'},h('div',{style:{display:'flex',flexDirection:'column',gap:12,alignItems:'center'}},h(RevealDemo)),h('div',{style:{display:'flex',flexDirection:'column',gap:12,minWidth:0}},h('div',{className:'co-chips'},h('span',{className:'co-chip'},"duration-base 250ms"),h('span',{className:'co-chip'},"easing-smooth"),h('span',{className:'co-chip'},"stagger 50ms"),h('span',{className:'co-chip'},"offset y 12pt")),h(Copy,{label:'SwiftUI',code:"ForEach(Array(sections.enumerated()), id: \\.offset) { i, section in\n    section\n        .opacity(appeared ? 1 : 0)\n        .offset(y: appeared ? 0 : 12)\n        .animation(.smooth(duration: 0.25).delay(Double(i) * 0.05),\n                   value: appeared)\n}\n.onAppear { appeared = true }"}))));
+</script>
+</body>
+</html>
