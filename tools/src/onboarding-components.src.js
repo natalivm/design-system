@@ -37,16 +37,24 @@
       h("div", { className: "ob-coach-text" }, props.children));
   }
 
-  // tone: "welcome" (dark overlay) | "congrats" (purple card)
+__GLOW__
+  // tone: "welcome" (dark overlay) | "congrats" (purple card) | "boost" (purple card, orange action)
   function RewardCard(props) {
-    var tone = props.tone || "welcome";
-    return h("div", { className: "ob ob-reward ob-reward-" + tone },
+    var tone = props.tone || "welcome", pile = React.useRef(null);
+    React.useEffect(function () {
+      var el = pile.current, seen = false; if (!el || !window.IntersectionObserver) return;
+      var fx = makeGlow(el, function () { return seen; }, tone === "boost" ? [1.0, 0.62, 0.22] : tone === "congrats" ? [1.0, 0.78, 0.30] : [1.0, 0.82, 0.18]);
+      var io = new IntersectionObserver(function (es) { seen = es[0].isIntersecting; if (seen) fx.start(); });
+      io.observe(el);
+      return function () { seen = false; io.disconnect(); };
+    }, []);
+    return h("div", { className: "ob ob-reward ob-reward-" + (tone === "welcome" ? "welcome" : "congrats") },
       h("h4", null, props.title || (tone === "congrats" ? "Congrats!" : "Welcome reward!")),
-      tone === "congrats" ? h("p", null, props.subtitle || "Missions complete!") : null,
-      h("div", { className: "ob-pile" }, h("img", { src: A.pile, alt: "" })),
+      tone !== "welcome" ? h("p", null, props.subtitle || (tone === "boost" ? "Get a 2x coins boost" : "Missions complete!")) : null,
+      h("div", { className: "ob-pile", ref: pile }, h("img", { src: A.pile, alt: "" })),
       h("div", { className: "ob-amount" }, props.amount || "+1,000 coins"),
       tone === "welcome" ? h("p", null, props.subtitle || "Start playing to earn even more!") : null,
-      h("button", { type: "button", className: "ob-cta", onClick: props.onAction }, props.cta || (tone === "congrats" ? "Claim now" : "Awesome!")));
+      h("button", { type: "button", className: "ob-cta" + (tone === "boost" ? " ob-cta-boost" : ""), onClick: props.onAction }, props.cta || (tone === "boost" ? "Boost now" : tone === "congrats" ? "Claim now" : "Awesome!")));
   }
 
   window.Cashout = Object.assign(window.Cashout || {}, { MissionRow: MissionRow, MissionCard: MissionCard, CoachMark: CoachMark, RewardCard: RewardCard });

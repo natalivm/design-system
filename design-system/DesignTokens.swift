@@ -13,6 +13,7 @@ extension Color {
     static let gold400        = Color("gold-400")
     static let mint400        = Color("mint-400")
     static let sky200         = Color("sky-200")
+    static let orange500      = Color("orange-500")
     static let ink            = Color("ink")
     static let inkSecondary   = Color("ink-secondary")
     static let link           = Color("link")

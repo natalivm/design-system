@@ -37,16 +37,100 @@
       h("div", { className: "ob-coach-text" }, props.children));
   }
 
-  // tone: "welcome" (dark overlay) | "congrats" (purple card)
+  /* God rays and light motes: shared with the prototype (tools/src/onboarding.html). */
+  var RAYS_FRAG = [
+    "precision mediump float;",
+    "uniform vec2 uRes; uniform float uTime; uniform vec3 uTint;",
+    "float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }",
+    "float noise(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f*f*(3.0-2.0*f);",
+    "  return mix(mix(hash(i), hash(i+vec2(1.,0.)), u.x), mix(hash(i+vec2(0.,1.)), hash(i+vec2(1.,1.)), u.x), u.y); }",
+    "void main(){",
+    "  vec2 uv = (gl_FragCoord.xy - 0.5*uRes) / uRes.y;",
+    "  uv.y += 0.04;",                                        // light source sits at the base of the pile
+    "  float r = length(uv), a = atan(uv.y, uv.x);",
+    "  float t = uTime;",
+    "  float beams = pow(0.5 + 0.5*sin(a*9.0 + t*0.35), 3.0) * 0.55",      // wide slow beams
+    "              + pow(0.5 + 0.5*sin(a*17.0 - t*0.22 + 1.7), 5.0) * 0.45", // thin counter-rotating beams
+    "              + pow(0.5 + 0.5*sin(a*5.0 + t*0.12 + 4.1), 2.0) * 0.25;",
+    "  beams *= 0.75 + 0.5*noise(vec2(a*3.0, t*0.6 - r*4.0));",             // shimmer travelling outward
+    "  float reach = smoothstep(0.46, 0.03, r);",                           // soft falloff, no hard edge
+    "  float core = exp(-r*r*60.0) * 0.55;",                                       // hot centre
+    "  float halo = exp(-r*r*11.0) * 0.32;",
+    "  float pulse = 0.9 + 0.1*sin(t*1.6);",
+    "  float lum = (beams*reach*0.95 + halo + core) * pulse;",
+    "  vec3 col = mix(uTint, vec3(1.0, 0.98, 0.86), clamp(core*1.4 + beams*reach*0.25, 0.0, 1.0));",
+    "  gl_FragColor = vec4(col * lum, lum);",
+    "}"].join("\n");
+  // pile: the element holding the coins. isActive(): keep animating while this returns true.
+  function makeGlow(pile, isActive, tint) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), SIZE = 460;
+    var rays = document.createElement("canvas"), motes = document.createElement("canvas");
+    rays.className = "rays"; motes.className = "motes"; rays.width = rays.height = motes.width = motes.height = SIZE * dpr;
+    pile.insertBefore(rays, pile.firstChild); pile.appendChild(motes);
+    var gl = null, uTime = null;
+    try {
+      gl = rays.getContext("webgl", { premultipliedAlpha: true, alpha: true });
+      var sh = function (type, src) { var o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+      var prog = gl.createProgram();
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, "attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }"));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, RAYS_FRAG)); gl.linkProgram(prog); gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      var loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform2f(gl.getUniformLocation(prog, "uRes"), rays.width, rays.height);
+      gl.uniform3f(gl.getUniformLocation(prog, "uTint"), tint[0], tint[1], tint[2]);
+      uTime = gl.getUniformLocation(prog, "uTime");
+    } catch (e) { gl = null; rays.remove(); }   // no WebGL: the CSS halo stays as the fallback
+
+    var ctx = motes.getContext("2d"), P = [];
+    function spawn(p, first) {
+      var ang = Math.random() * Math.PI * 2, rad = Math.random() * 95;
+      p.x = SIZE / 2 + Math.cos(ang) * rad * 1.25; p.y = SIZE / 2 + 30 + Math.sin(ang) * rad * 0.55;
+      p.vx = (Math.random() - .5) * 14; p.vy = -(14 + Math.random() * 34); p.r = 1.2 + Math.random() * 2.6;
+      p.life = first ? Math.random() : 0; p.span = 1.6 + Math.random() * 2.2; p.tw = Math.random() * 6.28; p.star = Math.random() < 0.28;
+    }
+    for (var i = 0; i < 34; i++) { var p = {}; spawn(p, true); P.push(p); }
+    function drawMotes(dt, t) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, SIZE, SIZE); ctx.globalCompositeOperation = "lighter";
+      for (var i = 0; i < P.length; i++) {
+        var p = P[i]; p.life += dt / p.span; if (p.life >= 1) spawn(p, false);
+        p.x += (p.vx + Math.sin(t * 1.3 + p.tw) * 10) * dt; p.y += p.vy * dt;
+        var fade = Math.sin(Math.PI * p.life), tw = 0.65 + 0.35 * Math.sin(t * 5 + p.tw), a = fade * tw, R = p.r * (p.star ? 7 : 5);
+        var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
+        g.addColorStop(0, "rgba(255,252,225," + a + ")"); g.addColorStop(0.25, "rgba(255,221,90," + a * 0.55 + ")"); g.addColorStop(1, "rgba(255,190,40,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.2832); ctx.fill();
+        if (p.star) {   // four-point glint
+          ctx.strokeStyle = "rgba(255,255,240," + a * 0.9 + ")"; ctx.lineWidth = 1; var L = R * 1.5 * tw;
+          ctx.beginPath(); ctx.moveTo(p.x - L, p.y); ctx.lineTo(p.x + L, p.y); ctx.moveTo(p.x, p.y - L); ctx.lineTo(p.x, p.y + L); ctx.stroke();
+        }
+      }
+    }
+    var raf = 0, last = 0, still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function frame(now) {
+      var dt = Math.min(0.05, (now - last) / 1000); last = now; var t = now / 1000;
+      if (gl) { gl.viewport(0, 0, rays.width, rays.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uTime, still ? 3.0 : t); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+      drawMotes(still ? 0 : dt, t);
+      raf = (!still && isActive()) ? requestAnimationFrame(frame) : 0;   // stops when no longer shown
+    }
+    return { start: function () { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } } };
+  }
+  
+  // tone: "welcome" (dark overlay) | "congrats" (purple card) | "boost" (purple card, orange action)
   function RewardCard(props) {
-    var tone = props.tone || "welcome";
-    return h("div", { className: "ob ob-reward ob-reward-" + tone },
+    var tone = props.tone || "welcome", pile = React.useRef(null);
+    React.useEffect(function () {
+      var el = pile.current, seen = false; if (!el || !window.IntersectionObserver) return;
+      var fx = makeGlow(el, function () { return seen; }, tone === "boost" ? [1.0, 0.62, 0.22] : tone === "congrats" ? [1.0, 0.78, 0.30] : [1.0, 0.82, 0.18]);
+      var io = new IntersectionObserver(function (es) { seen = es[0].isIntersecting; if (seen) fx.start(); });
+      io.observe(el);
+      return function () { seen = false; io.disconnect(); };
+    }, []);
+    return h("div", { className: "ob ob-reward ob-reward-" + (tone === "welcome" ? "welcome" : "congrats") },
       h("h4", null, props.title || (tone === "congrats" ? "Congrats!" : "Welcome reward!")),
-      tone === "congrats" ? h("p", null, props.subtitle || "Missions complete!") : null,
-      h("div", { className: "ob-pile" }, h("img", { src: A.pile, alt: "" })),
+      tone !== "welcome" ? h("p", null, props.subtitle || (tone === "boost" ? "Get a 2x coins boost" : "Missions complete!")) : null,
+      h("div", { className: "ob-pile", ref: pile }, h("img", { src: A.pile, alt: "" })),
       h("div", { className: "ob-amount" }, props.amount || "+1,000 coins"),
       tone === "welcome" ? h("p", null, props.subtitle || "Start playing to earn even more!") : null,
-      h("button", { type: "button", className: "ob-cta", onClick: props.onAction }, props.cta || (tone === "congrats" ? "Claim now" : "Awesome!")));
+      h("button", { type: "button", className: "ob-cta" + (tone === "boost" ? " ob-cta-boost" : ""), onClick: props.onAction }, props.cta || (tone === "boost" ? "Boost now" : tone === "congrats" ? "Claim now" : "Awesome!")));
   }
 
   window.Cashout = Object.assign(window.Cashout || {}, { MissionRow: MissionRow, MissionCard: MissionCard, CoachMark: CoachMark, RewardCard: RewardCard });
