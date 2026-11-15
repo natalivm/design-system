@@ -120,7 +120,9 @@ button { font-family: var(--font); }
 .bx-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
 .pp-scrim.on .bx-coins { animation: bx-coins-in .7s .15s var(--bouncy) both; }
 @keyframes bx-coins-in { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
-.bpop .pp-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+/* the 2x coins logo only: a bare `img` here also caught the clock inside the time pill,
+   which this rule then stretched to 176px */
+.bpop .pp-head > img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .bx-pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
 .bx-pill img { width: 18px; height: 18px; margin: 0; filter: none; }
 .bpop .pp-body { padding-top: 0; margin-top: -14px; }
