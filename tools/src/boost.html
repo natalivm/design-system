@@ -2,14 +2,13 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the 2x coins boost flow, with a scenario panel beside it. */
 :root {
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35;
-  --blue-500: #1464ff; --navy-900: #000748; --ink: #02266e; --gold: #ffdd20;
-  --claim-a: #98f73a; --claim-b: #0bdd66;
-  --pink-400: #f4517c; --pink-600: #dd1a5c; --pink-ink: #ee145c; --pink-50: #ffecf2; /* event colors, new to the system */
-  --violet-400: #9b51e0; --violet-600: #7a35c4;
+  --gold: var(--gold-400);
+  --claim-b: var(--mint-400);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -59,7 +58,7 @@ button { font-family: var(--font); }
 .hdr { position: relative; background: var(--blue-500); transition: background .4s; }
 .hdr[data-state="offer"], .hdr[data-state="active"] { background: var(--pink-600); }
 .hdr[data-state="offer"] .hdr-default, .hdr[data-state="active"] .hdr-default { display: none; }
-.hdr[data-state="default"] .ev { display: none; }
+.hdr[data-state="default"] .bx-ev { display: none; }
 .stripwrap { position: relative; padding: 0 7px 10px; margin-top: -1px; }
 .strip { height: 64px; border-radius: 16px; background: #fff; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.2); color: var(--ink); }
 .strip > div { display: flex; flex-direction: column; justify-content: center; padding: 0 10px; min-width: 0; }
@@ -84,65 +83,65 @@ button { font-family: var(--font); }
 .game:active { background: rgba(255,255,255,.18); }
 
 /* ---------- EventBanner: the pink 2x coins header ---------- */
-.ev { position: relative; display: block; width: 100%; height: 190px; border: 0; padding: 0; text-align: left; cursor: pointer; color: #fff; overflow: hidden;
-  background: radial-gradient(120% 90% at 50% -10%, #ff7a9b 0%, transparent 60%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); animation: evIn .5s var(--smooth) both; }
-@keyframes evIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
-.ev canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.ev-right { position: absolute; right: 14px; top: 108px; width: 160px; text-align: right; }
-.ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
-.ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
-.ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
-.ev:active .ev-start { transform: scale(.96); }
-.ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.ev-ends img { width: 16px; height: 16px; }
-.hdr[data-state="offer"] .ev-timer, .hdr[data-state="active"] .ev-offer { display: none; }
+@keyframes bx-pop { from { transform: scale(.5); opacity: 0; } to { transform: none; opacity: 1; } }
+.bx-ev { position: relative; display: block; width: 100%; height: 190px; border: 0; padding: 0; text-align: left; cursor: pointer; color: #fff; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% -10%, #ff7a9b 0%, transparent 60%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); animation: bx-ev-in .5s var(--smooth) both; }
+@keyframes bx-ev-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+.bx-ev canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.bx-ev-right { position: absolute; right: 14px; top: 108px; width: 160px; text-align: right; }
+.bx-ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
+.bx-ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+.bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.bx-ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.bx-ev:active .bx-ev-start { transform: scale(.96); }
+.bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.bx-ev-ends img { width: 16px; height: 16px; }
+.hdr[data-state="offer"] .bx-ev-timer, .hdr[data-state="active"] .bx-ev-offer { display: none; }
 
 /* ---------- FlipTimer ---------- */
-.flip { display: flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
-.flip i { position: relative; display: grid; place-items: center; width: var(--fw, 38px); height: var(--fh, 60px); border-radius: var(--fr, 8px); background: linear-gradient(180deg, #fff 0 50%, var(--pink-50) 50% 100%); color: var(--pink-ink); font-style: normal; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; box-shadow: 0 2px 4px rgba(120,0,40,.25); }
-.flip i::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(238,20,92,.14); }
-.flip i.tick { animation: tick .4s var(--snappy); }
-@keyframes tick { 0% { transform: perspective(200px) rotateX(-70deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
-.flip em { font-style: normal; width: var(--fc, 12px); text-align: center; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; color: var(--pink-ink); animation: colon 1s steps(2, jump-none) infinite; }
-@keyframes colon { 50% { opacity: .35; } }
-.flip.small { --fw: 23px; --fh: 34px; --fs: 21px; --fr: 5px; --fc: 7px; gap: 2px; }
-.flip.small em { color: #fff; }
+.bx-flip { display: flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
+.bx-flip i { position: relative; display: grid; place-items: center; width: var(--fw, 38px); height: var(--fh, 60px); border-radius: var(--fr, 8px); background: linear-gradient(180deg, #fff 0 50%, var(--pink-50) 50% 100%); color: var(--pink-ink); font-style: normal; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; box-shadow: 0 2px 4px rgba(120,0,40,.25); }
+.bx-flip i::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(238,20,92,.14); }
+.bx-flip i.tick { animation: bx-tick .4s var(--snappy); }
+@keyframes bx-tick { 0% { transform: perspective(200px) rotateX(-70deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
+.bx-flip em { font-style: normal; width: var(--fc, 12px); text-align: center; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; color: var(--pink-ink); animation: bx-colon 1s steps(2, jump-none) infinite; }
+@keyframes bx-colon { 50% { opacity: .35; } }
+.bx-flip.small { --fw: 23px; --fh: 34px; --fs: 21px; --fr: 5px; --fc: 7px; gap: 2px; }
+.bx-flip.small em { color: #fff; }
 
 {{popup_css}}
 /* ---------- 2x coins pop-up: what this feature puts in the Popup's free slots ---------- */
 .bokeh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .bpop { --pp-head: radial-gradient(90% 70% at 50% 0%, #ff7a9b 0%, transparent 70%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); }
-.over-title { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 30px; text-align: center; color: #fff; font-size: 34px; line-height: 41px; font-weight: 800; text-shadow: 0 3px 0 rgba(238,20,92,.9); display: none; }
-.pop-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
-  background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: spin 60s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.pop-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
-.pp-scrim.on .pop-coins { animation: coinsIn .7s .15s var(--bouncy) both; }
-@keyframes coinsIn { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
-.pp-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
-.pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
-.pill img { width: 18px; height: 18px; margin: 0; filter: none; }
+.bx-over-title { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 30px; text-align: center; color: #fff; font-size: 34px; line-height: 41px; font-weight: 800; text-shadow: 0 3px 0 rgba(238,20,92,.9); display: none; }
+.bx-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: bx-spin 60s linear infinite; }
+@keyframes bx-spin { to { transform: rotate(360deg); } }
+.bx-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
+.pp-scrim.on .bx-coins { animation: bx-coins-in .7s .15s var(--bouncy) both; }
+@keyframes bx-coins-in { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
+.bpop .pp-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+.bx-pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
+.bx-pill img { width: 18px; height: 18px; margin: 0; filter: none; }
 .bpop .pp-body { padding-top: 0; margin-top: -14px; }
 .bpop .pp-text { margin-top: 20px; }
-.pop-active { margin-top: 20px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
-.pop-earn { display: flex; flex-direction: column; align-items: center; }
-.pop-earn img { width: 176px; filter: drop-shadow(0 8px 12px rgba(120,70,0,.3)); }
-.pp-scrim.on .pop-earn img { animation: pop .6s .1s var(--bouncy) both; }
-.pop-earn .pp-eyebrow { margin-top: 6px; font-size: 17px; line-height: 22px; }
-.pop-earn s { margin-top: 2px; font-size: 22px; line-height: 28px; font-weight: 600; text-decoration-color: #ff7a1a; text-decoration-thickness: 3px; font-variant-numeric: tabular-nums; }
-.pop-earn .pp-amount { color: var(--violet-400); }
-.adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+.bx-active { margin-top: 20px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
+.bx-earn { display: flex; flex-direction: column; align-items: center; }
+.bx-earn img { width: 176px; filter: drop-shadow(0 8px 12px rgba(120,70,0,.3)); }
+.pp-scrim.on .bx-earn img { animation: bx-pop .6s .1s var(--bouncy) both; }
+.bx-earn .pp-eyebrow { margin-top: 6px; font-size: 17px; line-height: 22px; }
+.bx-earn s { margin-top: 2px; font-size: 22px; line-height: 28px; font-weight: 600; text-decoration-color: #ff7a1a; text-decoration-thickness: 3px; font-variant-numeric: tabular-nums; }
+.bx-earn .pp-amount { color: var(--violet-400); }
 /* what each mode shows */
-.bpop[data-mode="intro"] .pop-active, .bpop[data-mode="intro"] .pop-earn, .bpop[data-mode="intro"] .pill { display: none; }
-.bpop[data-mode="active"] .pp-text, .bpop[data-mode="active"] .pop-earn, .bpop[data-mode="active"] .pp-btn, .bpop[data-mode="active"] .pill { display: none; }
+.bpop[data-mode="intro"] .bx-active, .bpop[data-mode="intro"] .bx-earn, .bpop[data-mode="intro"] .bx-pill { display: none; }
+.bpop[data-mode="active"] .pp-text, .bpop[data-mode="active"] .bx-earn, .bpop[data-mode="active"] .pp-btn, .bpop[data-mode="active"] .bx-pill { display: none; }
 .bpop[data-mode="active"] { --pp-bg: var(--violet-400); }
-.bpop[data-mode="active"] .flip em { color: #fff; }
-.bpop[data-mode="progress"] .flip, .bpop[data-mode="progress"] .pp-text, .bpop[data-mode="progress"] .pop-active, .bpop[data-mode="progress"] .pp-btn { display: none; }
-.bpop[data-mode="over"] .flip, .bpop[data-mode="over"] .pp-text, .bpop[data-mode="over"] .pop-active, .bpop[data-mode="over"] .pp-btn, .bpop[data-mode="over"] .pill { display: none; }
-.bpop[data-mode="progress"] .pop-rays, .bpop[data-mode="over"] .pop-rays { display: block; }
+.bpop[data-mode="active"] .bx-flip em { color: #fff; }
+.bpop[data-mode="progress"] .bx-flip, .bpop[data-mode="progress"] .pp-text, .bpop[data-mode="progress"] .bx-active, .bpop[data-mode="progress"] .pp-btn { display: none; }
+.bpop[data-mode="over"] .bx-flip, .bpop[data-mode="over"] .pp-text, .bpop[data-mode="over"] .bx-active, .bpop[data-mode="over"] .pp-btn, .bpop[data-mode="over"] .bx-pill { display: none; }
+.bpop[data-mode="progress"] .bx-rays, .bpop[data-mode="over"] .bx-rays { display: block; }
 .bpop[data-mode="over"] .pp-body { margin-top: -30px; }
-.bpop[data-mode="over"] .over-title { display: block; animation: pop .5s var(--bouncy) both; }
+.bpop[data-mode="over"] .bx-over-title { display: block; animation: bx-pop .5s var(--bouncy) both; }
 
 /* rewarded video and game stand-in */
 .ad { position: absolute; inset: 0; z-index: 75; background: #05060a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0; pointer-events: none; transition: opacity .25s; }
@@ -173,14 +172,14 @@ button { font-family: var(--font); }
         <div class="home" id="home">
           <div class="hdr" id="hdr" data-state="default">
             <img class="art hdr-default" src="{{banner}}" alt="Win $1,000 event">
-            <button class="ev" id="ev" aria-label="2x coins, limited event">
+            <button class="bx-ev" id="ev" aria-label="2x coins, limited event">
               <canvas id="confetti" aria-hidden="true"></canvas>
-              <span class="ev-left">
-                <span class="ev-offer ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="adtag">Watch ad</span></span>
-                <span class="ev-offer ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
-                <span class="ev-timer flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
+              <span class="bx-ev-left">
+                <span class="bx-ev-offer bx-ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></span>
+                <span class="bx-ev-offer bx-ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
+                <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
-              <span class="ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
+              <span class="bx-ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
             </button>
             <div class="stripwrap">
               <div class="strip">
@@ -201,27 +200,27 @@ button { font-family: var(--font); }
         <div class="pp-scrim" id="modal" data-mode="intro">
           <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
           <div class="pp bpop" id="pop" data-size="standard" data-mode="intro" role="dialog" aria-label="2x coins">
-            <div class="over-title">Congrats!</div>
-            <div class="pop-rays" aria-hidden="true"></div>
-            <div class="pp-over"><img class="pop-coins" src="{{topcoins}}" alt=""></div>
+            <div class="bx-over-title">Congrats!</div>
+            <div class="bx-rays" aria-hidden="true"></div>
+            <div class="pp-over"><img class="bx-coins" src="{{topcoins}}" alt=""></div>
             <div class="pp-card" id="popCard">
               <div class="pp-head" data-curve>
                 <img src="{{logo}}" alt="2x coins">
                 <div class="pp-eyebrow" id="popSub">Start ahead</div>
-                <span class="pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
+                <span class="bx-pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
               </div>
               <div class="pp-body">
-                <div class="flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
+                <div class="bx-flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
                 <p class="pp-text">You have 24 hours to double all the coins you earn playing your favorite games.</p>
-                <div class="pop-active"><b class="pp-title">Bonus is active!</b><span class="pp-text" style="margin:0;display:block">Play games to earn coins</span></div>
-                <div class="pop-earn" id="popEarn">
+                <div class="bx-active"><b class="pp-title">Bonus is active!</b><span class="pp-text" style="margin:0;display:block">Play games to earn coins</span></div>
+                <div class="bx-earn" id="popEarn">
                   <img id="popPile" src="{{pile}}" alt="">
                   <span class="pp-eyebrow" id="earnLabel">So far you’ve earned</span>
                   <s id="earnBase">5,000</s>
                   <b class="pp-amount" id="earnTotal">+10,000</b>
                   <p class="pp-text" id="earnNone" style="font-size:15px;line-height:20px" hidden>Play a game and every coin counts twice.</p>
                 </div>
-                <button class="pp-btn" data-tone="boost" id="popStart"><span id="popStartLabel">Start now</span><span class="adtag">Watch ad</span></button>
+                <button class="pp-btn" data-tone="boost" id="popStart"><span id="popStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></button>
               </div>
             </div>
           </div>

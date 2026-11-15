@@ -2,7 +2,7 @@
 
 The one frame for every centered pop-up: offers, rewards, summaries and confirmations. The cash-out sheet slides up from the bottom and is a separate component (`CashoutSheet`); it does not follow these rules.
 
-Styles: `tools/src/popup.css` (copied into `design-system/components/onboarding.css` and both prototypes at build time).
+Styles: `tools/src/popup.css` (copied into `design-system/components/onboarding.css` and both prototypes by `tools/build.py`). Colours come from tokens. RewardCard and BoostPopup are built on it.
 
 ## Fixed for every pop-up
 
@@ -27,7 +27,7 @@ Styles: `tools/src/popup.css` (copied into `design-system/components/onboarding.
 - **Header**: colour or gradient (`--pp-head`), an illustration or logo, an optional curved bottom edge (`data-curve`).
 - **Art above the card**: anything in `.pp-over` may poke out past the top edge (the coins on the 2x coins pop-up).
 - **Effects**: rays, particles and confetti, behind the card or inside the header. Keep them slow and soft.
-- **Card colour**: `--pp-bg`. On a dark card set `data-theme="dark"` so text turns white.
+- **Card colour**: `--pp-bg`. For a dark card set `data-card="dark"` (the `card="dark"` prop): text turns white and, without a `--pp-bg`, the card uses the `overlay` token. Cards stay light in the app's dark mode unless you ask for a dark card.
 - **Body content**: a timer, a coin pile, an amount, a short list. It goes between the title and the button.
 
 ## Button tones
