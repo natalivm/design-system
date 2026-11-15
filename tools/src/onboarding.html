@@ -8,7 +8,7 @@
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
   --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --navy-900: #000748; --ink: #02266e; --ink-secondary: #5b6378;
   --mission-top: #a712f1; --mission-bottom: #0017aa; --row: #eff4fe; --row-coin: #8bd3ff; --gold: #ffdd20; --mint: #0bdd66;
-  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #0b2a12;
+  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #0b2a12; --orange: #ff7a1a;
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -154,6 +154,62 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .congrats .pile { height: 180px; } .congrats .pile img { width: 240px; }
 .congrats .amount { color: #fff; font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; }
 
+/* ---------- full screens: Terms, Trusted by ---------- */
+.full { position: absolute; inset: 0; z-index: 70; background: #fff; color: var(--ink); display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; pointer-events: none; transform: translateY(16px); transition: opacity .35s var(--smooth), transform .45s var(--snappy); }
+.full.on { opacity: 1; pointer-events: auto; transform: none; }
+.full-foot { width: 100%; box-sizing: border-box; padding: 16px 16px 34px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.primary { width: 100%; height: 50px; border: 0; border-radius: 999px; background: var(--blue-500); color: var(--on-accent); font: 600 17px/22px var(--font); cursor: pointer; transition: transform .15s var(--snappy), opacity .15s; }
+.primary:active { transform: scale(.98); opacity: .7; }
+.plain { min-height: 44px; padding: 0 20px; border: 0; background: none; color: var(--ink); font: 600 17px/22px var(--font); cursor: pointer; }
+.terms-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 32px; }
+.terms-body img { width: 120px; margin-bottom: 12px; }
+.full h2 { margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; }
+.terms-body p { margin: 0; font-size: 15px; line-height: 20px; font-weight: 500; color: var(--ink-secondary); }
+.terms-body p span { color: var(--blue-500); font-weight: 600; }
+.trust-top { flex: 1; width: 100%; box-sizing: border-box; padding: 64px 16px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; color: #fff; overflow: hidden;
+  background: radial-gradient(120% 60% at 50% 0%, #4a22d6 0%, transparent 70%), linear-gradient(180deg, #2b12a8, var(--mission-bottom)); }
+.trust-top h2 { font-size: 28px; line-height: 34px; }
+.trust-top h3 { margin: 8px 0 0; font-size: 17px; line-height: 22px; font-weight: 600; }
+.trust-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.trust-card { background: #fff; color: var(--ink); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
+.trust-card small { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--ink-secondary); }
+.trust-card b { font-size: 28px; line-height: 34px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.trust-card .stars { color: #e8a200; font-size: 15px; line-height: 20px; letter-spacing: 2px; }
+.trust-card.wide { grid-column: 1 / -1; align-items: flex-start; text-align: left; gap: 8px; }
+.trust-card.wide p { margin: 0; font-size: 15px; line-height: 20px; font-weight: 500; }
+.trust-card.pay b { font-size: 20px; line-height: 25px; }
+.trust-top .more { font-size: 15px; line-height: 20px; font-weight: 500; opacity: .85; }
+
+/* ---------- Congrats extras, boost offer, rewarded video ---------- */
+.amount-row { display: flex; align-items: flex-start; justify-content: center; gap: 8px; }
+.x2 { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--gold); transform: rotate(-8deg); text-shadow: 0 2px 0 rgba(60,20,0,.5); }
+.cta .vid { display: inline-block; vertical-align: -3px; margin-left: 8px; }
+.cta.boost { background: linear-gradient(200deg, #ffb347, var(--orange)); color: #2a1200; }
+.boost-row { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 22px; line-height: 28px; font-weight: 700; }
+.boost-row b { color: var(--gold); font-weight: 800; text-shadow: 0 2px 0 rgba(60,20,0,.5); }
+.boost-row img { width: 32px; height: 32px; }
+.ad { position: absolute; inset: 0; z-index: 75; background: #05060a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.ad.on { opacity: 1; pointer-events: auto; }
+.ad b { font-size: 17px; line-height: 22px; font-weight: 600; } .ad small { font-size: 13px; line-height: 18px; color: #9aa5b5; }
+.ad-bar { width: 200px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.2); overflow: hidden; }
+.ad-bar i { display: block; height: 100%; width: 0; background: #fff; }
+.ad.on .ad-bar i { width: 100%; transition: width 1.7s linear; }
+.mc-boost { display: none; position: absolute; left: 132px; right: 12px; top: 72px; justify-content: center; }
+.mc-boost span { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 999px; background: linear-gradient(200deg, #ffb347, var(--orange)); color: #2a1200; font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mc.boosted .mc-done { display: none; } .mc.boosted .mc-boost { display: flex; }
+
+/* ---------- push notification ---------- */
+.push { position: absolute; left: 8px; right: 8px; top: 54px; z-index: 80; display: flex; align-items: center; gap: 12px; padding: 12px; border: 0; border-radius: 24px; text-align: left; cursor: pointer; font-family: var(--font);
+  background: rgba(245,246,250,.92); color: #0b1220; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); box-shadow: 0 10px 30px rgba(0,0,0,.3); transform: translateY(-160%); transition: transform .5s var(--bouncy); }
+.push.on { transform: none; }
+.push-icon { flex: none; width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(180deg, var(--mission-top), var(--mission-bottom)); overflow: hidden; }
+.push-icon img { width: 52px; margin: -2px 0 0 -6px; }
+.push-main { flex: 1; min-width: 0; }
+.push-top { display: flex; justify-content: space-between; font-size: 13px; line-height: 18px; font-weight: 600; } .push-top span { color: #5b6378; font-weight: 500; }
+.push-main p { margin: 0; font-size: 15px; line-height: 20px; font-weight: 500; }
+.push-dots { display: flex; gap: 4px; margin-top: 4px; }
+.push-dots i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #0bb35a; box-sizing: border-box; } .push-dots i.done { background: #0bb35a; }
+
 /* flying coins */
 .fly { position: absolute; z-index: 85; width: 30px; height: 30px; pointer-events: none; will-change: transform; }
 .toast { position: absolute; left: 50%; top: 60px; z-index: 88; transform: translate(-50%, -20px); opacity: 0; background: rgba(20,24,40,.92); color: #fff; font: 600 13px/18px var(--font); padding: 10px 14px; border-radius: 999px; white-space: nowrap; pointer-events: none; transition: opacity .25s, transform .25s var(--snappy); }
@@ -189,6 +245,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
                 <div class="mc-title" id="mcTitle">Fast track to max earnings!</div>
                 <div class="mc-dots" id="dots" aria-label="Missions done"></div>
                 <div class="mc-done"><img src="{{coin}}" alt="">Missions complete</div>
+                <div class="mc-boost"><span>2x coins · <span id="boostClock">15:00</span></span></div>
                 <button class="mc-toggle" id="mcToggle" aria-label="Show or hide missions"><i></i></button>
               </div>
               <div class="mc-rows" id="rows"></div>
@@ -216,11 +273,54 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
             <h2>Congrats!</h2>
             <p>Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
-            <div class="amount" id="congratsAmount">1,500</div>
-            <button class="cta" id="congratsOk">Claim now</button>
+            <div class="amount-row"><div class="amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
+            <button class="cta" id="congratsOk">Get double<svg class="vid" width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="16" rx="4" fill="#0b2a12"/><path d="M9 4.5v7l6-3.5z" fill="#fff"/></svg></button>
           </div>
-          <button class="linkbtn" id="congratsClose">Close</button>
+          <button class="linkbtn" id="congratsClose">Claim 1,500</button>
         </div>
+
+        <div class="modal" id="boost" role="dialog" aria-label="Coins boost">
+          <div class="congrats">
+            <h2>Congrats!</h2>
+            <p>Get a 2x coins boost</p>
+            <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
+            <div class="boost-row"><b>2x coins</b><img src="{{clock}}" alt="">15 min</div>
+            <button class="cta boost" id="boostOk">Boost now<svg class="vid" width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="16" rx="4" fill="#2a1200"/><path d="M9 4.5v7l6-3.5z" fill="#fff"/></svg></button>
+          </div>
+          <button class="linkbtn" id="boostSkip">Skip</button>
+        </div>
+
+        <div class="ad" id="ad" role="status"><b>Rewarded video</b><div class="ad-bar"><i></i></div><small>Your reward unlocks when it ends</small></div>
+
+        <div class="full" id="terms" role="dialog" aria-label="Terms and conditions">
+          <div class="terms-body">
+            <img src="{{handshake}}" alt="">
+            <h2>Terms and conditions</h2>
+            <p>To continue playing, confirm that you agree to our <span>Terms of Service</span> and have read our <span>Privacy Policy</span>.</p>
+          </div>
+          <div class="full-foot"><button class="primary" id="termsOk">Accept</button></div>
+        </div>
+
+        <div class="full" id="trust" role="dialog" aria-label="Trusted by players">
+          <div class="trust-top">
+            <h2>Trusted by<br>10M+ users</h2>
+            <div class="trust-row">
+              <div class="trust-card"><small>Google reviews</small><b>4.6</b><span class="stars" aria-hidden="true">★★★★★</span><small>Based on 123 reviews</small></div>
+              <div class="trust-card"><small>Trustpilot</small><b>4.8 / 5</b><span class="stars" aria-hidden="true">★★★★★</span><small>Based on 456 reviews</small></div>
+            </div>
+            <h3>Don’t believe us? Check our reviews</h3>
+            <div class="trust-row"><div class="trust-card wide"><small>Player review · placeholder</small><span class="stars" aria-hidden="true">★★★★★</span><p>A real, verified player review goes here, with the reviewer’s permission.</p></div></div>
+            <h3>Cash outs with</h3>
+            <div class="trust-row"><div class="trust-card pay"><b>PayPal</b></div><div class="trust-card pay"><b>Amazon</b></div></div>
+            <span class="more">and many more!</span>
+          </div>
+          <div class="full-foot"><button class="primary" id="trustOk">Continue</button><button class="plain" id="trustSkip">Skip</button></div>
+        </div>
+
+        <button class="push" id="push" aria-label="Notification: Fast track to max earnings">
+          <span class="push-icon"><img src="{{fox}}" alt=""></span>
+          <span class="push-main"><span class="push-top">BestPlay<span>now</span></span><p>Fast track to max earnings! 1 of 3 done, keep going.</p><span class="push-dots"><i class="done"></i><i></i><i></i></span></span>
+        </button>
 
         <div class="toast" id="toast" role="status"></div>
         <div class="ring" id="ring" aria-hidden="true"></div>
@@ -240,12 +340,15 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       <div class="chips" id="scenarios">
         <button class="chip" data-s="first" aria-pressed="true">First launch</button>
         <button class="chip" data-s="progress" aria-pressed="false">Second task</button>
+        <button class="chip" data-s="push" aria-pressed="false">Push notification</button>
         <button class="chip" data-s="complete" aria-pressed="false">All missions done</button>
       </div>
     </div>
     <div class="group">
       <span class="label">Where you are</span>
       <ol class="flow" id="flow">
+        <li data-f="terms">Terms and conditions</li>
+        <li data-f="trust">Trusted by players</li>
         <li data-f="balance">Coach marks: coins and cash</li>
         <li data-f="intro">Coach mark: your tasks</li>
         <li data-f="first">First task: claim</li>
@@ -254,6 +357,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <li data-f="second">Second task</li>
         <li data-f="play">Playing and claiming</li>
         <li data-f="congrats">Missions complete</li>
+        <li data-f="boost">2x boost offer</li>
         <li data-f="done">Home, missions collapsed</li>
       </ol>
     </div>
@@ -281,8 +385,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   var BONUS = 1500;
   var S;
   function fresh(s) {
-    var m = s === "first" ? ["claim", "go", "go"] : s === "progress" ? ["claimed", "go", "go"] : ["claimed", "claimed", "claimed"];
-    return { scenario: s, coins: s === "first" ? 236378 : s === "progress" ? 237378 : 239878, m: m, p: [0, 0, 0], bonus: false, busy: false };
+    var m = s === "first" ? ["claim", "go", "go"] : (s === "progress" || s === "push") ? ["claimed", "go", "go"] : ["claimed", "claimed", "claimed"];
+    return { scenario: s, coins: s === "first" ? 236378 : (s === "progress" || s === "push") ? 237378 : 239878, m: m, p: [0, 0, 0], bonus: false, busy: false };
   }
 
   /* ---------- helpers ---------- */
@@ -398,19 +502,53 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     }
   }
   function showCongrats() { uncoach(); setStep("congrats"); $("homeInd").classList.add("light"); $("congrats").classList.add("on"); glowCongrats.start(); }
-  function finish(claimed) {
-    $("congrats").classList.remove("on"); $("homeInd").classList.remove("light");
-    var after = function () { S.bonus = claimed; renderRows(); $("mc").classList.add("collapsed"); setStep("done"); if (claimed) toast("All missions complete"); };
-    if (claimed) { S.busy = true; flyCoins($("congratsPile"), 20, BONUS).then(function () { S.busy = false; after(); }); } else after();
+  // A rewarded video stands in for the ad; the reward unlocks when it ends.
+  function watchVideo() {
+    var ad = $("ad"); ad.classList.add("on");
+    return sleep(1900).then(function () { ad.classList.remove("on"); return sleep(250); });
   }
+  function finish(mult) {
+    if (S.busy) return; S.busy = true;
+    var run = mult === 2 ? watchVideo() : Promise.resolve(), sc = S;
+    run.then(function () {
+      if (S !== sc) return;
+      $("congrats").classList.remove("on"); $("homeInd").classList.remove("light");
+      return flyCoins($("congratsPile"), mult === 2 ? 28 : 20, BONUS * mult);
+    }).then(function () {
+      if (S !== sc) return;
+      S.busy = false; S.bonus = true; renderRows(); $("mc").classList.add("collapsed");
+      return sleep(500).then(function () { if (S === sc) showBoost(); });
+    });
+  }
+  function showBoost() { setStep("boost"); $("homeInd").classList.add("light"); $("boost").classList.add("on"); glowBoost.start(); }
+  var boostT = 0;
+  function endBoost(taken) {
+    if (S.busy) return; var sc = S;
+    var done = function () {
+      if (S !== sc) return;
+      S.busy = false; $("boost").classList.remove("on"); $("homeInd").classList.remove("light"); setStep("done");
+      if (taken) {
+        $("mc").classList.add("boosted"); toast("2x coins for 15 minutes"); var left = 900; clearInterval(boostT);
+        boostT = setInterval(function () { left = Math.max(0, left - 1); $("boostClock").textContent = Math.floor(left / 60) + ":" + (left % 60 < 10 ? "0" : "") + left % 60; }, 1000);
+      } else toast("All missions complete");
+    };
+    if (taken) { S.busy = true; watchVideo().then(done); } else done();
+  }
+  function showTerms() { setStep("terms"); $("terms").classList.add("on"); }
+  $("termsOk").onclick = function () { $("terms").classList.remove("on"); setStep("trust"); $("trust").classList.add("on"); };
+  function leaveTrust() { $("trust").classList.remove("on"); setTimeout(function () { if (S.scenario === "first") intro(); }, 450); }
+  $("trustOk").onclick = leaveTrust; $("trustSkip").onclick = leaveTrust;
+  $("push").onclick = function () { $("push").classList.remove("on"); setTimeout(focusSecond, 350); };
+  $("boostOk").onclick = function () { endBoost(true); };
+  $("boostSkip").onclick = function () { endBoost(false); };
   $("coachNext").onclick = nextHint;
   $("dim").onclick = function () { if ($("coachNext").hidden === false) nextHint(); };
   $("rewardOk").onclick = function () {
     $("reward").classList.remove("on"); $("homeInd").classList.remove("light");
     claimRow(0, $("rewardPile")).then(function () { return sleep(500); }).then(function () { if (S.m[1] === "go" && S.scenario === "first") focusSecond(); });
   };
-  $("congratsOk").onclick = function () { finish(true); };
-  $("congratsClose").onclick = function () { finish(false); };
+  $("congratsOk").onclick = function () { finish(2); };
+  $("congratsClose").onclick = function () { finish(1); };
   $("mcToggle").onclick = function () { $("mc").classList.toggle("collapsed"); };
 
   /* ---------- reward glow: god rays under the coins (WebGL shader), light motes above them (canvas) ---------- */
@@ -490,13 +628,15 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   }
   var glowReward = makeGlow("rewardPile", "reward", [1.0, 0.82, 0.18]);
   var glowCongrats = makeGlow("congratsPile", "congrats", [1.0, 0.78, 0.30]);
+  var glowBoost = makeGlow("boostPile", "boost", [1.0, 0.62, 0.22]);
 
   /* ---------- scenarios and autoplay ---------- */
   var runId = 0;
   var SCRIPTS = {
-    first: [["coachNext", 900], ["coachNext", 900], ["coachNext", 1500], ["btn0", 2300], ["rewardOk", 3400], ["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 3600]],
-    progress: [["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 3600]],
-    complete: [["congratsOk", 3600]]
+    first: [["termsOk", 900], ["trustOk", 1500], ["coachNext", 900], ["coachNext", 900], ["coachNext", 1500], ["btn0", 2300], ["rewardOk", 3400], ["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 6600], ["boostOk", 3600]],
+    progress: [["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 6600], ["boostOk", 3600]],
+    push: [["push", 1700], ["btn1", 2400], ["btn1", 2600]],
+    complete: [["congratsOk", 6600], ["boostOk", 3600]]
   };
   var playing = false;
   function setPlaying(on) { playing = on; $("playNote").hidden = !on; var b = $("playBtn"); b.textContent = on ? "\u23f8 Pause" : "\u25b6 Play"; b.setAttribute("aria-pressed", on ? "true" : "false"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
@@ -519,10 +659,10 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   }
   function startScenario(s, noPlay) {
     Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
-    $("reward").classList.remove("on"); $("congrats").classList.remove("on"); uncoach();
+    ["reward", "congrats", "boost", "ad", "terms", "trust", "push"].forEach(function (id) { $(id).classList.remove("on"); }); uncoach(); clearInterval(boostT);
     Array.prototype.forEach.call(document.querySelectorAll(".fly"), function (c) { c.remove(); });
-    S = fresh(s); $("mc").classList.remove("collapsed", "finished"); renderRows(); $("home").scrollTop = 0;
-    setTimeout(function () { if (S.scenario !== s) return; if (s === "first") intro(); else if (s === "progress") focusSecond(); else showCongrats(); }, 500);
+    S = fresh(s); $("mc").classList.remove("collapsed", "finished", "boosted"); $("boostClock").textContent = "15:00"; renderRows(); $("home").scrollTop = 0;
+    setTimeout(function () { if (S.scenario !== s) return; if (s === "first") showTerms(); else if (s === "progress") focusSecond(); else if (s === "push") { setStep("second"); $("push").classList.add("on"); } else showCongrats(); }, 500);
     if (noPlay) stopPlay(); else autoplay(s);
   }
   Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
@@ -538,7 +678,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   }
   window.addEventListener("resize", fit); fit();
 
-  S = fresh("first"); renderRows(); setStep("balance");
+  S = fresh("first"); renderRows(); setStep("terms");
   setTimeout(function () { if (runId === 0) startScenario("first"); }, 900);
 })();
 </script>
