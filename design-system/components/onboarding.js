@@ -54,11 +54,11 @@
     "              + pow(0.5 + 0.5*sin(a*5.0 + t*0.12 + 4.1), 2.0) * 0.25;",
     "  beams *= 0.75 + 0.5*noise(vec2(a*3.0, t*0.6 - r*4.0));",             // shimmer travelling outward
     "  float reach = smoothstep(0.46, 0.03, r);",                           // soft falloff, no hard edge
-    "  float core = exp(-r*r*60.0) * 0.55;",                                       // hot centre
-    "  float halo = exp(-r*r*11.0) * 0.32;",
-    "  float pulse = 0.9 + 0.1*sin(t*1.6);",
-    "  float lum = (beams*reach*0.95 + halo + core) * pulse;",
-    "  vec3 col = mix(uTint, vec3(1.0, 0.98, 0.86), clamp(core*1.4 + beams*reach*0.25, 0.0, 1.0));",
+    "  float core = exp(-r*r*30.0) * 0.16;",                                       // hot centre
+    "  float halo = exp(-r*r*9.0) * 0.20;",
+    "  float pulse = 0.95 + 0.05*sin(t*1.1);",
+    "  float lum = (beams*reach*0.30 + halo + core) * pulse;",   // soft: the rays stay well under the coins' brightness
+    "  vec3 col = mix(uTint, vec3(1.0, 0.95, 0.8), clamp(core*1.2, 0.0, 0.5));",
     "  gl_FragColor = vec4(col * lum, lum);",
     "}"].join("\n");
   // pile: the element holding the coins. isActive(): keep animating while this returns true.
@@ -86,15 +86,15 @@
       var ang = Math.random() * Math.PI * 2, rad = Math.random() * 95;
       p.x = SIZE / 2 + Math.cos(ang) * rad * 1.25; p.y = SIZE / 2 + 30 + Math.sin(ang) * rad * 0.55;
       p.vx = (Math.random() - .5) * 14; p.vy = -(14 + Math.random() * 34); p.r = 1.2 + Math.random() * 2.6;
-      p.life = first ? Math.random() : 0; p.span = 1.6 + Math.random() * 2.2; p.tw = Math.random() * 6.28; p.star = Math.random() < 0.28;
+      p.life = first ? Math.random() : 0; p.span = 1.6 + Math.random() * 2.2; p.tw = Math.random() * 6.28; p.star = Math.random() < 0.15;
     }
-    for (var i = 0; i < 34; i++) { var p = {}; spawn(p, true); P.push(p); }
+    for (var i = 0; i < 20; i++) { var p = {}; spawn(p, true); P.push(p); }
     function drawMotes(dt, t) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, SIZE, SIZE); ctx.globalCompositeOperation = "lighter";
       for (var i = 0; i < P.length; i++) {
         var p = P[i]; p.life += dt / p.span; if (p.life >= 1) spawn(p, false);
         p.x += (p.vx + Math.sin(t * 1.3 + p.tw) * 10) * dt; p.y += p.vy * dt;
-        var fade = Math.sin(Math.PI * p.life), tw = 0.65 + 0.35 * Math.sin(t * 5 + p.tw), a = fade * tw, R = p.r * (p.star ? 7 : 5);
+        var fade = Math.sin(Math.PI * p.life), tw = 0.7 + 0.3 * Math.sin(t * 3 + p.tw), a = fade * tw * 0.6, R = p.r * (p.star ? 7 : 5);
         var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
         g.addColorStop(0, "rgba(255,252,225," + a + ")"); g.addColorStop(0.25, "rgba(255,221,90," + a * 0.55 + ")"); g.addColorStop(1, "rgba(255,190,40,0)");
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.2832); ctx.fill();
