@@ -116,7 +116,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .mr.claimed { background: var(--green-700); color: #fff; box-shadow: inset 0 0 0 2px var(--mint); }
 .mr.claimed .mr-coin { background: rgba(0,0,0,.18); opacity: .7; }
 .mr.claimed .mr-btn { background: none; color: #fff; animation: none; padding: 0 6px; }
-.mr-btn:focus-visible, .mc-toggle:focus-visible, .cta:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mr-btn:focus-visible, .mc-toggle:focus-visible, .pp-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 
 /* ---------- CoachMark ---------- */
 .dim { position: absolute; inset: 0; z-index: 30; background: rgba(8,10,28,.78); opacity: 0; pointer-events: none; transition: opacity .45s var(--smooth); }
@@ -131,29 +131,21 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .hand.on { opacity: 1; animation: poke 1s var(--smooth) infinite; }
 @keyframes poke { 0%, 100% { transform: translate(0, 0) rotate(-8deg); } 50% { transform: translate(-7px, -9px) rotate(-8deg) scale(.94); } }
 
-/* ---------- RewardModal ---------- */
-.modal { position: absolute; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 24px; background: rgba(8,10,28,.9); color: #fff; text-align: center; opacity: 0; pointer-events: none; transition: opacity .35s var(--smooth); }
-.modal.on { opacity: 1; pointer-events: auto; }
-.modal h2 { margin: 0; font-size: 28px; line-height: 34px; font-weight: 700; }
-.pile { position: relative; width: 300px; height: 210px; display: grid; place-items: center; }
+{{popup_css}}
+/* ---------- onboarding pop-ups: what this feature puts in the Popup's free slots ---------- */
+.ob-pop { --pp-bg: linear-gradient(180deg, var(--mission-top) 10%, var(--mission-bottom) 100%); }
+.ob-pop .pp-card { box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.12); }
+.ob-pop .pp-body > :not(.pile) { position: relative; z-index: 3; }
+.ob-pop .pp-title { color: var(--gold); text-shadow: 0 3px 0 rgba(60,20,0,.5); }
+.ob-pop .pp-text { margin-top: 2px; font-weight: 600; }
+.pile { position: relative; width: 289px; height: 180px; display: grid; place-items: center; }
 .pile::after { content: ""; position: absolute; width: 230px; height: 230px; border-radius: 50%; background: radial-gradient(circle, rgba(255,221,32,.16), transparent 68%); }
 .pile canvas { position: absolute; left: 50%; top: 50%; width: 460px; height: 460px; margin: -250px 0 0 -230px; pointer-events: none; }
 .pile canvas.rays { z-index: 0; mix-blend-mode: screen; }
 .pile canvas.motes { z-index: 2; mix-blend-mode: screen; }
-.pile img { position: relative; z-index: 1; width: 290px; filter: drop-shadow(0 10px 18px rgba(60,10,0,.45)); }
-.modal.on .pile img { animation: pop .6s var(--bouncy) both; }
+.pile img { position: relative; z-index: 1; width: 240px; filter: drop-shadow(0 10px 18px rgba(60,10,0,.45)); }
+.pp-scrim.on .pile img { animation: pop .6s var(--bouncy) both; }
 @keyframes pop { from { transform: scale(.5) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
-.amount { font-size: 34px; line-height: 41px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
-.modal p { margin: 0; font-size: 17px; line-height: 22px; font-weight: 600; max-width: 260px; }
-.cta { margin-top: 16px; width: 100%; max-width: 300px; height: 50px; border: 0; border-radius: 999px; font: 600 17px/22px var(--font); cursor: pointer; background: linear-gradient(200deg, var(--claim-a), var(--claim-b)); color: var(--claim-ink); box-shadow: 0 4px 0 rgba(0,0,0,.25); transition: transform .15s var(--snappy); }
-.cta:active { transform: scale(.97) translateY(2px); }
-.linkbtn { margin-top: 8px; background: none; border: 0; color: #fff; font: 600 15px/44px var(--font); text-decoration: underline; cursor: pointer; }
-.congrats { width: 100%; max-width: 330px; box-sizing: border-box; border-radius: 24px; padding: 24px 20px 20px; background: linear-gradient(180deg, var(--mission-top) 10%, var(--mission-bottom) 100%); box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.12); display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; overflow: hidden; }
-.modal.on .congrats { animation: pop .5s var(--bouncy) both; }
-.congrats > :not(.pile) { position: relative; z-index: 3; }
-.congrats h2 { color: var(--gold); text-shadow: 0 3px 0 rgba(60,20,0,.5); }
-.congrats .pile { height: 180px; } .congrats .pile img { width: 240px; }
-.congrats .amount { color: #fff; font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; }
 
 /* ---------- full screens: Terms, Trusted by ---------- */
 .full { position: absolute; inset: 0; z-index: 70; background: #fff; color: var(--ink); display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; pointer-events: none; transform: translateY(16px); transition: opacity .35s var(--smooth), transform .45s var(--snappy); }
@@ -185,7 +177,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .amount-row { display: flex; align-items: flex-start; justify-content: center; gap: 8px; }
 .x2 { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--gold); transform: rotate(-8deg); text-shadow: 0 2px 0 rgba(60,20,0,.5); }
 .adtag { display: inline-block; margin-left: 10px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
-.cta.boost { background: linear-gradient(200deg, #ffb347, var(--orange)); color: #2a1200; }
 .boost-row { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 22px; line-height: 28px; font-weight: 700; }
 .boost-row b { color: var(--gold); font-weight: 800; text-shadow: 0 2px 0 rgba(60,20,0,.5); }
 .boost-row img { width: 32px; height: 32px; }
@@ -285,34 +276,36 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <div class="coach" id="coach" role="status"><span id="coachText"></span><button id="coachNext">Tap to continue</button></div>
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
-        <div class="modal" id="reward" role="dialog" aria-label="Welcome reward">
-          <h2>Welcome reward!</h2>
-          <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
-          <div class="amount" id="rewardAmount">+1,000 coins</div>
-          <p>Start playing to earn even more!</p>
-          <button class="cta" id="rewardOk">Awesome!</button>
+        <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward">
+          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+            <h2 class="pp-title">Welcome reward!</h2>
+            <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
+            <div class="pp-amount" id="rewardAmount">+1,000</div>
+            <p class="pp-text">Start playing to earn even more!</p>
+            <button class="pp-btn" data-tone="claim" id="rewardOk">Awesome!</button>
+          </div></div></div>
         </div>
 
-        <div class="modal" id="congrats" role="dialog" aria-label="Missions complete">
-          <div class="congrats">
-            <h2>Congrats!</h2>
-            <p>Missions complete!</p>
+        <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete">
+          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+            <h2 class="pp-title">Congrats!</h2>
+            <p class="pp-text">Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
-            <div class="amount-row"><div class="amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
-            <button class="cta" id="congratsOk">Get double<span class="adtag">Watch ad</span></button>
-          </div>
-          <button class="linkbtn" id="congratsClose">Claim 1,500</button>
+            <div class="amount-row"><div class="pp-amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
+            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="adtag">Watch ad</span></button>
+          </div></div></div>
+          <button class="pp-dismiss" id="congratsClose">Claim 1,500</button>
         </div>
 
-        <div class="modal" id="boost" role="dialog" aria-label="Coins boost">
-          <div class="congrats">
-            <h2>Congrats!</h2>
-            <p>Get a 2x coins boost</p>
+        <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost">
+          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+            <h2 class="pp-title">Congrats!</h2>
+            <p class="pp-text">Get a 2x coins boost</p>
             <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
             <div class="boost-row"><b>2x coins</b><img src="{{clock}}" alt="">15 min</div>
-            <button class="cta boost" id="boostOk">Boost now<span class="adtag">Watch ad</span></button>
-          </div>
-          <button class="linkbtn" id="boostSkip">Skip</button>
+            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="adtag">Watch ad</span></button>
+          </div></div></div>
+          <button class="pp-dismiss" id="boostSkip">Skip</button>
         </div>
 
         <div class="ad" id="ad" role="status"><b>Rewarded video</b><div class="ad-bar"><i></i></div><small>Your reward unlocks when it ends</small></div>
@@ -477,7 +470,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     uncoach(); setStep("reward"); $("homeInd").classList.add("light");
     $("reward").classList.add("on"); glowReward.start();
     var el = $("rewardAmount"), t0 = null;
-    (function f(ts) { if (!t0) t0 = ts || performance.now(); var p = Math.min(1, ((ts || t0) - t0) / 800); el.textContent = "+" + nf.format(Math.round(1000 * (1 - Math.pow(1 - p, 3)))) + " coins"; if (p < 1) requestAnimationFrame(f); })();
+    (function f(ts) { if (!t0) t0 = ts || performance.now(); var p = Math.min(1, ((ts || t0) - t0) / 800); el.textContent = "+" + nf.format(Math.round(1000 * (1 - Math.pow(1 - p, 3))));  if (p < 1) requestAnimationFrame(f); })();
   }
   function claimRow(i, fromEl) {
     S.busy = true;
