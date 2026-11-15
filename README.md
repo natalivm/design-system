@@ -8,6 +8,24 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Scripts and source art used to generate the files above. |
+| `site/` | The website: React + Vite, with a Three.js coin hero and a GLSL shader background. It reads the tokens and components from `design-system/` and embeds the prototype. |
+
+## Website (GitHub Pages)
+
+Live at **https://natalivm.github.io/design-system/** once Pages is turned on.
+
+1. In the repo on GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**.
+2. Merge this branch into `main`. The workflow in `.github/workflows/pages.yml` builds `site/` and deploys it on every push to `main`. You can also run it by hand from the **Actions** tab.
+
+Run it locally:
+
+```bash
+cd site
+npm install
+npm run dev
+```
+
+Open the address Vite prints (it ends in `/design-system/`).
 
 ## Live pages
 
