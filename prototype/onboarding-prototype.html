@@ -20,6 +20,7 @@
   --pink-600: #dd1a5c;
   --pink-50: #ffecf2;
   --pink-ink: #ee145c;
+  --pink-800: #950c3a;
   --violet-400: #9b51e0;
   --violet-600: #7a35c4;
   --ink: #02266e;
@@ -34,6 +35,7 @@
   --danger-surface: #fff1f0;
   --grabber: rgba(2,38,110,0.2);
   --scrim: rgba(0,0,0,0.3);
+  --scrim-popup: rgba(8,10,28,0.84);
   --claim-ink: #ffffff;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
@@ -203,7 +205,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
    Fixed: width, corners, backdrop, entrance, type sizes, button height, where the dismiss link sits.
    Free: the header (colour, art, effects), art that pokes out above the card, and what goes in the body.
    Cards stay light (white, navy text) in both app themes unless a feature sets data-card="dark". */
-.pp-scrim { position: absolute; inset: 0; z-index: 50; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 24px 72px; background: rgba(8,10,28,.84); opacity: 0; pointer-events: none; transition: opacity .3s cubic-bezier(0.4, 0, 0.2, 1); }
+.pp-scrim { position: absolute; inset: 0; z-index: 50; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 24px 72px; background: var(--scrim-popup, rgba(8,10,28,.84)); opacity: 0; pointer-events: none; transition: opacity .3s cubic-bezier(0.4, 0, 0.2, 1); }
 .pp-scrim.on { opacity: 1; pointer-events: auto; }
 .pp { position: relative; width: 100%; max-width: 345px; }
 .pp-scrim.on .pp { animation: pp-in .5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
