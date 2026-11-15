@@ -1,0 +1,538 @@
+<title>2x Coins Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a phone running the 2x coins boost flow, with a scenario panel beside it. */
+:root {
+  --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35;
+  --blue-500: #1464ff; --navy-900: #000748; --ink: #02266e; --gold: #ffdd20;
+  --claim-a: #98f73a; --claim-b: #0bdd66;
+  --pink-400: #f4517c; --pink-600: #dd1a5c; --pink-ink: #ee145c; --pink-50: #ffecf2; /* event colors, new to the system */
+  --violet-400: #9b51e0; --violet-600: #7a35c4;
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+button { font-family: var(--font); }
+.page { min-height: 100%; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; align-items: flex-start;
+  padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* panel */
+.panel { width: 320px; max-width: 100%; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.panel .group { display: flex; flex-direction: column; }
+.panel .group:first-child { padding: 22px 22px 20px; }
+.panel h1 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
+.panel h1::before { content: "Prototype"; display: block; margin-bottom: 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.panel .label { padding: 0 22px 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.chips { counter-reset: sc; border-top: 1px solid var(--line); }
+.chip { counter-increment: sc; display: flex; align-items: center; gap: 14px; width: 100%; min-height: 46px; padding: 0 22px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--muted); font: 500 15px/20px var(--font); text-align: left; cursor: pointer; transition: color .15s, background .15s; }
+.chip::before { content: counter(sc, decimal-leading-zero); font: 500 11px/14px var(--mono); letter-spacing: .08em; color: #5b6676; }
+.chip::after { content: ""; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: #0bdd66; opacity: 0; transform: scale(.4); transition: opacity .2s, transform .2s; }
+.chip:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.chip[aria-pressed="true"] { background: rgba(255,255,255,.05); color: #fff; font-weight: 600; }
+.chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
+.chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: #05070a; border: 1px solid var(--line); }
+.playbtn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: 600 16px/20px var(--font); cursor: pointer; transition: background .18s, color .18s; }
+.playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.playbtn:hover { color: var(--text); }
+.playbtn[aria-pressed="true"] { background: #fff; color: #07090c; }
+.reset { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; border: 0; background: none; cursor: pointer; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
+.reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
+.reset:hover { color: #fff; }
+
+/* device */
+.device-wrap { flex: none; }
+.device { position: relative; width: 417px; height: 876px; border-radius: 64px; background: #0c0d10; padding: 12px; box-sizing: border-box; box-shadow: 0 0 0 2px #2a2c31, 0 30px 80px rgba(0,0,0,.6), 0 0 120px rgba(238,20,92,.12); transform-origin: top left; }
+.screen { position: relative; width: 393px; height: 852px; border-radius: 52px; overflow: hidden; background: #eef3fb; isolation: isolate; color: var(--ink); }
+.island { position: absolute; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; z-index: 90; }
+.home-indicator { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #000; z-index: 95; pointer-events: none; }
+
+/* home */
+.home { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; background: #eef3fb; padding-bottom: 87px; }
+.home::-webkit-scrollbar { display: none; }
+.home img.art { display: block; width: 393px; height: auto; user-select: none; -webkit-user-drag: none; }
+.hdr { position: relative; background: var(--blue-500); transition: background .4s; }
+.hdr[data-state="offer"], .hdr[data-state="active"] { background: var(--pink-600); }
+.hdr[data-state="offer"] .hdr-default, .hdr[data-state="active"] .hdr-default { display: none; }
+.hdr[data-state="default"] .ev { display: none; }
+.stripwrap { position: relative; padding: 0 7px 10px; margin-top: -1px; }
+.strip { height: 64px; border-radius: 16px; background: #fff; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.2); color: var(--ink); }
+.strip > div { display: flex; flex-direction: column; justify-content: center; padding: 0 10px; min-width: 0; }
+.strip small { font-size: 12px; line-height: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.strip b { font-size: 20px; line-height: 25px; font-weight: 700; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 4px; transition: color .3s; }
+.strip b img { width: 22px; height: 22px; transform-origin: center; }
+.s-coins { flex: 1.5; }
+.s-conv { flex: none; width: 76px; background: var(--gold); align-items: center; }
+.s-conv b { font-size: 13px; line-height: 18px; }
+.s-cash { flex: 1; }
+.s-go { flex: none; width: 48px; background: linear-gradient(200deg, var(--claim-a), var(--claim-b)); align-items: center; padding: 0 !important; }
+.boost-tag { display: none; padding: 0 6px; border-radius: 6px; background: var(--violet-400); color: #fff; font-size: 12px; line-height: 16px; font-weight: 700; }
+.hdr[data-state="active"] .boost-tag { display: inline-block; animation: pop .45s var(--bouncy) both; }
+.hdr[data-state="active"] #coins { color: var(--violet-600); }
+.bump { animation: bump .28s var(--bouncy); }
+@keyframes bump { 50% { transform: scale(1.35); } }
+@keyframes pop { from { transform: scale(.5); opacity: 0; } to { transform: none; opacity: 1; } }
+.tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; z-index: 20; background: #fff; }
+.tabbar img { display: block; width: 393px; }
+.body { position: relative; }
+.game { position: absolute; left: 15px; top: 399px; width: 368px; height: 186px; border: 0; border-radius: 14px; background: none; cursor: pointer; }
+.game:active { background: rgba(255,255,255,.18); }
+
+/* ---------- EventBanner: the pink 2x coins header ---------- */
+.ev { position: relative; display: block; width: 100%; height: 190px; border: 0; padding: 0; text-align: left; cursor: pointer; color: #fff; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% -10%, #ff7a9b 0%, transparent 60%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); animation: evIn .5s var(--smooth) both; }
+@keyframes evIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+.ev canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.ev-right { position: absolute; right: 14px; top: 108px; width: 160px; text-align: right; }
+.ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
+.ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+.ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: linear-gradient(180deg, #b06bf0, var(--violet-400)); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; box-shadow: 0 3px 0 var(--violet-600), 0 6px 14px rgba(70,0,90,.35); transition: transform .15s var(--snappy); }
+.ev:active .ev-start { transform: scale(.96) translateY(2px); }
+.ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ev-ends img { width: 16px; height: 16px; }
+.hdr[data-state="offer"] .ev-timer, .hdr[data-state="active"] .ev-offer { display: none; }
+
+/* ---------- FlipTimer ---------- */
+.flip { display: flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+.flip i { position: relative; display: grid; place-items: center; width: var(--fw, 52px); height: var(--fh, 82px); border-radius: var(--fr, 8px); background: linear-gradient(180deg, #fff 0 50%, var(--pink-50) 50% 100%); color: var(--pink-ink); font-style: normal; font-size: var(--fs, 54px); line-height: 1; font-weight: 700; box-shadow: 0 2px 4px rgba(120,0,40,.25); }
+.flip i::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(238,20,92,.14); }
+.flip i.tick { animation: tick .4s var(--snappy); }
+@keyframes tick { 0% { transform: perspective(200px) rotateX(-70deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
+.flip em { font-style: normal; width: var(--fc, 20px); text-align: center; font-size: var(--fs, 54px); line-height: 1; font-weight: 700; color: var(--pink-ink); animation: colon 1s steps(2, jump-none) infinite; }
+@keyframes colon { 50% { opacity: .35; } }
+.flip.small { --fw: 30px; --fh: 42px; --fs: 28px; --fr: 6px; --fc: 10px; gap: 3px; }
+.flip.small em { color: #fff; }
+
+/* ---------- BoostPopup ---------- */
+.modal { position: absolute; inset: 0; z-index: 50; background: rgba(8,10,28,.84); opacity: 0; pointer-events: none; transition: opacity .3s var(--smooth); }
+.modal.on { opacity: 1; pointer-events: auto; }
+.bokeh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.over-title { position: absolute; left: 0; right: 0; top: 112px; text-align: center; color: #fff; font-size: 34px; line-height: 41px; font-weight: 800; text-shadow: 0 3px 0 rgba(238,20,92,.9); display: none; }
+.pop { position: absolute; left: 42px; top: 206px; width: 309px; }
+.modal.on .pop { animation: popIn .5s var(--bouncy) both; }
+@keyframes popIn { from { transform: scale(.7) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+.pop-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: spin 60s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pop-coins { position: absolute; left: 16px; top: -19px; width: 272px; z-index: 3; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
+.modal.on .pop-coins { animation: coinsIn .7s .15s var(--bouncy) both; }
+@keyframes coinsIn { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
+.pop-card { --low: #fff; position: relative; border-radius: 28px; overflow: hidden; background: var(--low); box-shadow: 0 20px 60px rgba(0,0,0,.5); text-align: center; color: var(--ink); transition: background .3s; }
+.pop-head { position: relative; height: 162px; padding-top: 22px; box-sizing: border-box; color: #fff;
+  background: radial-gradient(90% 70% at 50% 0%, #ff7a9b 0%, transparent 70%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); }
+.pop-head::after { content: ""; position: absolute; left: -45%; right: -45%; top: 124px; height: 220px; border-radius: 50%; background: var(--low); transition: background .3s; }
+.pop-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+.pop-sub { margin-top: 2px; font-size: 17px; line-height: 22px; font-weight: 600; }
+.pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
+.pill img { width: 18px; height: 18px; }
+.pop-body { position: relative; z-index: 2; margin-top: -40px; padding: 0 21px 22px; display: flex; flex-direction: column; align-items: center; }
+.pop-body .flip { justify-content: center; }
+.pop-text { margin: 22px 0 0; font-size: 17px; line-height: 22px; font-weight: 500; text-wrap: balance; }
+.pop-active { margin-top: 22px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 10px; }
+.pop-active b { font-size: 22px; line-height: 28px; font-weight: 700; }
+.pop-active span { font-size: 17px; line-height: 22px; font-weight: 500; }
+.pop-earn { display: flex; flex-direction: column; align-items: center; }
+.pop-earn img { width: 176px; margin-top: 0; filter: drop-shadow(0 8px 12px rgba(120,70,0,.3)); }
+.modal.on .pop-earn img { animation: pop .6s .1s var(--bouncy) both; }
+.pop-earn span { margin-top: 6px; font-size: 17px; line-height: 22px; font-weight: 600; }
+.pop-earn s { margin-top: 2px; font-size: 22px; line-height: 28px; font-weight: 600; text-decoration-color: #ff7a1a; text-decoration-thickness: 3px; font-variant-numeric: tabular-nums; }
+.pop-earn b { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; color: var(--violet-400); font-variant-numeric: tabular-nums; }
+.pop-earn p { margin: 6px 0 4px; font-size: 15px; line-height: 20px; font-weight: 500; }
+.cta-v { margin-top: 22px; width: 100%; min-height: 56px; border: 0; border-radius: 999px; background: linear-gradient(180deg, #b06bf0, var(--violet-400)); color: #fff; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 0 var(--violet-600); transition: transform .15s var(--snappy); }
+.cta-v:active { transform: scale(.97) translateY(2px); }
+.adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+.linkbtn { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; background: none; border: 0; color: #fff; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; white-space: nowrap; }
+/* what each mode shows */
+.pop[data-mode="intro"] .pop-active, .pop[data-mode="intro"] .pop-earn, .pop[data-mode="intro"] .pill { display: none; }
+.pop[data-mode="active"] .pop-text, .pop[data-mode="active"] .pop-earn, .pop[data-mode="active"] .cta-v, .pop[data-mode="active"] .pill { display: none; }
+.pop[data-mode="active"] .pop-card { --low: var(--violet-400); }
+.pop[data-mode="active"] .flip em { color: #fff; }
+.pop[data-mode="progress"] .flip, .pop[data-mode="progress"] .pop-text, .pop[data-mode="progress"] .pop-active, .pop[data-mode="progress"] .cta-v { display: none; }
+.pop[data-mode="over"] .flip, .pop[data-mode="over"] .pop-text, .pop[data-mode="over"] .pop-active, .pop[data-mode="over"] .cta-v, .pop[data-mode="over"] .pill { display: none; }
+.pop[data-mode="progress"] .pop-rays, .pop[data-mode="over"] .pop-rays { display: block; }
+.pop[data-mode="progress"] .pop-body, .pop[data-mode="over"] .pop-body { margin-top: -24px; }
+.pop[data-mode="over"] .pop-body { margin-top: -44px; }
+.modal[data-mode="over"] .over-title { display: block; animation: pop .5s var(--bouncy) both; }
+
+/* rewarded video and game stand-in */
+.ad { position: absolute; inset: 0; z-index: 75; background: #05060a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.ad.on { opacity: 1; pointer-events: auto; }
+.ad b { font-size: 17px; line-height: 22px; font-weight: 600; } .ad small { font-size: 13px; line-height: 18px; color: #9aa5b5; }
+.ad-bar { width: 200px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.2); overflow: hidden; }
+.ad-bar i { display: block; height: 100%; width: 0; background: #fff; }
+.ad.on .ad-bar i { width: 100%; transition: width 1.7s linear; }
+
+/* flying coins, toast, autoplay marker */
+.fly { position: absolute; z-index: 85; width: 30px; height: 30px; pointer-events: none; will-change: transform; }
+.toast { position: absolute; left: 50%; top: 60px; z-index: 88; transform: translate(-50%, -20px); opacity: 0; background: rgba(20,24,40,.92); color: #fff; font: 600 13px/18px var(--font); padding: 10px 14px; border-radius: 999px; white-space: nowrap; pointer-events: none; transition: opacity .25s, transform .25s var(--snappy); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.tap { position: absolute; z-index: 92; left: 196px; top: 640px; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(255,255,255,.4); border: 2px solid rgba(255,255,255,.95); box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 6px 16px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: left .6s var(--smooth), top .6s var(--smooth), opacity .25s, transform .15s var(--snappy), background .15s; }
+.tap.show { opacity: 1; } .tap.down { transform: scale(.68); background: rgba(20,100,255,.55); }
+.ring { position: absolute; z-index: 91; pointer-events: none; opacity: 0; transform: scale(1.08); box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(20,100,255,.95); transition: opacity .25s, transform .35s var(--snappy); }
+.ring.show { opacity: 1; transform: none; }
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; } }
+</style>
+
+<div class="page">
+  <div class="device-wrap" id="deviceWrap">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="island" aria-hidden="true"></div>
+        <div class="home" id="home">
+          <div class="hdr" id="hdr" data-state="default">
+            <img class="art hdr-default" src="{{banner}}" alt="Win $1,000 event">
+            <button class="ev" id="ev" aria-label="2x coins, limited event">
+              <canvas id="confetti" aria-hidden="true"></canvas>
+              <span class="ev-left">
+                <span class="ev-offer ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="adtag">Watch ad</span></span>
+                <span class="ev-offer ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
+                <span class="ev-timer flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i></span>
+              </span>
+              <span class="ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
+            </button>
+            <div class="stripwrap">
+              <div class="strip">
+                <div class="s-coins"><small>Game coins<span class="boost-tag">2x</span></small><b><span id="coins">236,378</span><img id="coinTarget" src="{{coin}}" alt=""></b></div>
+                <div class="s-conv"><small>Convert in:</small><b>3h 45m</b></div>
+                <div class="s-cash"><small>Cash out</small><b>$5.37</b></div>
+                <div class="s-go" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0b2a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="8"/><path d="M11 9v8M13.5 10.5h-3.2a1.5 1.5 0 0 0 0 3h1.4a1.5 1.5 0 0 1 0 3H8.5M16 3h5v5M21 3l-5 5"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="body">
+            <img class="art" src="{{body}}" alt="Missions and games">
+            <button class="game" id="game" aria-label="Play Domino Legends"></button>
+          </div>
+        </div>
+        <div class="tabbar" aria-hidden="true"><img src="{{tabbar}}" alt=""></div>
+
+        <div class="modal" id="modal" data-mode="intro">
+          <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
+          <div class="over-title">Congrats!</div>
+          <div class="pop" id="pop" data-mode="intro" role="dialog" aria-label="2x coins">
+            <div class="pop-rays" aria-hidden="true"></div>
+            <img class="pop-coins" src="{{topcoins}}" alt="">
+            <div class="pop-card" id="popCard">
+              <div class="pop-head">
+                <img src="{{logo}}" alt="2x coins">
+                <div class="pop-sub" id="popSub">Start ahead</div>
+                <span class="pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
+              </div>
+              <div class="pop-body">
+                <div class="flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i></div>
+                <p class="pop-text">You have 24 hours to double all the coins you earn playing your favorite games.</p>
+                <div class="pop-active"><b>Bonus is active!</b><span>Play games to earn coins</span></div>
+                <div class="pop-earn" id="popEarn">
+                  <img id="popPile" src="{{pile}}" alt="">
+                  <span id="earnLabel">So far you’ve earned</span>
+                  <s id="earnBase">5,000</s>
+                  <b id="earnTotal">+10,000</b>
+                  <p id="earnNone" hidden>Play a game and every coin counts twice.</p>
+                </div>
+                <button class="cta-v" id="popStart"><span id="popStartLabel">Start now</span><span class="adtag">Watch ad</span></button>
+              </div>
+            </div>
+          </div>
+          <button class="linkbtn" id="popLink">Skip</button>
+        </div>
+
+        <div class="ad" id="ad" role="status"><b id="adTitle">Rewarded video</b><div class="ad-bar"><i></i></div><small id="adSub">Your boost starts when it ends</small></div>
+        <div class="toast" id="toast" role="status"></div>
+        <div class="ring" id="ring" aria-hidden="true"></div>
+        <div class="tap" id="tap" aria-hidden="true"></div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div class="group">
+      <h1>2x coins boost</h1>
+    </div>
+    <div class="group">
+      <span class="label">Start from</span>
+      <div class="chips" id="scenarios">
+        <button class="chip" data-s="first" aria-pressed="true">Open the app</button>
+        <button class="chip" data-s="two" aria-pressed="false">Two ads to start</button>
+        <button class="chip" data-s="active" aria-pressed="false">Boost active</button>
+        <button class="chip" data-s="over" aria-pressed="false">Time is over</button>
+      </div>
+    </div>
+    <div class="transport">
+      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.6v10.8a.7.7 0 0 0 1.06.6l9-5.4a.7.7 0 0 0 0-1.2l-9-5.4A.7.7 0 0 0 3 1.6z"/></svg>Play</button>
+      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1.5" width="3.6" height="11" rx="1"/><rect x="8.4" y="1.5" width="3.6" height="11" rx="1"/></svg>Pause</button>
+    </div>
+    <button class="reset" id="reset">Reset</button>
+  </aside>
+</div>
+
+<script>
+(function () {
+  var COIN = "{{coin}}";
+  var $ = function (id) { return document.getElementById(id); };
+  var nf = new Intl.NumberFormat("en-US");
+  var DAY = 86400, PER_GAME = 2500;
+  var S, tickT;
+  // state: "default" (no event), "offer" (banner with Start now), "active" (boost running), "done" (boost ended)
+  function fresh(s) {
+    var o = { scenario: s, state: "default", coins: 236378, ads: s === "two" ? 2 : 1, seen: 0, left: DAY, base: 0, plays: 0, busy: false, sawProgress: false, ff: false, from: "pop" };
+    if (s === "active") { o.state = "active"; o.left = DAY - 120; }
+    if (s === "over") { o.state = "active"; o.left = 4; o.base = 5000; o.plays = 2; o.coins += 10000; o.sawProgress = true; o.ff = true; }
+    return o;
+  }
+
+  /* ---------- helpers ---------- */
+  var toastT;
+  function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("on"); }, 1900); }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function scale() { var scr = $("screen"); return scr.getBoundingClientRect().width / scr.offsetWidth; }
+  function local(el) { var sr = $("screen").getBoundingClientRect(), k = scale(), r = el.getBoundingClientRect(); return { x: (r.left - sr.left) / k, y: (r.top - sr.top) / k, w: r.width / k, h: r.height / k }; }
+  function isOn(id) { return $(id).classList.contains("on"); }
+  function countCoins(to, ms) {
+    var from = S.coins, t0 = null; S.coins = to;
+    function f(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / ms); $("coins").textContent = nf.format(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(f); }
+    requestAnimationFrame(f);
+  }
+  function flyCoins(fromEl, n, add) {
+    var a = local(fromEl), t = local($("coinTarget")), scr = $("screen");
+    var sx = a.x + a.w / 2 - 15, sy = a.y + a.h / 2 - 15, tx = t.x + t.w / 2 - 15, ty = t.y + t.h / 2 - 15;
+    for (var i = 0; i < n; i++) (function (i) {
+      var c = document.createElement("img"); c.src = COIN; c.className = "fly"; c.alt = "";
+      var ox = (Math.random() - .5) * 120, oy = (Math.random() - .5) * 70;
+      c.style.left = sx + "px"; c.style.top = sy + "px"; scr.appendChild(c);
+      var mx = (tx - sx) * 0.35 + ox * 1.6 - 60, my = (ty - sy) * 0.45 + oy;
+      var an = c.animate([
+        { transform: "translate(0,0) scale(.3) rotate(0deg)", opacity: 0 },
+        { transform: "translate(" + ox + "px," + oy + "px) scale(1.15) rotate(120deg)", opacity: 1, offset: .22, easing: "cubic-bezier(.3,0,.4,1)" },
+        { transform: "translate(" + mx + "px," + my + "px) scale(1) rotate(300deg)", opacity: 1, offset: .62, easing: "cubic-bezier(.5,0,.8,.6)" },
+        { transform: "translate(" + (tx - sx) + "px," + (ty - sy) + "px) scale(.55) rotate(540deg)", opacity: 1 }
+      ], { duration: 900 + Math.random() * 250, delay: i * 45, fill: "both" });
+      an.onfinish = function () { c.remove(); var tg = $("coinTarget"); tg.classList.remove("bump"); void tg.offsetWidth; tg.classList.add("bump"); };
+    })(i);
+    if (add) setTimeout(function () { countCoins(S.coins + add, 700 + n * 40); }, 700);
+    return sleep(1000 + n * 45 + 450);
+  }
+
+  /* ---------- timer ---------- */
+  function hhmm(left) { var m = Math.ceil(left / 60); if (left >= DAY) m = 1440; var h = Math.floor(m / 60); m = m % 60; return (h < 10 ? "0" : "") + h + (m < 10 ? "0" : "") + m; }
+  function setFlip(el, str) {
+    var cells = el.querySelectorAll("i");
+    for (var k = 0; k < 4; k++) if (cells[k].textContent !== str[k]) { cells[k].textContent = str[k]; cells[k].classList.remove("tick"); void cells[k].offsetWidth; cells[k].classList.add("tick"); }
+  }
+  function leftText(left) { var m = Math.ceil(left / 60), h = Math.floor(m / 60); m = m % 60; return (h ? h + "h " : "") + m + "m left"; }
+  function renderTime() {
+    var t = hhmm(S.left); setFlip($("evFlip"), t);
+    if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "2400");
+    $("popLeft").textContent = leftText(S.left);
+  }
+  function startClock() {
+    clearInterval(tickT);
+    tickT = setInterval(function () {
+      if (S.state !== "active" || S.fast) return;
+      S.left = Math.max(0, S.left - 1); renderTime();
+      if (S.left === 0) timeOver();
+    }, 1000);
+  }
+  // The prototype cannot wait a day: this spins the clock down to zero.
+  function fastForward() {
+    if (S.state !== "active" || S.fast) return; S.fast = true; S.ff = true; toast("24 hours later"); var sc = S, from = S.left, t0 = null;
+    function f(ts) {
+      if (S !== sc) return; if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / 2400);
+      S.left = Math.round(from * (1 - p * p)); renderTime();
+      if (p < 1) requestAnimationFrame(f); else { S.fast = false; timeOver(); }
+    }
+    requestAnimationFrame(f);
+  }
+
+  /* ---------- render ---------- */
+  function startLabel() { return S.ads === 1 ? "Start now" : "Start (" + (S.seen + 1) + "/" + S.ads + ")"; }
+  function render() {
+    $("hdr").setAttribute("data-state", S.state === "done" ? "default" : S.state);
+    $("evStartLabel").textContent = startLabel(); $("popStartLabel").textContent = startLabel();
+    $("coins").textContent = nf.format(S.coins);
+    $("ev").setAttribute("aria-label", S.state === "active" ? "2x coins is active. See your progress" : "2x coins, limited event. " + startLabel());
+    renderTime(); confetti.sync();
+  }
+  function openPop(mode, link) {
+    $("pop").setAttribute("data-mode", mode); $("modal").setAttribute("data-mode", mode);
+    $("popSub").textContent = mode === "intro" ? "Start ahead" : mode === "over" ? "Time is over" : mode === "progress" ? "Bonus active" : "Start ahead";
+    $("popLink").textContent = link;
+    if (mode === "progress" || mode === "over") {
+      $("earnLabel").textContent = mode === "over" ? "You’ve earned" : "So far you’ve earned";
+      var none = S.base === 0;
+      $("earnBase").hidden = none; $("earnTotal").textContent = none ? "+0" : "+" + nf.format(S.base * 2); $("earnBase").textContent = nf.format(S.base);
+      $("earnNone").hidden = !(none && mode === "progress");
+    }
+    renderTime();
+    var m = $("modal"); m.classList.remove("on"); void m.offsetWidth; m.classList.add("on"); bokeh.sync();
+  }
+  function closePop() { $("modal").classList.remove("on"); bokeh.sync(); }
+
+  /* ---------- flow ---------- */
+  // A rewarded video stands in for the ad; a short loader stands in for a game round.
+  function interstitial(title, sub) {
+    $("adTitle").textContent = title; $("adSub").textContent = sub;
+    var ad = $("ad"); ad.classList.add("on");
+    return sleep(1900).then(function () { ad.classList.remove("on"); return sleep(250); });
+  }
+  function start(from) {
+    if (S.busy || S.state === "active" || S.state === "done") return; S.busy = true; S.from = from; var sc = S;
+    closePop();
+    interstitial("Rewarded video" + (S.ads > 1 ? " " + (S.seen + 1) + " of " + S.ads : ""), "Your boost starts when it ends").then(function () {
+      if (S !== sc) return; S.busy = false; S.seen++;
+      if (S.seen < S.ads) { S.state = "offer"; render(); if (from === "pop") openPop("intro", "Skip"); return; }
+      S.state = "active"; S.left = DAY - 60; render(); startClock(); openPop("active", "Close");
+    });
+  }
+  function onBanner() {
+    if (S.busy) return;
+    if (S.state === "offer") start("banner");
+    else if (S.state === "active") { S.sawProgress = true; openPop("progress", "Close"); }
+  }
+  function onLink() {
+    var mode = $("pop").getAttribute("data-mode");
+    if (mode === "over") { collect(); return; }
+    closePop();
+    if (mode === "intro" && S.state === "default") { S.state = "offer"; render(); }
+  }
+  function play() {
+    if (S.busy || isOn("modal")) return; S.busy = true; var sc = S, boosted = S.state === "active";
+    interstitial("Domino Legends", "Playing a round").then(function () {
+      if (S !== sc) return;
+      if (boosted) { S.base += PER_GAME; S.plays++; }
+      toast(boosted ? "2x boost: " + nf.format(PER_GAME) + " became " + nf.format(PER_GAME * 2) + " coins" : "You earned " + nf.format(PER_GAME) + " coins");
+      return flyCoins($("game"), boosted ? 18 : 9, boosted ? PER_GAME * 2 : PER_GAME);
+    }).then(function () { if (S === sc) S.busy = false; });
+  }
+  function timeOver() {
+    if (S.state !== "active") return; clearInterval(tickT); S.state = "over"; S.left = 0; renderTime(); openPop("over", "Tap to continue");
+  }
+  function collect() {
+    if (S.busy) return; S.busy = true; var sc = S; closePop();
+    flyCoins($("popPile"), 16, 0).then(function () { if (S !== sc) return; S.state = "done"; S.busy = false; render(); toast("2x coins has ended"); });
+  }
+  $("popStart").onclick = function () { start("pop"); };
+  $("popLink").onclick = onLink;
+  $("ev").onclick = onBanner;
+  $("game").onclick = play;
+  $("modal").addEventListener("click", function (e) { if ($("pop").getAttribute("data-mode") === "over" && !e.target.closest("button")) collect(); });
+
+  /* ---------- banner confetti: gold coins drifting down the pink header ---------- */
+  var confetti = (function () {
+    var cv = $("confetti"), ctx = cv.getContext("2d"), raf = 0, parts = [], W = 393, H = 190, last = 0;
+    function seed() {
+      parts = [];
+      for (var i = 0; i < 34; i++) parts.push({ x: Math.random() * W, y: Math.random() * H, r: 2.5 + Math.random() * 5, v: 5 + Math.random() * 11, spin: Math.random() * 6.28, sv: .6 + Math.random() * 1.6, tilt: Math.random() * 6.28, sway: Math.random() * 6.28 });
+      for (var j = 0; j < 12; j++) parts.push({ star: true, x: Math.random() * W, y: Math.random() * H, r: 1 + Math.random() * 1.6, ph: Math.random() * 6.28, sp: .5 + Math.random() });
+    }
+    function draw(ts) {
+      var dt = Math.min(.05, (ts - last) / 1000 || 0); last = ts;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        if (p.star) { var a = .35 + .65 * Math.abs(Math.sin(ts / 1000 * p.sp + p.ph)); ctx.fillStyle = "rgba(255,255,255," + a.toFixed(2) + ")"; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill(); continue; }
+        p.y += p.v * dt; p.spin += p.sv * dt; p.sway += dt; if (p.y > H + 8) { p.y = -8; p.x = Math.random() * W; }
+        var sy = Math.abs(Math.cos(p.spin)) * .75 + .25;
+        ctx.save(); ctx.translate(p.x + Math.sin(p.sway) * 4, p.y); ctx.rotate(p.tilt); ctx.scale(1, sy);
+        ctx.fillStyle = "#e9a400"; ctx.beginPath(); ctx.arc(0, 1.2, p.r, 0, 6.283); ctx.fill();
+        ctx.fillStyle = sy > .6 ? "#ffd83a" : "#ffe98a"; ctx.beginPath(); ctx.arc(0, 0, p.r, 0, 6.283); ctx.fill();
+        ctx.restore();
+      }
+      raf = requestAnimationFrame(draw);
+    }
+    function size() { var d = Math.min(2, window.devicePixelRatio || 1); cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+    size(); seed();
+    return { sync: function () { var on = S.state === "offer" || S.state === "active"; cancelAnimationFrame(raf); raf = 0; if (on) { last = performance.now(); raf = requestAnimationFrame(draw); } } };
+  })();
+
+  /* ---------- soft gold bokeh behind the progress and time-over pop-ups ---------- */
+  var bokeh = (function () {
+    var cv = $("bokeh"), ctx = cv.getContext("2d"), raf = 0, parts = [], W = 393, H = 852, d = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    for (var i = 0; i < 46; i++) { var top = i % 2 === 0; parts.push({ x: Math.random() * W, y: top ? Math.random() * 90 : H - 110 + Math.random() * 100, r: 3 + Math.random() * 9, ph: Math.random() * 6.28, sp: .25 + Math.random() * .5, dx: (Math.random() - .5) * 5 }); }
+    function draw(ts) {
+      ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = "lighter"; var t = ts / 1000;
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i], a = .18 + .5 * (0.5 + 0.5 * Math.sin(t * p.sp + p.ph)), x = p.x + Math.sin(t * .2 + p.ph) * 6 + p.dx * Math.sin(t * .1), y = p.y + Math.cos(t * .17 + p.ph) * 5;
+        var g = ctx.createRadialGradient(x, y, 0, x, y, p.r); g.addColorStop(0, "rgba(255,214,90," + a.toFixed(2) + ")"); g.addColorStop(.6, "rgba(255,180,40," + (a * .45).toFixed(2) + ")"); g.addColorStop(1, "rgba(255,160,0,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, p.r, 0, 6.283); ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    }
+    return { sync: function () { var m = $("modal").getAttribute("data-mode"), on = isOn("modal") && (m === "progress" || m === "over"); cancelAnimationFrame(raf); raf = 0; if (on) raf = requestAnimationFrame(draw); else ctx.clearRect(0, 0, W, H); } };
+  })();
+
+  /* ---------- scenarios and autoplay ---------- */
+  var runId = 0, playing = false;
+  function setPlaying(on) { playing = on; $("playBtn").setAttribute("aria-pressed", on ? "true" : "false"); $("pauseBtn").setAttribute("aria-pressed", on ? "false" : "true"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
+  function stopPlay() { runId++; setPlaying(false); }
+  function tapOn(el, id) {
+    if (!el || id !== runId) return Promise.resolve();
+    $("home").scrollTop = 0;
+    var tap = $("tap"), ring = $("ring"), r = local(el), pad = 5, rad = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 12;
+    tap.style.left = (r.x + r.w / 2) + "px"; tap.style.top = (r.y + r.h / 2) + "px"; tap.classList.add("show");
+    ring.style.left = (r.x - pad) + "px"; ring.style.top = (r.y - pad) + "px"; ring.style.width = (r.w + pad * 2) + "px"; ring.style.height = (r.h + pad * 2) + "px";
+    ring.style.borderRadius = Math.min(rad + pad, (r.h + pad * 2) / 2) + "px";
+    setTimeout(function () { if (id === runId) ring.classList.add("show"); }, 350);
+    return sleep(950).then(function () { if (id !== runId) return; tap.classList.add("down"); return sleep(220); })
+      .then(function () { if (id !== runId) return; tap.classList.remove("down"); ring.classList.remove("show"); el.click(); return sleep(300); })
+      .then(function () { if (id === runId) tap.classList.remove("show"); });
+  }
+  // Autoplay looks at what is on screen and taps the next control, so Play can start from any state.
+  function nextTarget() {
+    if (isOn("ad") || S.busy || S.fast) return null;
+    if (isOn("modal")) { var m = $("pop").getAttribute("data-mode"); return m === "intro" ? (S.skipFirst && !S.skipped ? (S.skipped = true, $("popLink")) : $("popStart")) : $("popLink"); }
+    if (S.state === "offer") return $("evStart");
+    if (S.state === "active") {
+      if (S.plays < 2) return $("game");
+      if (!S.sawProgress) return $("ev");
+      if (!S.ff) { fastForward(); return null; }
+      return null;
+    }
+    return S.state === "done" ? "done" : null;
+  }
+  function autoplay() {
+    var id = ++runId, idle = 0; setPlaying(true);
+    (function step() {
+      if (id !== runId) return;
+      var t = nextTarget();
+      if (t === "done" || idle > 80) { setPlaying(false); return; }
+      if (!t) { idle++; sleep(300).then(step); return; }
+      idle = 0; tapOn(t, id).then(function () { return sleep(900); }).then(step);
+    })();
+  }
+  function startScenario(s, noPlay) {
+    Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
+    clearInterval(tickT); $("modal").classList.remove("on"); $("ad").classList.remove("on");
+    Array.prototype.forEach.call(document.querySelectorAll(".fly"), function (c) { c.remove(); });
+    S = fresh(s); S.skipFirst = s === "first"; $("home").scrollTop = 0; render(); bokeh.sync();
+    if (S.state === "active") startClock();
+    setTimeout(function () { if (S.scenario !== s || S.state !== "default") return; openPop("intro", "Skip"); }, 500);
+    if (noPlay) stopPlay(); else autoplay();
+  }
+  Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
+  $("playBtn").onclick = function () { if (!playing) autoplay(); };
+  $("pauseBtn").onclick = function () { if (playing) stopPlay(); };
+  $("reset").onclick = function () { startScenario("first", true); };
+  $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
+
+  /* fit the phone to the window */
+  function fit() {
+    var availH = window.innerHeight - 48, availW = Math.min(window.innerWidth - 32, 417);
+    var s = Math.min(1, availW / 417, Math.max(0.42, availH / 876));
+    $("device").style.transform = "scale(" + s + ")"; $("deviceWrap").style.width = (417 * s) + "px"; $("deviceWrap").style.height = (876 * s) + "px";
+  }
+  window.addEventListener("resize", fit); fit();
+
+  S = fresh("first");
+  startScenario("first", true);   // starts paused on the first screen; Play runs it
+})();
+</script>
