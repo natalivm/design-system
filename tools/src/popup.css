@@ -19,9 +19,9 @@
 .pp-text { margin: 8px 0 0; font-size: 17px; line-height: 22px; font-weight: 500; text-wrap: balance; }
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
 .pp-btn { margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
-.pp-btn:active { transform: scale(.97) translateY(2px); }
-.pp-btn, .pp-btn[data-tone="claim"] { background: linear-gradient(200deg, #98f73a, #0bdd66); color: #0b2a12; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
-.pp-btn[data-tone="boost"] { background: linear-gradient(180deg, #b06bf0, #9b51e0); color: #fff; box-shadow: 0 4px 0 #7a35c4; }
-.pp-btn[data-tone="offer"] { background: linear-gradient(200deg, #ffb347, #ff7a1a); color: #2a1200; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+.pp-btn:active { transform: scale(.97); }
+.pp-btn, .pp-btn[data-tone="claim"] { background: linear-gradient(200deg, #98f73a, #0bdd66); color: #0b2a12; }
+.pp-btn[data-tone="boost"] { background: #9b51e0; color: #fff; }
+.pp-btn[data-tone="offer"] { background: #ff7a1a; color: #2a1200; }
 .pp-dismiss { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; padding: 0 12px; background: none; border: 0; color: #fff; font-family: inherit; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; cursor: pointer; }
 /* popup:end */
