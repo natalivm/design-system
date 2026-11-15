@@ -16,7 +16,7 @@ tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
 """
-import base64, json, os, re, subprocess, sys
+import base64, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def P(*a): return os.path.join(ROOT, *a)
@@ -196,7 +196,6 @@ def home_page():
 
 def site():
     """dist/: the home page at the root and the three prototypes under prototype/, as GitHub Pages serves them."""
-    import shutil
     out = P('dist')
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(os.path.join(out, 'prototype'))

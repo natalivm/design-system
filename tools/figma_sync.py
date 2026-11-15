@@ -166,7 +166,6 @@ def apply(d, tok):
 if __name__ == '__main__':
     flags = [a for a in sys.argv[1:] if a.startswith('--')]
     paths = [a for a in sys.argv[1:] if not a.startswith('--')]
-    if '--rebuild' in flags: build.build_all('--site' in flags); sys.exit(0)
     if len(paths) != 1: sys.exit(__doc__)
     snap = json.load(open(paths[0], encoding='utf-8')); tok = json.load(open(TOKENS, encoding='utf-8'))
     d = diff(snap, tok)
