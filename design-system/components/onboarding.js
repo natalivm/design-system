@@ -24,7 +24,7 @@
     return h("section", { className: "ob mc" + (collapsed ? " collapsed" : "") + (props.finished ? " finished" : ""), "aria-label": "Missions" },
       h("div", { className: "mc-head" },
         h("img", { className: "mc-fox", src: A.fox, alt: "" }),
-        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "03d : 32h"),
+        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "3d 8h"),
         h("div", { className: "mc-title" }, props.finished ? "" : (props.title || "Fast track to max earnings!")),
         h("div", { className: "mc-dots" }, [0, 1, 2].map(function (i) { return h("span", { key: i, className: "mc-dot" + (i < done ? " done" : "") }, check()); })),
         h("div", { className: "mc-done" }, h("img", { src: A.coin, alt: "" }), "Missions complete"),
@@ -186,7 +186,7 @@
             props.text ? h("p", { className: "pp-text" }, props.text) : null,
             props.children,
             props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,
-            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.action, props.ad ? h("span", { className: "pp-adtag" }, "Watch ad") : null) : null))),
+            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.ad ? h(AdTag, { key: "ad" }) : null, props.action) : null))),
       props.dismiss ? h("button", { type: "button", className: "pp-dismiss", onClick: props.onDismiss }, props.dismiss) : null);
   }
   Popup.art = A;
@@ -200,14 +200,15 @@
     for (var k = 0; k < 6; k++) { if (k === 2 || k === 4) kids.push(h("em", { key: "c" + k }, ":")); kids.push(h("i", { key: k }, v.charAt(k))); }
     return h("span", { className: "bx-flip" + (props.size === "small" ? " small" : ""), role: "timer", "aria-label": +v.slice(0, 2) + " hours " + +v.slice(2, 4) + " minutes " + +v.slice(4) + " seconds left" }, kids);
   }
-  function TimePill(props) { return h("span", { className: "bx-pill" }, h("img", { src: A.clock, alt: "" }), props.children || "23h 59m left"); }
-  function AdTag() { return h("span", { className: "pp-adtag" }, "Watch ad"); }
+  // A running clock, so it carries the format and the role Countdown uses.
+  function TimePill(props) { return h("span", { className: "bx-pill", role: "timer", "aria-label": props.spoken }, h("img", { src: A.clock, alt: "" }), props.children || "23:59:59"); }
+  function AdTag() { return h("span", { className: "pp-adtag", role: "img", "aria-label": "Watch ad", title: "Watch ad" }); }
   function BoostTag() { return h("span", { className: "bx-tag" }, "2x"); }
   // size: "popup" (50pt, fills the body) | "banner" (44pt, hugs its label)
   function BoostButton(props) {
     var label = props.children || "Start now";
-    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, label, h(AdTag));
-    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, label, h(AdTag));
+    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, h(AdTag), label);
+    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, h(AdTag), label);
   }
   // state: "offer" (Start now plays the ad: onAction) | "active" (tapping opens progress: onOpen)
   function EventBanner(props) {

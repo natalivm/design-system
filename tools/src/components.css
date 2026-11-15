@@ -41,3 +41,4 @@
 .bx-over { padding-top: 110px; }
 .bx-swatch { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 20px; border-radius: 16px; background: linear-gradient(180deg, var(--pink-400), var(--pink-600)); font-family: var(--font-sans); color: #fff; }
 .bx-swatch.light { background: #fff; }
+.bx-swatch.fill { display: flex; }  /* for a preview of a button that fills its body */

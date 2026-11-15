@@ -92,7 +92,7 @@ button { font-family: var(--font); }
 .bx-ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
 .bx-ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.bx-ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
 .bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .bx-ev-ends img { width: 16px; height: 16px; }
@@ -120,9 +120,15 @@ button { font-family: var(--font); }
 .bx-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
 .pp-scrim.on .bx-coins { animation: bx-coins-in .7s .15s var(--bouncy) both; }
 @keyframes bx-coins-in { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
-.bpop .pp-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
-.bx-pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
-.bx-pill img { width: 18px; height: 18px; margin: 0; filter: none; }
+/* the 2x coins logo only: a bare `img` here also caught the clock inside the time pill,
+   which this rule then stretched to 176px */
+.bpop .pp-head > img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
+/* Solid, not translucent: this pill used to tint whatever sat behind it, so on the white
+   half of the curve it turned a dusty #a47383 and its white text fell to 3.9:1.
+   #950c3a is what the old fill already computed to over the pink, so the pill reads the
+   same on the gradient and holds 8.8:1 wherever it lands. */
+.bx-pill { display: inline-flex; align-items: center; gap: 5px; height: 28px; margin-top: 8px; padding: 0 12px 0 5px; border-radius: 999px; background: #950c3a; font-size: 14px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
+.bx-pill img { width: 20px; height: 20px; margin: 0; filter: none; }
 .bpop .pp-body { padding-top: 0; margin-top: -14px; }
 .bpop .pp-text { margin-top: 20px; }
 .bx-active { margin-top: 20px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
@@ -139,6 +145,9 @@ button { font-family: var(--font); }
 .bpop[data-mode="active"] .bx-flip em { color: #fff; }
 .bpop[data-mode="progress"] .bx-flip, .bpop[data-mode="progress"] .pp-text, .bpop[data-mode="progress"] .bx-active, .bpop[data-mode="progress"] .pp-btn { display: none; }
 .bpop[data-mode="over"] .bx-flip, .bpop[data-mode="over"] .pp-text, .bpop[data-mode="over"] .bx-active, .bpop[data-mode="over"] .pp-btn, .bpop[data-mode="over"] .bx-pill { display: none; }
+/* Progress is the only state with the pill: give the head enough pink under it that the
+   pill sits on the gradient instead of straddling the curve. */
+.bpop[data-mode="progress"] .pp-head { padding-bottom: 40px; }
 .bpop[data-mode="progress"] .bx-rays, .bpop[data-mode="over"] .bx-rays { display: block; }
 .bpop[data-mode="over"] .pp-body { margin-top: -30px; }
 .bpop[data-mode="over"] .bx-over-title { display: block; animation: bx-pop .5s var(--bouncy) both; }
@@ -175,7 +184,7 @@ button { font-family: var(--font); }
             <button class="bx-ev" id="ev" aria-label="2x coins, limited event">
               <canvas id="confetti" aria-hidden="true"></canvas>
               <span class="bx-ev-left">
-                <span class="bx-ev-offer bx-ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></span>
+                <span class="bx-ev-offer bx-ev-start" id="evStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="evStartLabel">Start now</span></span>
                 <span class="bx-ev-offer bx-ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
                 <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
@@ -207,7 +216,7 @@ button { font-family: var(--font); }
               <div class="pp-head" data-curve>
                 <img src="{{logo}}" alt="2x coins">
                 <div class="pp-eyebrow" id="popSub">Start ahead</div>
-                <span class="bx-pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
+                <span class="bx-pill" role="timer"><img src="{{clock}}" alt=""><span id="popLeft">23:59:59</span></span>
               </div>
               <div class="pp-body">
                 <div class="bx-flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
@@ -220,7 +229,7 @@ button { font-family: var(--font); }
                   <b class="pp-amount" id="earnTotal">+10,000</b>
                   <p class="pp-text" id="earnNone" style="font-size:15px;line-height:20px" hidden>Play a game and every coin counts twice.</p>
                 </div>
-                <button class="pp-btn" data-tone="boost" id="popStart"><span id="popStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></button>
+                <button class="pp-btn" data-tone="boost" id="popStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="popStartLabel">Start now</span></button>
               </div>
             </div>
           </div>
@@ -294,11 +303,14 @@ button { font-family: var(--font); }
     var cells = el.querySelectorAll("i");
     for (var k = 0; k < cells.length; k++) if (cells[k].textContent !== str[k]) { cells[k].textContent = str[k]; cells[k].classList.remove("tick"); void cells[k].offsetWidth; cells[k].classList.add("tick"); }
   }
-  function leftText(left) { var h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return (h ? h + "h " + (m ? m + "m" : "") : (m || 1) + "m").trim() + " left"; }
+  // The pill counts down in front of the player, so it reads as a clock: 3:14:03.
+  function leftClock(left) { var p = function (n) { return (n < 10 ? "0" : "") + n; }, h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return (h ? h + ":" + p(m) : m) + ":" + p(left % 60); }
+  function leftSpoken(left) { var h = Math.floor(left / 3600), m = Math.floor(left % 3600 / 60); return [h && h + " hours", m && m + " minutes", (left % 60) + " seconds"].filter(Boolean).join(", ") + " left"; }
   function renderTime() {
     var t = hhmm(S.left); setFlip($("evFlip"), t);
     if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
-    $("popLeft").textContent = leftText(S.left);
+    $("popLeft").textContent = leftClock(S.left);
+    $("popLeft").parentNode.setAttribute("aria-label", leftSpoken(S.left));
   }
   function startClock() {
     clearInterval(tickT);
