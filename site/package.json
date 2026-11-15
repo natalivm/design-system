@@ -6,7 +6,7 @@
   "scripts": {
     "copy-prototype": "node scripts/copy-prototype.mjs",
     "dev": "npm run copy-prototype && vite",
-    "build": "npm run copy-prototype && vite build",
+    "build": "npm run copy-prototype && vite build && node scripts/postbuild.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
