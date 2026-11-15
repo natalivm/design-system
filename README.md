@@ -5,7 +5,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | Folder | What's in it |
 |---|---|
 | `prototype/cashout-prototype.html` | Clickable iPhone prototype of the flow. Open it in a browser; all art is embedded. |
-| `prototype/onboarding-prototype.html` | Clickable prototype of the onboarding missions: coach marks, the welcome reward, coins flying to the balance, and the missions-complete card. It plays by itself in a loop. |
+| `prototype/onboarding-prototype.html` | Clickable prototype of the onboarding missions: coach marks, the welcome reward, coins flying to the balance, and the missions-complete card. Press Play to watch it run by itself; press Pause to tap through it yourself. |
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Scripts and source art used to generate the files above. |
