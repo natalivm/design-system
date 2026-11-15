@@ -537,7 +537,8 @@ main { padding-top: 28px; }
 .hero .hero-art { display: block; position: relative; width: min(393px, 100%); margin-right: 150px; }
 .hero-art > :nth-child(2) { position: absolute; right: -150px; bottom: 44px; width: 280px; margin-top: 0; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 600px) { .hero .hero-art { margin-right: 0; margin-bottom: 40px; } .hero-art > :nth-child(2) { right: -6px; bottom: -34px; width: 220px; } }
+.hero .hero-art { margin-left: 32px; }
+@media (max-width: 600px) { .hero .hero-art { margin-right: 0; margin-left: 0; margin-bottom: 40px; } .hero-art > :nth-child(2) { right: -6px; bottom: -34px; width: 220px; } }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1180px) {
