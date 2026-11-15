@@ -66,6 +66,11 @@
 /* RewardCard is a Popup (hero, dark card); only its glowing coin pile needs styles of its own. */
 .ob-reward .pp-card { box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 0 0 2px rgba(255,255,255,.12); }
 .ob-reward .pp-body > :not(.ob-pile) { position: relative; z-index: 3; }
+/* One card height across the three tones. The dismiss link sits under the card, so a card
+   that has one must not come out shorter than its siblings. 544 is the tallest natural
+   height, Welcome, whose title wraps to two lines. */
+.ob-reward .pp-card { min-height: 544px; display: flex; flex-direction: column; }
+.ob-reward .pp-body { flex: 1; justify-content: center; }
 .ob-reward .pp-title { color: var(--gold); text-shadow: 0 3px 0 rgba(60,20,0,.5); }
 .ob-reward .pp-text { margin-top: 2px; font-weight: 600; }
 .ob-boost-amount { margin-top: 4px; color: var(--gold); }
