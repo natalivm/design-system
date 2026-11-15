@@ -334,6 +334,9 @@ main { min-width: 0; padding-top: 56px; }
 .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 18px 0 0 18px; }
 .pillbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; font: 400 15px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 0; border-radius: 999px; padding: 9px 16px; cursor: pointer; text-decoration: none; }
 .pillbtn:hover { background: #021f14; }
+.gobtn { display: inline-flex; align-items: center; min-height: 48px; font: 400 16px/1 var(--f-mono); color: #5d6d67; background: #ffffff; border: 0; border-radius: 999px; padding: 14px 26px; cursor: pointer; text-decoration: none; }
+.gobtn:hover { color: #11241d; }
+.hero-acts { gap: 12px; }
 .note { font: 400 12px/1.5 var(--f-mono); color: var(--site-faint); }
 .points { margin: 14px 0 0 18px; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 15px; color: var(--site-muted); }
 .points li { padding-left: 16px; position: relative; }
@@ -650,22 +653,16 @@ main { padding-top: 28px; }
 .landing .hero { min-height: calc(100svh - var(--bar-h, 66px)); box-sizing: border-box; padding-block: 40px; align-items: center; align-content: center; }
 .shell > main { padding-top: 0; }
 /* tabs under the hero; they stay under the top bar while you scroll */
-.tabs-wrap { position: sticky; top: var(--bar-h, 66px); z-index: 15; background: var(--site-canvas); border-bottom: 1px solid var(--site-line); margin-bottom: 32px; scroll-margin-top: var(--bar-h, 66px); }
-.tabs { display: flex; flex-wrap: wrap; gap: 0 36px; }
-.tabs a { position: relative; padding: 18px 0 16px; font: 600 20px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-faint); text-decoration: none; }
-.tabs a:hover { color: var(--site-fg); }
-.tabs a[aria-current="page"] { color: var(--site-fg); }
-.tabs a[aria-current="page"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--site-spark); }
 /* the Prototypes tab: the three prototypes stacked as bordered sections, a list on the left that follows the scroll */
 .protos { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start; }
 .protos[hidden] { display: none; }
-.sublist { position: sticky; top: calc(var(--bar-h, 66px) + var(--tabs-h, 58px) + 24px); display: flex; flex-direction: column; }
+.sublist { position: sticky; top: calc(var(--bar-h, 66px) + 24px); display: flex; flex-direction: column; }
 .sublist a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; font: 400 16px/1.3 var(--f-mono); color: var(--site-faint); text-decoration: none; }
 .sublist a::after { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; border: 1px solid currentColor; }
 .sublist a:hover, .sublist a[aria-current="page"] { color: var(--site-fg); }
 .sublist a[aria-current="page"]::after { background: var(--site-spark); border-color: var(--site-spark); }
 .protos-main { min-width: 0; display: flex; flex-direction: column; gap: 24px; }
-.proto-sec { scroll-margin-top: calc(var(--bar-h, 66px) + var(--tabs-h, 58px) + 24px); }
+.proto-sec { scroll-margin-top: calc(var(--bar-h, 66px) + 24px); }
 .proto-sec .proto-panel { padding: 0; gap: 0; }
 .proto-head { padding: 26px 30px 22px; }
 .proto-head .desc { margin: 8px 0 0 18px; max-width: 60ch; font-size: 15px; line-height: 1.5; letter-spacing: 0; }
@@ -674,7 +671,6 @@ main { padding-top: 28px; }
   .sublist { position: static; flex-direction: row; gap: 24px; overflow-x: auto; scrollbar-width: none; }
   .sublist a { flex: none; flex-direction: row-reverse; gap: 8px; font-size: 14px; padding: 4px 0; }
   .proto-head { padding: 20px 18px 16px; }
-  .tabs { gap: 0 24px; } .tabs a { font-size: 17px; }
 }
 
 /* ---------- responsive ---------- */
@@ -783,7 +779,10 @@ main { padding-top: 28px; }
       <h1>One system for every BestPlay screen.</h1>
       <p class="lede">Tokens, components and working prototypes for the iPhone app: cash out, onboarding, 2x coins and every pop-up. Kept in sync with Figma.</p>
       <ul class="counts" id="counts"></ul>
-      <div class="acts" style="margin-left:0;margin-top:28px"><button type="button" class="pillbtn" id="explore-go">Explore the system</button></div>
+      <div class="acts hero-acts" style="margin-left:0;margin-top:28px">
+        <a class="gobtn" href="#prototype">Prototypes</a>
+        <a class="gobtn" href="#components">Components</a>
+      </div>
     </div>
     <div class="hero-art" aria-label="Cash out sheet and countdown card">
       <div class="ui float flush"><div data-spec="sheet-earned-bare"></div></div>
@@ -791,13 +790,6 @@ main { padding-top: 28px; }
     </div>
   </div>
 </section>
-
-<div class="tabs-wrap" id="tabs">
-  <nav class="tabs" aria-label="Design system">
-    <a href="#prototype" data-tab="prototypes">Prototypes</a>
-    <a href="#components" data-tab="components">Components</a>
-  </nav>
-</div>
 
 <!-- ============================ FOUNDATIONS ============================ -->
 <section class="page" data-page="foundations" data-label="Foundations" hidden>
@@ -1786,28 +1778,26 @@ main { padding-top: 28px; }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
 
-  /* ---------- pages: the hero is always on top; the #hash picks the tab and, for Prototypes, the prototype ---------- */
+  /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
   var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", components: "components" };
-  var tabsWrap = document.getElementById("tabs"), protos = document.getElementById("protos");
-  document.getElementById("explore-go").onclick = function () { tabsWrap.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  var protos = document.getElementById("protos");
   var bar = document.querySelector(".bar");
   function barHeight() {
     document.documentElement.style.setProperty("--bar-h", bar.offsetHeight + "px");
-    document.documentElement.style.setProperty("--tabs-h", tabsWrap.offsetHeight + "px");
   }
   window.addEventListener("resize", barHeight); barHeight();
   function show(scroll) {
-    var id = location.hash.slice(1), top = !id || id === "overview";
-    if (!TAB[id]) id = "prototype";
+    var id = location.hash.slice(1), top = !TAB[id];
+    if (top) id = "overview";
     var tab = TAB[id];
+    overview.hidden = !top;
     pages.forEach(function (p) {
       if (p === overview) return;
       var pid = p.getAttribute("data-page");
-      p.hidden = tab === "prototypes" ? TAB[pid] !== "prototypes" : pid !== id;
+      p.hidden = top || (tab === "prototypes" ? TAB[pid] !== "prototypes" : pid !== id);
     });
-    protos.hidden = tab !== "prototypes";
-    tabsWrap.querySelectorAll("a").forEach(function (a) { if (a.getAttribute("data-tab") === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    protos.hidden = top || tab !== "prototypes";
     markProto(id);
     document.body.setAttribute("data-route", id);
     if (scroll) land(top, id);
@@ -1816,12 +1806,11 @@ main { padding-top: 28px; }
     protos.querySelectorAll(".sublist a").forEach(function (a) { if (a.getAttribute("data-sub") === id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
   }
   function land(top, id) {
-    if (top) window.scrollTo(0, 0);
-    else if (TAB[id] === "prototypes" && id !== "prototype") document.querySelector('[data-page="' + id + '"]').scrollIntoView({ block: "start" });
-    else tabsWrap.scrollIntoView({ block: "start" });
+    if (!top && TAB[id] === "prototypes" && id !== "prototype") document.querySelector('[data-page="' + id + '"]').scrollIntoView({ block: "start" });
+    else window.scrollTo(0, 0);
   }
   // Clicking the link you are already on still takes you there.
-  [].forEach.call(document.querySelectorAll(".tabs a, .sublist a"), function (a) {
+  [].forEach.call(document.querySelectorAll(".hero-acts a, .sublist a, .brand"), function (a) {
     a.addEventListener("click", function (e) { if (location.hash === a.getAttribute("href")) { e.preventDefault(); show(true); } });
   });
   // While you scroll the Prototypes tab, the list marks the section you are reading.
@@ -1840,7 +1829,7 @@ main { padding-top: 28px; }
   show(false);
   // A link straight to a tab (e.g. #onboarding) lands on it once the page has finished laying out.
   if (location.hash && location.hash !== "#overview") {
-    var first = location.hash.slice(1), go = function () { land(false, TAB[first] ? first : "prototype"); };
+    var first = location.hash.slice(1), go = function () { land(!TAB[first], first); };
     if (document.readyState === "complete") setTimeout(go, 0); else window.addEventListener("load", function () { setTimeout(go, 0); });
   }
 })();
