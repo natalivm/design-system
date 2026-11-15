@@ -2,7 +2,7 @@
 
   python3 tools/figma_sync.py figma/snapshot.json            report what differs, change nothing
   python3 tools/figma_sync.py figma/snapshot.json --apply    write the changes and rebuild
-  add --site to either to also run the Vite build (needs `npm install` in site/ once)
+  add --site to either to also write the published site to dist/
   python3 tools/build.py                                     rebuild without reading Figma
 
 The snapshot comes from tools/figma_snapshot.js run in the Figma file. Figma is the source of truth for
@@ -28,8 +28,7 @@ TEXT_NAME = {'Amount': 'amount', 'Large Title': 'large-title', 'Title 1': 'title
              'Footnote': 'footnote', 'Caption': 'caption', 'Tab Label': 'tab-label'}
 # Sources that hard-code token hex values. Generated files are rebuilt from these.
 SOURCES = ['tools/src/*.html', 'tools/src/*.css', 'tools/src/*.js', 'tools/build_onboarding_components.py',
-           'design-system/components/bundle.css', 'design-system/components/*/preview.html',
-           'site/src/*.css', 'site/src/*.jsx']
+           'design-system/components/bundle.css', 'design-system/components/*/preview.html']
 
 
 def read(p): return open(p, encoding='utf-8').read()

@@ -11,26 +11,25 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Sources (`tools/src/`), art (`tools/assets/`) and the build (`tools/build.py`) that generates the files above. |
 | `website/index.html` | The website's home page: the green BestPlay Design System page, with Overview, Foundations, Components, Screens, Prototype, Motion and Writing pages. The prototype runs inside its Prototype page. |
-| `site/` | Build for GitHub Pages. It publishes `website/index.html` as the home page, the prototype at `prototype/`, and an extra React + Three.js showcase at `showcase/`. |
 
 ## Website (GitHub Pages)
 
 Live at **https://natalivm.github.io/design-system/** once Pages is turned on.
 
 1. In the repo on GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**.
-2. Merge into `main`. The workflow in `.github/workflows/pages.yml` first checks that the committed generated files match their sources (`python3 tools/build.py --check`), then builds `site/` and deploys it. You can also run it by hand from the **Actions** tab.
+2. Merge into `main`. The workflow in `.github/workflows/pages.yml` first checks that the committed generated files match their sources (`python3 tools/build.py --check`), then writes the site to `dist/` and deploys it. You can also run it by hand from the **Actions** tab.
 
-Run it locally (the first time, run `npm install` in `site/`):
+Run it locally:
 
 ```bash
 python3 tools/build.py --site
 ```
 
 ```bash
-npm --prefix site run preview
+python3 -m http.server 4177 --directory dist
 ```
 
-Open the address Vite prints (it ends in `/design-system/`). `npm run dev` serves only the React showcase, not the home page.
+Then open http://localhost:4177/.
 
 ## Live pages
 
@@ -53,7 +52,7 @@ Figma is the source of truth for colours, spacing, radii, sizes and text styles 
 
 `--apply` updates `tokens.json`, `tokens.css`, `DesignTokens.swift` and the website, replaces old colour values in the prototype and component sources, and rebuilds everything. It reports what it cannot place on its own: a colour value still shared by another token, and sizes or font sizes the prototypes hard-code. Changes to how a component is laid out in Figma are applied by hand.
 
-Add `--site` to also run the Vite build.
+Add `--site` to also write the published site to `dist/`.
 
 ## Rebuilding
 
