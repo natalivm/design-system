@@ -189,6 +189,17 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .toast { position: absolute; left: 50%; top: 60px; z-index: 70; transform: translate(-50%, -20px); opacity: 0; background: rgba(20,24,40,.92); color: #fff; font: 600 13px/18px var(--font); padding: 10px 14px; border-radius: 999px; white-space: nowrap; pointer-events: none; transition: opacity 250ms, transform 250ms var(--snappy); }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 
+/* ---------- autoplay tap marker ---------- */
+.tap { position: absolute; z-index: 80; left: 196px; top: 640px; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: rgba(255,255,255,.4); border: 2px solid rgba(255,255,255,.95); box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 6px 16px rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: left .6s var(--smooth), top .6s var(--smooth), opacity .25s, transform .15s var(--snappy), background .15s; }
+.tap.show { opacity: 1; }
+.tap.down { transform: scale(.68); background: rgba(20,100,255,.55); }
+.tap.down::after { content: ""; position: absolute; inset: -14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.8); animation: ripple .45s var(--smooth) both; }
+@keyframes ripple { from { transform: scale(.5); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+.ring { position: absolute; z-index: 79; pointer-events: none; opacity: 0; transform: scale(1.08); box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(20,100,255,.95), 0 8px 24px rgba(20,100,255,.35); transition: opacity .25s, transform .35s var(--snappy); }
+.ring.show { opacity: 1; transform: none; }
+.playnote { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--text); }
+.playnote::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0bdd66; animation: dot 1s infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; }
 }
@@ -245,6 +256,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
         </div>
 
         <div class="toast" id="toast" role="status"></div>
+        <div class="ring" id="ring" aria-hidden="true"></div>
+        <div class="tap" id="tap" aria-hidden="true"></div>
         <div class="home-indicator" id="homeInd"></div>
       </div>
     </div>
@@ -277,7 +290,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
     </div>
     <div class="group">
       <span class="label">Try</span>
-      <p>Drag the sheet down to close it. Open History from the green pill. After a cash out, the balance resets and the next visit shows the wait timer.</p>
+      <p>The flow plays by itself and loops through every state, outlining each control before it's tapped. Pick a state to jump to it. Tap the phone at any time to take over.</p>
+      <p class="playnote" id="playNote" hidden>Playing. Tap the phone to take over.</p>
     </div>
     <button class="reset" id="reset">Reset prototype</button>
   </aside>
@@ -463,15 +477,56 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   }, 1000);
 
   /* scenarios */
-  function startScenario(s) {
+  function startScenario(s, noPlay) {
     Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
     $("success").classList.remove("on"); $("homeInd").classList.remove("light");
     if (S.open) { $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
+    $("sheet").classList.remove("in-history");
     S = fresh(s); renderStrip(); setStep("home"); $("home").scrollTop = 0;
-    setTimeout(openSheet, 350);
+    if (noPlay) stopPlay(); else autoplay(s);
   }
+
+  /* ---------- autoplay: walks the flow with a visible tap marker ---------- */
+  var runId = 0;
+  var SCRIPTS = {
+    earned: [["stripCash", 1500], ["openHistory", 1700], ["histBack", 1200], ["cashOut", 3400], ["successDone", 1300], ["stripCash", 0]],
+    empty: [["stripCash", 1700], ["openHistory", 1700], ["histBack", 1200], ["keepPlaying", 0]],
+    waiting: [["stripCash", 2200], ["openHistory", 1700], ["histBack", 0]],
+    limit: [["stripCash", 2000], ["cashOut", 3400], ["successDone", 0]]
+  };
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function setPlaying(on) { $("playNote").hidden = !on; if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
+  function stopPlay() { runId++; setPlaying(false); }
+  function tapOn(el, id) {
+    if (!el || id !== runId) return Promise.resolve();
+    var tap = $("tap"), scr = $("screen"), sr = scr.getBoundingClientRect(), k = sr.width / scr.offsetWidth, r = el.getBoundingClientRect();
+    tap.style.left = ((r.left + r.width / 2 - sr.left) / k) + "px"; tap.style.top = ((r.top + r.height / 2 - sr.top) / k) + "px";
+    tap.classList.add("show");
+    // Outline the control that is about to be tapped.
+    var ring = $("ring"), pad = 5, rad = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 12;
+    ring.style.left = ((r.left - sr.left) / k - pad) + "px"; ring.style.top = ((r.top - sr.top) / k - pad) + "px";
+    ring.style.width = (r.width / k + pad * 2) + "px"; ring.style.height = (r.height / k + pad * 2) + "px";
+    ring.style.borderRadius = Math.min(rad + pad, (r.height / k + pad * 2) / 2) + "px";
+    setTimeout(function () { if (id === runId) ring.classList.add("show"); }, 350);
+    return sleep(950).then(function () { if (id !== runId) return; tap.classList.add("down"); return sleep(220); })
+      .then(function () { if (id !== runId) return; tap.classList.remove("down"); ring.classList.remove("show"); el.click(); return sleep(300); })
+      .then(function () { if (id === runId) tap.classList.remove("show"); });
+  }
+  function autoplay(s) {
+    var id = ++runId, p = sleep(500); setPlaying(true);
+    SCRIPTS[s].forEach(function (st) { p = p.then(function () { if (id !== runId) return; return tapOn($(st[0]), id).then(function () { return sleep(st[1]); }); }); });
+    // Loop: when a scenario ends, pause, then play the next one.
+    p.then(function () { if (id !== runId) return; return sleep(2600).then(function () {
+      if (id !== runId) return;
+      var order = ["earned", "empty", "waiting", "limit"];
+      startScenario(order[(order.indexOf(s) + 1) % order.length]);
+    }); });
+  }
+  // Start playing on load.
+  setTimeout(function () { if (runId === 0) startScenario("earned"); }, 1200);
+  $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
   Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s")); }; });
-  $("reset").onclick = function () { startScenario("earned"); setTimeout(closeSheet, 400); };
+  $("reset").onclick = function () { startScenario("earned", true); };
 
   /* status bar color follows what's under it */
   $("home").addEventListener("scroll", function () { $("statusbar").classList.toggle("dark", $("home").scrollTop > 140); });
