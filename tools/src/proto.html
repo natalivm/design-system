@@ -198,9 +198,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .ring { position: absolute; z-index: 79; pointer-events: none; opacity: 0; transform: scale(1.08); box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(20,100,255,.95), 0 8px 24px rgba(20,100,255,.35); transition: opacity .25s, transform .35s var(--snappy); }
 .ring.show { opacity: 1; transform: none; }
 .transport { display: flex; gap: 12px; }
-.playbtn { width: 72px; height: 72px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--text); cursor: pointer; transition: background .15s, transform .1s; }
-.playbtn svg { width: 28px; height: 28px; fill: currentColor; }
-.playbtn:active { transform: scale(.94); }
+.playbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: 600 17px/22px var(--font); cursor: pointer; }
 .playbtn[aria-pressed="true"] { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
 .playbtn:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
 
@@ -281,8 +279,8 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
       </div>
     </div>
     <div class="transport">
-      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
-      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></button>
+      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false">▶ Play</button>
+      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true">⏸ Pause</button>
     </div>
     <button class="reset" id="reset">Reset prototype</button>
   </aside>
