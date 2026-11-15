@@ -6,7 +6,7 @@
 <style>
 /* Layout: a phone running the onboarding missions flow, with a slim scenario panel beside it. */
 :root {
-  --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
+  --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08);
   --mission-top: var(--violet-500); --mission-bottom: var(--indigo-800); --row: #eff4fe; --row-coin: var(--sky-200); --gold: var(--gold-400); --mint: var(--mint-400);
   --claim-b: var(--mint-400); --orange: var(--orange-500);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
@@ -214,7 +214,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; } }
 /* panel:start */
-.panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); overflow: hidden; }
 .panel .group { gap: 0; }
 .panel .group:first-child { padding: 22px 22px 20px; }
 .panel h1 { font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
@@ -228,11 +228,11 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .chip[aria-pressed="true"] { background: rgba(255,255,255,.05); border-color: var(--line); color: #fff; font-weight: 600; }
 .chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
 .chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
-.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: #05070a; border: 1px solid var(--line); }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: rgba(0,0,0,.2); border: 1px solid var(--line); }
 .playbtn { justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; background: none; color: var(--muted); font: 600 16px/20px var(--font); transition: background .18s, color .18s; }
 .playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
 .playbtn:hover { color: var(--text); }
-.playbtn[aria-pressed="true"] { background: #fff; color: #07090c; }
+.playbtn[aria-pressed="true"] { background: #fff; color: #05493a; }
 .reset { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
 .reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
 .reset:hover { color: #fff; }

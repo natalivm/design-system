@@ -7,15 +7,15 @@
 /* Layout: a phone running the flow on the left, a slim scenario panel on the right; stacks on narrow screens. */
 :root {
   /* page chrome */
-  --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
+  --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08);
   /* app colours that are not tokens; token colours come from design-system/tokens.css at build time */
   --surface-warm: #f9f8f4;
   --strip: #f2f2f2; --strip-ink: #171b20;
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25; color-scheme: dark; } }
-:root[data-theme="dark"] { --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25; color-scheme: dark; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08); color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08); color-scheme: dark; }
 
 html, body { height: 100%; }
 body { background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
@@ -205,7 +205,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
   *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
 }
 /* panel:start */
-.panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); overflow: hidden; }
 .panel .group { gap: 0; }
 .panel .group:first-child { padding: 22px 22px 20px; }
 .panel h1 { font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
@@ -219,11 +219,11 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .chip[aria-pressed="true"] { background: rgba(255,255,255,.05); border-color: var(--line); color: #fff; font-weight: 600; }
 .chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
 .chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
-.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: #05070a; border: 1px solid var(--line); }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: rgba(0,0,0,.2); border: 1px solid var(--line); }
 .playbtn { justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; background: none; color: var(--muted); font: 600 16px/20px var(--font); transition: background .18s, color .18s; }
 .playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
 .playbtn:hover { color: var(--text); }
-.playbtn[aria-pressed="true"] { background: #fff; color: #07090c; }
+.playbtn[aria-pressed="true"] { background: #fff; color: #05493a; }
 .reset { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
 .reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
 .reset:hover { color: #fff; }

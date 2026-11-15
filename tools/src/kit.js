@@ -3,6 +3,8 @@
 var KIT = (function () {
   var $ = function (id) { return document.getElementById(id); };
   var K = { runId: 0, playing: false };
+  // Inside the website's frame, the prototype has no background of its own, so the page reads as one colour.
+  if (window.self !== window.top) document.documentElement.style.setProperty("--page", "transparent");
   K.reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   K.sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   K.scale = function () { var s = $("screen"); return s.getBoundingClientRect().width / s.offsetWidth; };

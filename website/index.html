@@ -405,7 +405,7 @@ main { min-width: 0; padding-top: 56px; }
 
 .proto-panel { padding: 0; overflow: hidden; }
 /* The frame is never taller than the window (minus the sticky bar), so the phone inside scales to fit. */
-.proto-frame { display: block; width: 100%; height: min(940px, calc(100vh - 96px)); height: min(940px, calc(100dvh - 96px)); min-height: 540px; border: 0; background: #eef1f6; scroll-margin-top: 80px; }
+.proto-frame { display: block; width: 100%; height: min(940px, calc(100vh - 96px)); height: min(940px, calc(100dvh - 96px)); min-height: 540px; border: 0; background: transparent; scroll-margin-top: 80px; }
 footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-line); font: 400 12.5px/1.6 var(--f-mono); color: var(--site-faint); display: flex; flex-wrap: wrap; gap: 6px 28px; }
 
 /* @gen onboarding.css */
@@ -616,7 +616,7 @@ main { padding-top: 28px; }
 .chips { margin-top: 12px; }
 .phone { height: 640px; background: radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%); border-color: #020403; }
 .phone::before { background: radial-gradient(60% 30% at 50% 0%, rgba(141,240,111,.12), transparent 70%); }
-.proto-frame { background: #07090c; }
+.proto-frame { background: transparent; }
 .fig figcaption { margin-top: 10px; }
 .fig figcaption b { font-size: 15px; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
