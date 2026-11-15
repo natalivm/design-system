@@ -7,7 +7,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const wrap = (body) => body.trimStart().startsWith('<!doctype')
   ? body
   : `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n<style>html,body{margin:0}</style>\n</head>\n<body>\n${body}\n</body>\n</html>\n`;
-for (const [from, to] of [['cashout-prototype.html', 'index.html'], ['onboarding-prototype.html', 'onboarding.html']]) {
+for (const [from, to] of [['cashout-prototype.html', 'index.html'], ['onboarding-prototype.html', 'onboarding.html'], ['boost-prototype.html', 'boost.html']]) {
   const out = resolve(here, '../public/prototype', to);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, wrap(readFileSync(resolve(here, '../../prototype', from), 'utf8')));
