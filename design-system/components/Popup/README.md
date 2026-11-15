@@ -8,19 +8,19 @@ Styles: `tools/src/popup.css` (copied into `design-system/components/onboarding.
 
 | What | Value |
 |---|---|
-| Width | Screen width minus 32pt each side (329pt on a 393pt screen) |
-| Corners | 24pt |
+| Width | Screen width minus 24pt each side (345pt on a 393pt screen) |
+| Corners | 26pt |
 | Backdrop | `rgba(8, 10, 28, 0.84)` over the whole screen |
 | Entrance | Scale 0.7 → 1 and rise 30pt, 500ms, bouncy easing; backdrop fades in 300ms |
 | Body padding | 24pt top, 20pt sides and bottom |
 | Slot order | Header art → title → body → one main button |
-| Title | 22/28 bold; 28/34 in the hero size |
+| Title | 22/28 bold; 37/44 in the hero size |
 | Eyebrow | 15/20 semibold |
-| Body text | 17/22 medium |
+| Body text | 19/25 medium |
 | Big number | 54/58 extra bold, tabular figures |
 | Smallest text | 12pt |
-| Main button | 50pt tall, full width of the body, pill shape, one per pop-up |
-| Dismiss | One text link, 17pt, 44pt tall, centered 52pt above the bottom of the screen ("Skip", "Close", "Not now"). No X in the corner. Leave it out when the main button is the only sensible answer |
+| Main button | 66pt tall, 22/28 bold label, full width of the body, pill shape, one per pop-up |
+| Dismiss | One text link, 22pt, 44pt tall, centered 52pt above the bottom of the screen ("Skip", "Close", "Not now"). No X in the corner. Leave it out when the main button is the only sensible answer |
 
 ## Free per feature
 
@@ -36,7 +36,7 @@ Pick the tone that fits the action and stands out from the card.
 
 | Tone | Use for | Looks like |
 |---|---|---|
-| `claim` | Collecting or confirming something earned | Flat mint-400 (#0BDD66), white text |
+| `claim` | Collecting or confirming something earned | Flat green-400 (#49CC3D), white text |
 | `boost` | Starting a multiplier, on light cards | Flat violet-400, white text |
 | `offer` | An optional extra, on dark cards | Flat orange-500, white text |
 
