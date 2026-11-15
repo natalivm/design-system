@@ -720,13 +720,15 @@ main { padding-top: 28px; }
 .comp > .comp-head { order: 2; }
 .comp > .comp-code { order: 3; }
 .comp > .note { order: 4; }
-.comp .comp-head h2 { align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.comp .comp-head h2 { align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 10px; font-size: 15px; font-weight: 500; letter-spacing: -.005em; }
+.comp .comp-head h2::before { display: none; }
+.comp-chips { display: inline-flex; align-items: center; gap: 6px; }
 .comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
 .comp-vars:hover { color: var(--site-fg); }
 .comp-vars[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
-.comp-toggle { margin-left: auto; flex: none; font: 500 12px/1 var(--f-mono); color: var(--site-muted); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 8px 10px; cursor: pointer; }
+.comp-toggle { flex: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
 .comp-toggle:hover { color: var(--site-fg); }
-.comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
+.comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
 
 #components { align-items: start; }
 .comp-group { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 12px; margin: 10px 0 0; font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-muted); }
@@ -736,13 +738,11 @@ main { padding-top: 28px; }
 /* compact cards */
 #components.dense { grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 14px; }
 #components.dense .comp { padding: 14px 14px 12px; gap: 10px; }
-#components.dense .comp-head h2 { font-size: 15px; gap: 8px; }
-#components.dense .comp .desc { font-size: 13px; line-height: 1.45; margin: 5px 0 0 14px; }
+#components.dense .comp-head h2 { font-size: 12px; gap: 7px; }
 #components.dense .comp .points, #components.dense .comp > .note { display: none; }
 #components.dense .comp > .stage { zoom: .5; gap: 14px; }
 #components.dense .comp > .stage .fig ~ .fig { display: none; }
 #components.dense .comp.show-vars > .stage .fig ~ .fig { display: flex; }
-#components.dense .comp .fig figcaption { margin-top: 6px; font-size: 22px; }
 #components.dense .comp-vars { display: inline-block; }
 #components.dense .comp-code pre { font-size: 11.5px; max-height: 320px; overflow: auto; }
 @media (max-width: 460px) {
@@ -1591,7 +1591,7 @@ main { padding-top: 28px; }
   var compRoot = document.getElementById("components");
   var CARDS = COMPONENTS.map(function (c) {
     var a = el("article", "panel comp"), head = el("div", "comp-head");
-    var h2 = el("h2", null, c.name);
+    var h2 = el("h2", null, c.name), chips = el("span", "comp-chips");
     if (c.specs.length > 1) {
       /* With no Full view, this is how the other variants are reached. */
       var vars = el("button", "comp-vars", c.specs.length + " variants");
@@ -1603,15 +1603,15 @@ main { padding-top: 28px; }
         vars.setAttribute("aria-expanded", open ? "true" : "false");
         vars.title = open ? "Show one variant" : "Show every variant";
       });
-      h2.appendChild(vars);
+      chips.appendChild(vars);
     }
     var tog = el("button", "comp-toggle", "</>");
     tog.type = "button"; tog.setAttribute("aria-expanded", "false");
     tog.setAttribute("aria-label", "Show the SwiftUI for " + c.name);
     tog.title = "Show the SwiftUI";
-    h2.appendChild(tog);
+    chips.appendChild(tog);
+    h2.appendChild(chips);
     head.appendChild(h2);
-    head.appendChild(el("p", "desc", c.sum));
     var ul = el("ul", "points"); c.pts.forEach(function (p) { ul.appendChild(el("li", null, p)); }); head.appendChild(ul);
     a.appendChild(head);
     var st = el("div", "stage");
@@ -1619,7 +1619,7 @@ main { padding-top: 28px; }
       var fig = el("figure", "fig"), box = el("div", "ui float" + (s[3] ? " " + s[3] : ""));
       if (s[1]) box.style.width = s[1] + "px";
       box.setAttribute("data-spec", s[0]);
-      var cap = el("figcaption", null, s[2]);
+      var cap = el("figcaption", "vh", s[2]);
       fig.appendChild(cap); fig.appendChild(box); st.appendChild(fig);
     });
     a.appendChild(st);
