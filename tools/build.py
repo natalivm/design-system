@@ -12,7 +12,7 @@ tools/src/components.css             ->   design-system/components/onboarding.{j
 tools/src/proto.html                 ->   prototype/cashout-prototype.html
 tools/src/onboarding.html            ->   prototype/onboarding-prototype.html
 tools/src/boost.html                 ->   prototype/boost-prototype.html
-tools/src/popup.css                       is shared by the last two and by components.css
+tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.css also by components.css)
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
 """
@@ -107,8 +107,15 @@ def components():
 
 
 # ---------- prototypes ----------
+def tokens_vars():
+    """The token custom properties for the prototypes: light values and layout, without the type classes."""
+    blocks = read(P('design-system', 'tokens.css')).split('\n}\n')
+    keep = [b for b in blocks if b.lstrip().startswith((':root', '/*')) and '.%s {' not in b]
+    return '\n}\n'.join(b.split('*/\n', 1)[-1] if b.startswith('/*') else b for b in keep[:2]) + '\n}\n'
+
+
 def prototype(src, out, assets, extra=None):
-    h = read(P('tools', 'src', src)).replace('{{popup_css}}', read(P('tools', 'src', 'popup.css')))
+    h = read(P('tools', 'src', src)).replace('{{tokens_css}}', tokens_vars()).replace('{{popup_css}}', read(P('tools', 'src', 'popup.css'))).replace('{{kit_js}}', read(P('tools', 'src', 'kit.js')))
     files = {k: P('tools', 'assets', assets, f) for k, f in assets_map(assets).items()}
     files.update(extra or {})
     write(P('prototype', out), fill(h, files))
