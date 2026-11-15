@@ -36,11 +36,11 @@ Pick the tone that fits the action and stands out from the card.
 
 | Tone | Use for | Looks like |
 |---|---|---|
-| `claim` | Collecting or confirming something earned | Green gradient, dark green text |
-| `boost` | Starting a multiplier, on light cards | Violet gradient, white text |
-| `offer` | An optional extra, on dark cards | Orange gradient, dark brown text |
+| `claim` | Collecting or confirming something earned | Green, dark green text |
+| `boost` | Starting a multiplier, on light cards | Flat violet-400, white text |
+| `offer` | An optional extra, on dark cards | Flat orange-500, dark brown text |
 
-A button that plays an ad carries the "Watch ad" tag after its label.
+Buttons are flat: no drop shadow, and no gradient on the violet and orange tones. A button that plays an ad carries the "Watch ad" tag after its label.
 
 ## Sizes
 

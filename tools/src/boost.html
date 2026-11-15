@@ -92,8 +92,8 @@ button { font-family: var(--font); }
 .ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
 .ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: linear-gradient(180deg, #b06bf0, var(--violet-400)); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; box-shadow: 0 3px 0 var(--violet-600), 0 6px 14px rgba(70,0,90,.35); transition: transform .15s var(--snappy); }
-.ev:active .ev-start { transform: scale(.96) translateY(2px); }
+.ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.ev:active .ev-start { transform: scale(.96); }
 .ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .ev-ends img { width: 16px; height: 16px; }
 .hdr[data-state="offer"] .ev-timer, .hdr[data-state="active"] .ev-offer { display: none; }
@@ -112,7 +112,7 @@ button { font-family: var(--font); }
 {{popup_css}}
 /* ---------- 2x coins pop-up: what this feature puts in the Popup's free slots ---------- */
 .bokeh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-#pop { --pp-head: radial-gradient(90% 70% at 50% 0%, #ff7a9b 0%, transparent 70%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); }
+.bpop { --pp-head: radial-gradient(90% 70% at 50% 0%, #ff7a9b 0%, transparent 70%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); }
 .over-title { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 30px; text-align: center; color: #fff; font-size: 34px; line-height: 41px; font-weight: 800; text-shadow: 0 3px 0 rgba(238,20,92,.9); display: none; }
 .pop-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
   background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: spin 60s linear infinite; }
@@ -123,8 +123,8 @@ button { font-family: var(--font); }
 .pp-head img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .pill { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-top: 6px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 13px; line-height: 18px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
 .pill img { width: 18px; height: 18px; margin: 0; filter: none; }
-#pop .pp-body { padding-top: 0; margin-top: -14px; }
-#pop .pp-text { margin-top: 20px; }
+.bpop .pp-body { padding-top: 0; margin-top: -14px; }
+.bpop .pp-text { margin-top: 20px; }
 .pop-active { margin-top: 20px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
 .pop-earn { display: flex; flex-direction: column; align-items: center; }
 .pop-earn img { width: 176px; filter: drop-shadow(0 8px 12px rgba(120,70,0,.3)); }
@@ -134,15 +134,15 @@ button { font-family: var(--font); }
 .pop-earn .pp-amount { color: var(--violet-400); }
 .adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px var(--mono); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
 /* what each mode shows */
-#pop[data-mode="intro"] .pop-active, #pop[data-mode="intro"] .pop-earn, #pop[data-mode="intro"] .pill { display: none; }
-#pop[data-mode="active"] .pp-text, #pop[data-mode="active"] .pop-earn, #pop[data-mode="active"] .pp-btn, #pop[data-mode="active"] .pill { display: none; }
-#pop[data-mode="active"] { --pp-bg: var(--violet-400); }
-#pop[data-mode="active"] .flip em { color: #fff; }
-#pop[data-mode="progress"] .flip, #pop[data-mode="progress"] .pp-text, #pop[data-mode="progress"] .pop-active, #pop[data-mode="progress"] .pp-btn { display: none; }
-#pop[data-mode="over"] .flip, #pop[data-mode="over"] .pp-text, #pop[data-mode="over"] .pop-active, #pop[data-mode="over"] .pp-btn, #pop[data-mode="over"] .pill { display: none; }
-#pop[data-mode="progress"] .pop-rays, #pop[data-mode="over"] .pop-rays { display: block; }
-#pop[data-mode="over"] .pp-body { margin-top: -30px; }
-#pop[data-mode="over"] .over-title { display: block; animation: pop .5s var(--bouncy) both; }
+.bpop[data-mode="intro"] .pop-active, .bpop[data-mode="intro"] .pop-earn, .bpop[data-mode="intro"] .pill { display: none; }
+.bpop[data-mode="active"] .pp-text, .bpop[data-mode="active"] .pop-earn, .bpop[data-mode="active"] .pp-btn, .bpop[data-mode="active"] .pill { display: none; }
+.bpop[data-mode="active"] { --pp-bg: var(--violet-400); }
+.bpop[data-mode="active"] .flip em { color: #fff; }
+.bpop[data-mode="progress"] .flip, .bpop[data-mode="progress"] .pp-text, .bpop[data-mode="progress"] .pop-active, .bpop[data-mode="progress"] .pp-btn { display: none; }
+.bpop[data-mode="over"] .flip, .bpop[data-mode="over"] .pp-text, .bpop[data-mode="over"] .pop-active, .bpop[data-mode="over"] .pp-btn, .bpop[data-mode="over"] .pill { display: none; }
+.bpop[data-mode="progress"] .pop-rays, .bpop[data-mode="over"] .pop-rays { display: block; }
+.bpop[data-mode="over"] .pp-body { margin-top: -30px; }
+.bpop[data-mode="over"] .over-title { display: block; animation: pop .5s var(--bouncy) both; }
 
 /* rewarded video and game stand-in */
 .ad { position: absolute; inset: 0; z-index: 75; background: #05060a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; opacity: 0; pointer-events: none; transition: opacity .25s; }
@@ -200,7 +200,7 @@ button { font-family: var(--font); }
 
         <div class="pp-scrim" id="modal" data-mode="intro">
           <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
-          <div class="pp" id="pop" data-size="standard" data-mode="intro" role="dialog" aria-label="2x coins">
+          <div class="pp bpop" id="pop" data-size="standard" data-mode="intro" role="dialog" aria-label="2x coins">
             <div class="over-title">Congrats!</div>
             <div class="pop-rays" aria-hidden="true"></div>
             <div class="pp-over"><img class="pop-coins" src="{{topcoins}}" alt=""></div>
