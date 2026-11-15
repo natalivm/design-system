@@ -8,6 +8,11 @@ extension Color {
     static let green500       = Color("green-500")
     static let lime400        = Color("lime-400")
     static let navy900        = Color("navy-900")
+    static let violet500      = Color("violet-500")
+    static let indigo800      = Color("indigo-800")
+    static let gold400        = Color("gold-400")
+    static let mint400        = Color("mint-400")
+    static let sky200         = Color("sky-200")
     static let ink            = Color("ink")
     static let inkSecondary   = Color("ink-secondary")
     static let link           = Color("link")
@@ -24,6 +29,13 @@ extension ShapeStyle where Self == LinearGradient {
     /// AmountHero fill. Text sits over the green-700 end.
     static var reward: LinearGradient {
         LinearGradient(colors: [.green500, .green700], startPoint: .topTrailing, endPoint: .bottom)
+    }
+}
+
+extension ShapeStyle where Self == LinearGradient {
+    /// MissionCard and Congrats card fill.
+    static var mission: LinearGradient {
+        LinearGradient(colors: [.violet500, .indigo800], startPoint: .top, endPoint: .bottom)
     }
 }
 
