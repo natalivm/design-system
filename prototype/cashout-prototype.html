@@ -73,12 +73,12 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .strip-conv img { position: absolute; top: 4px; width: 25px; }
 .strip-conv b { font-size: 15px; line-height: 18px; font-weight: 800; color: var(--green-700); margin-top: 7px; font-variant-numeric: tabular-nums; }
 .strip-conv span { font-size: 12px; line-height: 14px; letter-spacing: -.01em; font-weight: 700; }
-.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: #0bdd66; color: var(--strip-ink); font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
+.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: #0bdd66; color: #fff; font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
 .strip-cash b { font-size: 20px; line-height: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .strip-cash span { font-size: 13px; line-height: 16px; font-weight: 600; }
 .strip-cash:active { transform: scale(0.97); filter: brightness(0.95); }
 .strip-cash:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
-.strip-cash.zero { background: linear-gradient(200deg, #e4e7ec, #cfd5df); }
+.strip-cash.zero { background: #dfe3ea; color: var(--strip-ink); }
 
 /* ---------- sheet ---------- */
 .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 30; opacity: 0; pointer-events: none; transition: opacity 250ms linear; }

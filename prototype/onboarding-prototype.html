@@ -8,7 +8,7 @@
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
   --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --navy-900: #000748; --ink: #02266e; --ink-secondary: #5b6378;
   --mission-top: #a712f1; --mission-bottom: #0017aa; --row: #eff4fe; --row-coin: #8bd3ff; --gold: #ffdd20; --mint: #0bdd66;
-  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #0b2a12; --orange: #ff7a1a; /* orange-500 */
+  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #ffffff; --orange: #ff7a1a; /* orange-500 */
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -154,9 +154,9 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
 .pp-btn { margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
 .pp-btn:active { transform: scale(.97); }
-.pp-btn, .pp-btn[data-tone="claim"] { background: #0bdd66; color: #0b2a12; }
+.pp-btn, .pp-btn[data-tone="claim"] { background: #0bdd66; color: #ffffff; }
 .pp-btn[data-tone="boost"] { background: #9b51e0; color: #fff; }
-.pp-btn[data-tone="offer"] { background: #ff7a1a; color: #2a1200; }
+.pp-btn[data-tone="offer"] { background: #ff7a1a; color: #fff; }
 .pp-dismiss { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; padding: 0 12px; background: none; border: 0; color: #fff; font-family: inherit; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; cursor: pointer; }
 /* popup:end */
 
@@ -215,7 +215,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .ad-bar i { display: block; height: 100%; width: 0; background: #fff; }
 .ad.on .ad-bar i { width: 100%; transition: width 1.7s linear; }
 .mc-boost { display: none; position: absolute; left: 132px; right: 12px; top: 72px; justify-content: center; }
-.mc-boost span { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 999px; background: var(--orange); color: #2a1200; font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mc-boost span { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 16px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .mc.boosted .mc-done { display: none; } .mc.boosted .mc-boost { display: flex; }
 
 /* ---------- push notification ---------- */
@@ -278,7 +278,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
               <div class="s-coins" id="cellCoins"><small>Game coins</small><b><span id="coins">236,378</span><img id="coinTarget" src="data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9Ijg3IiBoZWlnaHQ9Ijg3IiB2aWV3Qm94PSIwIDAgODcgODciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGlkPSJnb2xkIj4KPGcgaWQ9IlZlY3RvciIgZmlsdGVyPSJ1cmwoI2ZpbHRlcjBfZF8wXzEwMSkiPgo8cGF0aCBkPSJNNDMuNSA3NUM2My4xMDYxIDc1IDc5IDU5LjEwNjEgNzkgMzkuNUM3OSAxOS44OTM5IDYzLjEwNjEgNCA0My41IDRDMjMuODkzOSA0IDggMTkuODkzOSA4IDM5LjVDOCA1OS4xMDYxIDIzLjg5MzkgNzUgNDMuNSA3NVoiIGZpbGw9IiNGRkRBMDMiLz4KPC9nPgo8cGF0aCBpZD0iVmVjdG9yXzIiIGQ9Ik02OS45MjMyIDM4LjkzNzRDNjkuOTIzMiA1My44NDI1IDU3Ljg0MDcgNjUuOTI1MSA0Mi45MzU2IDY1LjkyNTFDMjguMDMwNiA2NS45MjUxIDE1Ljk0OCA1My44NDI1IDE1Ljk0OCAzOC45Mzc0QzE1Ljk0OCAyNC4wMzI0IDI4LjAzMDYgMTEuOTQ5OCA0Mi45MzU2IDExLjk0OThDNTcuODQwNyAxMS45NDk4IDY5LjkyMzIgMjQuMDMyNCA2OS45MjMyIDM4LjkzNzRaIiBmaWxsPSIjRUE3RTAwIi8+CjxwYXRoIGlkPSJWZWN0b3JfMyIgZD0iTTcwLjY5MzYgNDAuMDYxN0M3MC42OTM2IDU0Ljc2NDMgNTguNzc0IDY2LjY4OTUgNDQuMDcxNCA2Ni42ODk1QzI5LjM2ODggNjYuNjg5NSAxNy40NDM2IDU0Ljc3IDE3LjQ0MzYgNDAuMDYxN0MxNy40NDM2IDI1LjM1MzQgMjkuMzYzMSAxMy40Mzk1IDQ0LjA2NTggMTMuNDM5NUM1OC43Njg0IDEzLjQzOTUgNzAuNjg4IDI1LjM1OTEgNzAuNjg4IDQwLjA2NzNMNzAuNjkzNiA0MC4wNjE3WiIgZmlsbD0iI0Y0QTEwMCIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfMF8xMDEiIHg9IjAiIHk9IjAiIHdpZHRoPSI4NyIgaGVpZ2h0PSI4NyIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPgo8ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPgo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4KPGZlT2Zmc2V0IGR5PSI0Ii8+CjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjQiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0ib3V0Ii8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjc1IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3dfMF8xMDEiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3dfMF8xMDEiIHJlc3VsdD0ic2hhcGUiLz4KPC9maWx0ZXI+CjwvZGVmcz4KPC9zdmc+Cg==" alt=""></b></div>
               <div class="s-conv" id="cellConv"><small>Convert in:</small><b>3h 45m</b></div>
               <div class="s-cash" id="cellCash"><small>Cash out</small><b>$5.37</b></div>
-              <div class="s-go" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0b2a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="8"/><path d="M11 9v8M13.5 10.5h-3.2a1.5 1.5 0 0 0 0 3h1.4a1.5 1.5 0 0 1 0 3H8.5M16 3h5v5M21 3l-5 5"/></svg></div>
+              <div class="s-go" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="13" r="8"/><path d="M11 9v8M13.5 10.5h-3.2a1.5 1.5 0 0 0 0 3h1.4a1.5 1.5 0 0 1 0 3H8.5M16 3h5v5M21 3l-5 5"/></svg></div>
             </div>
           </div>
           <div class="mc-wrap">
