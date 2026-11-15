@@ -19,7 +19,7 @@ body { margin: 0; font-family: var(--font-sans); color: var(--ink); background: 
 
 /* AmountHero */
 .co-hero { border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5); color: var(--on-accent); text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
-.co-hero-earned, .co-hero-success { background: linear-gradient(196deg, var(--green-500) 0%, var(--green-700) 55%); }
+.co-hero-earned, .co-hero-success { background: linear-gradient(196deg, var(--green-400) 0%, var(--green-500) 55%); }
 .co-hero-empty, .co-hero-pending { background: var(--navy-900); }
 .co-hero-eyebrow { font-size: 16px; line-height: 21px; font-weight: 500; }
 .co-hero-amount { font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }

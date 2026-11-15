@@ -8,7 +8,7 @@
   /* page chrome */
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
   /* app tokens: Cashout iOS design system (the app itself is light-only, like the Figma) */
-  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --navy-900: #000748;
+  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --green-400: #49cc3d; --navy-900: #000748;
   --ink: #02266e; --ink-secondary: #5b6378; --link: #1464ff; --surface: #ffffff; --surface-warm: #f9f8f4;
   --surface-grouped: #f2f4f7; --surface-info: #eff5fd; --separator: #e3e7ef; --success: #087a5a;
   --danger: #b42318; --danger-surface: #fff1f0; --strip: #f2f2f2; --strip-ink: #171b20;
@@ -99,7 +99,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .view.next { transform: translateX(100%); pointer-events: none; }
 .spacer { flex: 1; min-height: 4px; }
 
-.hero { border-radius: 24px; padding: 30px 20px; color: var(--on-accent); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; background: linear-gradient(196deg, #4cd440 -10%, var(--green-500) 35%, var(--green-700) 75%); }
+.hero { border-radius: 24px; padding: 30px 20px; color: var(--on-accent); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; background: linear-gradient(196deg, var(--green-400) 0%, var(--green-500) 55%); }
 .hero.navy { background: var(--navy-900); }
 .hero .eyebrow { font-size: 16px; line-height: 21px; font-weight: 500; }
 .hero .amount { font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
