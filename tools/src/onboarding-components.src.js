@@ -24,7 +24,7 @@
     return h("section", { className: "ob mc" + (collapsed ? " collapsed" : "") + (props.finished ? " finished" : ""), "aria-label": "Missions" },
       h("div", { className: "mc-head" },
         h("img", { className: "mc-fox", src: A.fox, alt: "" }),
-        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "03d : 32h"),
+        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "3d 8h"),
         h("div", { className: "mc-title" }, props.finished ? "" : (props.title || "Fast track to max earnings!")),
         h("div", { className: "mc-dots" }, [0, 1, 2].map(function (i) { return h("span", { key: i, className: "mc-dot" + (i < done ? " done" : "") }, check()); })),
         h("div", { className: "mc-done" }, h("img", { src: A.coin, alt: "" }), "Missions complete"),

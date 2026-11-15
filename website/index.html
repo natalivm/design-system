@@ -1278,7 +1278,7 @@ main { padding-top: 28px; }
     return h("section", { className: "ob mc" + (collapsed ? " collapsed" : "") + (props.finished ? " finished" : ""), "aria-label": "Missions" },
       h("div", { className: "mc-head" },
         h("img", { className: "mc-fox", src: A.fox, alt: "" }),
-        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "03d : 32h"),
+        h("span", { className: "mc-timer" }, h("img", { src: A.clock, alt: "" }), props.timer || "3d 8h"),
         h("div", { className: "mc-title" }, props.finished ? "" : (props.title || "Fast track to max earnings!")),
         h("div", { className: "mc-dots" }, [0, 1, 2].map(function (i) { return h("span", { key: i, className: "mc-dot" + (i < done ? " done" : "") }, check()); })),
         h("div", { className: "mc-done" }, h("img", { src: A.coin, alt: "" }), "Missions complete"),
@@ -1847,7 +1847,8 @@ main { padding-top: 28px; }
   ruleRows(document.getElementById("words"), ["", "Say", "Not"], [
     ["Action", "Cash out", "Cashout · Cash-out · cashout"],
     ["Money", "$30.00, formatted by the locale", "$30,00, typed by hand"],
-    ["Timer", "3:14:03", "03h:14m:03s"],
+    ["Timer", "3:14:03, while it ticks", "03h:14m:03s"],
+    ["Time left", "3h 45m \u00b7 23h 59m left \u00b7 3d 8h", "3:45:00 left \u00b7 03d : 32h"],
     ["Icons", "The star image inside the sentence", "“Your ______ will turn” with 15 typed spaces"]
   ]);
   [["Earned", "Well done!", "Earned and ready to cash out.", "Cash out / Keep playing"], ["Empty", "Oh no!", "Play more to earn your first reward.", "Play games / Back to home"], ["Pending", "Almost there", "Your stars are being converted.", "Play games / Back to home"], ["Success", "Cash out successful", "Your money is on the way.", "Done"]].forEach(function (s) {
