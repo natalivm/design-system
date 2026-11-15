@@ -70,6 +70,7 @@ python3 tools/build.py
 | `tools/src/onboarding-components.src.js` and `tools/src/components.css` | `design-system/components/onboarding.js` and `.css` |
 | `tools/src/proto.html`, `onboarding.html`, `boost.html` and `tools/assets/` | `prototype/*.html` |
 | `tools/src/popup.css` | copied into the onboarding and 2x coins prototypes and into `onboarding.css` |
+| `tools/src/kit.js` | copied into all three prototypes: autoplay, the tap marker, coin flights, overlays, fitting the phone to the window |
 | `design-system/DesignTokens.swift` | the SwiftTokens and Typography previews |
 | all of the above | the blocks between `/* @gen … */` and `/* @end … */` in `website/index.html` |
 

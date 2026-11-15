@@ -12,7 +12,7 @@ tools/src/components.css             ->   design-system/components/onboarding.{j
 tools/src/proto.html                 ->   prototype/cashout-prototype.html
 tools/src/onboarding.html            ->   prototype/onboarding-prototype.html
 tools/src/boost.html                 ->   prototype/boost-prototype.html
-tools/src/popup.css                       is shared by the last two and by components.css
+tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.css also by components.css)
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
 """
@@ -108,7 +108,7 @@ def components():
 
 # ---------- prototypes ----------
 def prototype(src, out, assets, extra=None):
-    h = read(P('tools', 'src', src)).replace('{{popup_css}}', read(P('tools', 'src', 'popup.css')))
+    h = read(P('tools', 'src', src)).replace('{{popup_css}}', read(P('tools', 'src', 'popup.css'))).replace('{{kit_js}}', read(P('tools', 'src', 'kit.js')))
     files = {k: P('tools', 'assets', assets, f) for k, f in assets_map(assets).items()}
     files.update(extra or {})
     write(P('prototype', out), fill(h, files))
