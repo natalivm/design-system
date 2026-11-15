@@ -685,6 +685,68 @@ main { padding-top: 28px; }
   .sc-row { grid-template-columns: 84px 44px minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ---------- Components page: search, feature filter, density and code behind an icon ---------- */
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.comp-bar { order: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-bottom: 4px; }
+.comp-find { flex: 1 1 220px; min-width: 180px; max-width: 360px; }
+.comp-find input { width: 100%; box-sizing: border-box; font: 400 14px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 11px 16px; }
+.comp-find input::placeholder { color: var(--site-faint); }
+.comp-find input:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
+.comp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.comp-chips button { font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 13px; cursor: pointer; }
+.comp-chips button:hover { color: var(--site-fg); }
+.comp-chips button[aria-pressed="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
+.comp-sort { display: inline-flex; align-items: center; gap: 8px; font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); }
+.comp-sort select { font: 400 12.5px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 12px; cursor: pointer; }
+.comp-count { margin-left: auto; }
+.comp-empty { order: 1; font-size: 15px; color: var(--site-muted); }
+.is-off { display: none !important; }
+
+/* panel: visuals first, then the name row, then the code, then the Figma note */
+.comp > .stage { order: 1; }
+.comp > .comp-head { order: 2; }
+.comp > .comp-code { order: 3; }
+.comp > .note { order: 4; }
+.comp .comp-head h2 { align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; }
+.comp-feat { font: 400 11px/1 var(--f-mono); color: var(--site-muted); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; white-space: nowrap; }
+.comp-toggle { margin-left: auto; flex: none; font: 500 12px/1 var(--f-mono); color: var(--site-muted); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 8px 10px; cursor: pointer; }
+.comp-toggle:hover { color: var(--site-fg); }
+.comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-fg); border-color: var(--site-fg); }
+/* ---------- Screens page: one phone per screen, grouped by feature ---------- */
+#screens { order: 1; align-items: start; }
+#screens .comp-group { justify-self: stretch; }
+.phone.lit::before { display: none; }
+.phone > .scr { top: 0; box-sizing: border-box; display: flex; }
+.phone > .scr > * { width: 100%; }
+.phone > .scr.center { align-items: center; justify-content: center; padding: 0 16px; }
+.phone > .scr.fill { align-items: stretch; }
+.phone > .scr.fill > .ob-coach { justify-content: center; border-radius: 0; }
+.scr-home { display: flex; flex-direction: column; }
+.scr-home-top { padding: 12px 8px 0; }
+.scr-home-body { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+
+#components { align-items: start; }
+.comp-group { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 12px; margin: 10px 0 0; font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-muted); }
+.comp-group::after { content: ""; flex: 1; height: 1px; background: var(--site-line); }
+#components:first-of-type .comp-group:first-child { margin-top: 0; }
+
+/* compact cards */
+#components.dense { grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 14px; }
+#components.dense .comp { padding: 14px 14px 12px; gap: 10px; }
+#components.dense .comp-head h2 { font-size: 15px; gap: 8px; }
+#components.dense .comp .desc { font-size: 13px; line-height: 1.45; margin: 5px 0 0 14px; }
+#components.dense .comp .points, #components.dense .comp > .note { display: none; }
+#components.dense .comp > .stage { zoom: .5; gap: 14px; }
+#components.dense .comp > .stage .fig ~ .fig { display: none; }
+#components.dense .comp .fig figcaption { margin-top: 6px; font-size: 22px; }
+#components.dense .comp-vars { display: inline-block; }
+#components.dense .comp-code pre { font-size: 11.5px; max-height: 320px; overflow: auto; }
+@media (max-width: 460px) {
+  #components.dense { grid-template-columns: minmax(0, 1fr); }
+  .comp-count { margin-left: 0; }
+}
 </style>
 
 <header class="bar">
@@ -809,31 +871,62 @@ main { padding-top: 28px; }
     <h1>Every view, built once.</h1>
     <p class="lede">Each example below is the live component. Props mirror the Swift initializers, and the snippet is ready to paste.</p>
   </div>
-  <div class="grid" id="components"></div>
+  <div class="comp-bar" id="comp-bar">
+    <div class="comp-find">
+      <label class="vh" for="comp-q">Search components</label>
+      <input id="comp-q" type="search" placeholder="Search name, summary or rule…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="comp-chips" role="group" aria-label="Filter by feature">
+      <button type="button" data-feat="all" aria-pressed="true">All</button>
+      <button type="button" data-feat="core" aria-pressed="false">Core</button>
+      <button type="button" data-feat="cashout" aria-pressed="false">Cash out</button>
+      <button type="button" data-feat="onboarding" aria-pressed="false">Onboarding</button>
+      <button type="button" data-feat="boost" aria-pressed="false">2x coins</button>
+    </div>
+    <label class="comp-sort"><span>Sort</span>
+      <select id="comp-sort">
+        <option value="feature">Feature</option>
+        <option value="name">A–Z</option>
+      </select>
+    </label>
+    <div class="seg" role="group" aria-label="Card size">
+      <button type="button" data-dense="1" aria-pressed="true">Compact</button>
+      <button type="button" data-dense="0" aria-pressed="false">Full</button>
+    </div>
+    <p class="note comp-count" id="comp-count"></p>
+  </div>
+  <p class="comp-empty is-off" id="comp-empty">Nothing matches that search. Clear it to see all 20 components.</p>
+  <div class="grid dense" id="components"></div>
 </section>
 
 <!-- ============================ SCREENS ============================ -->
 <section class="page" data-page="screens" data-label="Screens" hidden>
   <div class="page-head">
     <p class="eyebrow">Screens</p>
-    <h1>One sheet, every state.</h1>
-    <p class="lede">The cash-out screen is a system sheet. Its states share a layout, so the hero color and the primary action are the only things that change.</p>
+    <h1>Every flow, screen by screen.</h1>
+    <p class="lede">The cash-out sheet, the onboarding missions and the 2x coins event, each as the app presents it. Filter by feature or search for a state; the SwiftUI for the parts sits on the Components page.</p>
   </div>
-  <article class="panel">
-    <div>
-      <h2>Cash out sheet</h2>
-      <p class="desc">Presented with the system sheet, drag indicator and scrim. Never draw the chrome into the screen.</p>
-      <div class="acts"><button type="button" class="pillbtn" data-code="CashoutSheet">Copy SwiftUI</button><span class="note">Figma: CashoutSheet · State=Earned</span></div>
+  <div class="comp-bar" id="scr-bar">
+    <div class="comp-find">
+      <label class="vh" for="scr-q">Search screens</label>
+      <input id="scr-q" type="search" placeholder="Search screen or state…" autocomplete="off" spellcheck="false">
     </div>
-    <div class="phones">
-      <figure class="fig"><figcaption><b>Earned</b>Cash out / Keep playing</figcaption><div class="phone ui"><div data-spec="sheet-earned"></div></div></figure>
-      <figure class="fig"><figcaption><b>Pending</b>Play games / Back to home</figcaption><div class="phone ui"><div data-spec="sheet-pending"></div></div></figure>
-      <figure class="fig"><figcaption><b>Empty</b>Play games / Back to home</figcaption><div class="phone ui"><div data-spec="sheet-empty"></div></div></figure>
-      <figure class="fig"><figcaption><b>Success</b>Done</figcaption><div class="phone ui"><div data-spec="sheet-success"></div></div></figure>
-      <figure class="fig"><figcaption><b>Cashing out</b>The button shows progress and disables</figcaption><div class="phone ui"><div data-spec="sheet-loading"></div></div></figure>
-      <figure class="fig"><figcaption><b>Limit reached</b>An inline message explains the block</figcaption><div class="phone ui"><div data-spec="sheet-limit"></div></div></figure>
+    <div class="comp-chips" role="group" aria-label="Filter by feature">
+      <button type="button" data-feat="all" aria-pressed="true">All</button>
+      <button type="button" data-feat="cashout" aria-pressed="false">Cash out</button>
+      <button type="button" data-feat="onboarding" aria-pressed="false">Onboarding</button>
+      <button type="button" data-feat="boost" aria-pressed="false">2x coins</button>
     </div>
-  </article>
+    <label class="comp-sort"><span>Sort</span>
+      <select id="scr-sort">
+        <option value="feature">Feature</option>
+        <option value="name">A–Z</option>
+      </select>
+    </label>
+    <p class="note comp-count" id="scr-count"></p>
+  </div>
+  <p class="comp-empty is-off" id="scr-empty">Nothing matches that search. Clear it to see every screen.</p>
+  <div class="phones" id="screens"></div>
 </section>
 
 <!-- ============================ PROTOTYPES (one tab, a list on the left) ============================ -->
@@ -1420,26 +1513,26 @@ main { padding-top: 28px; }
 
   /* ---------- component catalogue (summaries and notes from each component README) ---------- */
   var COMPONENTS = [
-    { name: "AmountHero", figma: "AmountHero · State=Earned", sum: "The balance card: green means money, navy means waiting.", pts: ["Pass a number and currency code, never a formatted string", "Digits are monospaced so the amount does not jump", "Reads as one VoiceOver element"], specs: [["hero-earned", 280, "Earned"], ["hero-empty", 280, "Empty"], ["hero-success", 280, "Success"]] },
-    { name: "CashoutSheet", figma: "CashoutSheet · State=Earned", sum: "The cash-out screen as a system sheet, in four states.", pts: ["Earned: Cash out / Keep playing", "Pending and Empty: Play games / Back to home", "Success: Done"], specs: [["sheet-earned-bare", 393, "Earned", "flush"]] },
-    { name: "Button", figma: "Button · Style=Filled, State=Default", sum: "Capsule button: one Filled primary action per screen, Plain for the way out.", pts: ["50pt tall, full width minus 16pt margins", "Verbs in sentence case: “Cash out”, “Keep playing”", "Plain buttons still get a 44pt tap area"], specs: [["btn-all", 300, "Filled · Plain · Loading · Disabled"]] },
-    { name: "Pill", figma: "Pill · Style=Solid", sum: "Small capsule shortcut, used for History.", pts: ["Solid on light surfaces, Glass on the green hero", "32pt visible, 44pt tap area"], specs: [["pill-solid", 0, "Solid"], ["pill-glass", 0, "Glass on green", "on-green"]] },
-    { name: "Countdown", figma: "Countdown · Size=Card", sum: "Live timer for the wait before stars convert.", pts: ["Format 3:14:03, not 03h:14m:03s", "VoiceOver reads “3 hours, 14 minutes”"], specs: [["count-card", 280, "Card · live"], ["count-inline", 0, "Inline"]] },
-    { name: "InfoRow", figma: "InfoRow", sum: "Explains when stars turn into rewards.", pts: ["Bold only the duration", "The star icon sits inside the sentence, never placed with spaces"], specs: [["info", 360, "Default"]] },
-    { name: "HistoryList", figma: "HistoryList", sum: "Inset grouped list of past payouts.", pts: ["Status is text plus color, never color alone", "Amounts right-aligned with tabular digits"], specs: [["history", 340, "Paid · Pending · Failed"]] },
-    { name: "StatTile", figma: "StatTile", sum: "Label and value tile for balances on Home.", pts: ["Two side by side, equal width", "Coins are whole numbers; money uses currency format"], specs: [["stats-row", 380, "Coins and money"]] },
-    { name: "InlineMessage", figma: "InlineMessage · Tone=Danger", sum: "Tinted message for limits, errors and short notices.", pts: ["Danger for limits and failures, Info for neutral notes", "Always with an icon"], specs: [["msg-danger", 300, "Danger"], ["msg-info", 300, "Info"]] },
-    { name: "MissionCard", figma: "Missions group · deployed", sum: "The onboarding missions card: a timer, three progress dots and the mission rows.", pts: ["Violet to indigo gradient; white text only", "A dot fills with a check as each mission is claimed", "The chevron collapses the rows; it collapses by itself when all are done"], specs: [["mission-card", 378, "In progress · tap the chevron", "flush"]] },
-    { name: "MissionRow", figma: "Mission 1 / Mission 2 / Mission 3", sum: "One mission: its coin reward, title and a single action.", pts: ["Go is blue; Claim is green and pulses", "Progress shows a bar with a count, never a bare percentage", "Claimed rows turn green with a check and no button"], specs: [["row-go", 351, "Go", "flush"], ["row-progress", 351, "In progress", "flush"], ["row-claim", 351, "Claim", "flush"], ["row-claimed", 351, "Claimed", "flush"]] },
-    { name: "CoachMark", figma: "Onboarding MainMenu deployed 7", sum: "A first-session hint: the screen dims, one control stays lit and a hand points at it.", pts: ["One short sentence, at most two lines", "Only the lit control is tappable", "Fades out as soon as the player taps the control"], specs: [["coach", 380, "First task", "flush"]] },
-    { name: "Popup", figma: "BestPlay Design System · Onboarding · Popup", sum: "The one frame for every centered pop-up. The frame is fixed; the header art and the body are free.", pts: ["Fixed: width (screen minus 32pt a side), 24pt corners, backdrop, type sizes, one 50pt button", "One dismiss link under the card, never an X in the corner", "Free: header colour and art, art above the card, effects, body content", "Button tone: green to claim, violet to start a boost, orange for an extra on dark cards", "The cash-out sheet is not a Popup"], specs: [["popup-compact", 361, "Compact", "flush"], ["popup-standard", 361, "Standard", "flush"], ["popup-hero", 361, "Hero", "flush"]] },
-    { name: "BoostPopup", figma: "BestPlay Design System · 2x coins · BoostPopup", sum: "The 2x coins pop-up in its four moments, built on the Popup frame.", pts: ["Offer on app open; Active right after the ad", "Progress opens from the active banner and shows the time left", "Time over sums up what was earned, with Congrats! above the card", "The base amount is struck through; the doubled amount is violet"], specs: [["bpop-offer", 361, "Offer", "flush"], ["bpop-active", 361, "Active", "flush"], ["bpop-progress", 361, "Progress", "flush"], ["bpop-over", 361, "Time over", "flush"]] },
-    { name: "EventBanner", figma: "BestPlay Design System · 2x coins · EventBanner", sum: "The pink home header while the 2x coins event is on.", pts: ["Offer: Start now with the time the offer ends under it", "Active: a live timer; tapping the banner opens progress", "The top 59pt stays clear for the status bar", "Gold coins drift down it slowly"], specs: [["banner-offer", 393, "Offer", "flush"], ["banner-active", 393, "Active", "flush"]] },
-    { name: "FlipTimer", figma: "BestPlay Design System · 2x coins · FlipTimer", sum: "Hours, minutes and seconds left, as flip cards.", pts: ["Large on the pop-up, Small on the banner", "Digits are tabular so the cards never change width", "The seconds card flips every second"], specs: [["flip-large", 0, "Large", "flush"], ["flip-small", 0, "Small", "flush"]] },
-    { name: "BoostButton", figma: "BestPlay Design System · 2x coins · BoostButton", sum: "Starts the boost by playing an ad.", pts: ["Flat violet-400 with a white label: no gradient, no shadow", "Always carries the Watch ad tag", "Popup size fills the body; Banner size hugs its label"], specs: [["bbtn-popup", 329, "Popup", "flush"], ["bbtn-banner", 0, "Banner", "flush"]] },
-    { name: "EventTags", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: time left, on the pink gradient only", "AdTag: marks a button that plays an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
-    { name: "RewardCard", figma: "BestPlay Design System · Onboarding · RewardCard", sum: "The reward moment, built on Popup: a glowing coin pile, the amount and one button.", pts: ["Hero size on a violet card, gold title", "The amount counts up, then coins fly to the balance", "Get double and Boost now play an ad; the link under the card skips it", "Plays a success haptic"], specs: [["reward-welcome", 361, "Welcome", "flush"], ["reward-congrats", 361, "Congrats", "flush"], ["reward-boost", 361, "2x boost", "flush"]] },
-    { name: "TabBar", figma: "TabBar", sum: "The four root destinations, drawn by the system TabView.", pts: ["Use SF Symbols; the selected tab is tinted blue-500", "Never draw the tab bar or safe area into a screen"], specs: [["tabbar", 360, "Tap a tab", "flush"]] }
+    { name: "AmountHero", feat: "cashout", figma: "AmountHero · State=Earned", sum: "The balance card: green means money, navy means waiting.", pts: ["Pass a number and currency code, never a formatted string", "Digits are monospaced so the amount does not jump", "Reads as one VoiceOver element"], specs: [["hero-earned", 280, "Earned"], ["hero-empty", 280, "Empty"], ["hero-success", 280, "Success"]] },
+    { name: "CashoutSheet", feat: "cashout", figma: "CashoutSheet · State=Earned", sum: "The cash-out screen as a system sheet, in four states.", pts: ["Earned: Cash out / Keep playing", "Pending and Empty: Play games / Back to home", "Success: Done"], specs: [["sheet-earned-bare", 393, "Earned", "flush"]] },
+    { name: "Button", feat: "core", figma: "Button · Style=Filled, State=Default", sum: "Capsule button: one Filled primary action per screen, Plain for the way out.", pts: ["50pt tall, full width minus 16pt margins", "Verbs in sentence case: “Cash out”, “Keep playing”", "Plain buttons still get a 44pt tap area"], specs: [["btn-all", 300, "Filled · Plain · Loading · Disabled"]] },
+    { name: "Pill", feat: "core", figma: "Pill · Style=Solid", sum: "Small capsule shortcut, used for History.", pts: ["Solid on light surfaces, Glass on the green hero", "32pt visible, 44pt tap area"], specs: [["pill-solid", 0, "Solid"], ["pill-glass", 0, "Glass on green", "on-green"]] },
+    { name: "Countdown", feat: "cashout", figma: "Countdown · Size=Card", sum: "Live timer for the wait before stars convert.", pts: ["Format 3:14:03, not 03h:14m:03s", "VoiceOver reads “3 hours, 14 minutes”"], specs: [["count-card", 280, "Card · live"], ["count-inline", 0, "Inline"]] },
+    { name: "InfoRow", feat: "cashout", figma: "InfoRow", sum: "Explains when stars turn into rewards.", pts: ["Bold only the duration", "The star icon sits inside the sentence, never placed with spaces"], specs: [["info", 360, "Default"]] },
+    { name: "HistoryList", feat: "cashout", figma: "HistoryList", sum: "Inset grouped list of past payouts.", pts: ["Status is text plus color, never color alone", "Amounts right-aligned with tabular digits"], specs: [["history", 340, "Paid · Pending · Failed"]] },
+    { name: "StatTile", feat: "cashout", figma: "StatTile", sum: "Label and value tile for balances on Home.", pts: ["Two side by side, equal width", "Coins are whole numbers; money uses currency format"], specs: [["stats-row", 380, "Coins and money"]] },
+    { name: "InlineMessage", feat: "core", figma: "InlineMessage · Tone=Danger", sum: "Tinted message for limits, errors and short notices.", pts: ["Danger for limits and failures, Info for neutral notes", "Always with an icon"], specs: [["msg-danger", 300, "Danger"], ["msg-info", 300, "Info"]] },
+    { name: "MissionCard", feat: "onboarding", figma: "Missions group · deployed", sum: "The onboarding missions card: a timer, three progress dots and the mission rows.", pts: ["Violet to indigo gradient; white text only", "A dot fills with a check as each mission is claimed", "The chevron collapses the rows; it collapses by itself when all are done"], specs: [["mission-card", 378, "In progress · tap the chevron", "flush"]] },
+    { name: "MissionRow", feat: "onboarding", figma: "Mission 1 / Mission 2 / Mission 3", sum: "One mission: its coin reward, title and a single action.", pts: ["Go is blue; Claim is green and pulses", "Progress shows a bar with a count, never a bare percentage", "Claimed rows turn green with a check and no button"], specs: [["row-go", 351, "Go", "flush"], ["row-progress", 351, "In progress", "flush"], ["row-claim", 351, "Claim", "flush"], ["row-claimed", 351, "Claimed", "flush"]] },
+    { name: "CoachMark", feat: "onboarding", figma: "Onboarding MainMenu deployed 7", sum: "A first-session hint: the screen dims, one control stays lit and a hand points at it.", pts: ["One short sentence, at most two lines", "Only the lit control is tappable", "Fades out as soon as the player taps the control"], specs: [["coach", 380, "First task", "flush"]] },
+    { name: "Popup", feat: "core", figma: "BestPlay Design System · Onboarding · Popup", sum: "The one frame for every centered pop-up. The frame is fixed; the header art and the body are free.", pts: ["Fixed: width (screen minus 32pt a side), 24pt corners, backdrop, type sizes, one 50pt button", "One dismiss link under the card, never an X in the corner", "Free: header colour and art, art above the card, effects, body content", "Button tone: green to claim, violet to start a boost, orange for an extra on dark cards", "The cash-out sheet is not a Popup"], specs: [["popup-compact", 361, "Compact", "flush"], ["popup-standard", 361, "Standard", "flush"], ["popup-hero", 361, "Hero", "flush"]] },
+    { name: "BoostPopup", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostPopup", sum: "The 2x coins pop-up in its four moments, built on the Popup frame.", pts: ["Offer on app open; Active right after the ad", "Progress opens from the active banner and shows the time left", "Time over sums up what was earned, with Congrats! above the card", "The base amount is struck through; the doubled amount is violet"], specs: [["bpop-offer", 361, "Offer", "flush"], ["bpop-active", 361, "Active", "flush"], ["bpop-progress", 361, "Progress", "flush"], ["bpop-over", 361, "Time over", "flush"]] },
+    { name: "EventBanner", feat: "boost", figma: "BestPlay Design System · 2x coins · EventBanner", sum: "The pink home header while the 2x coins event is on.", pts: ["Offer: Start now with the time the offer ends under it", "Active: a live timer; tapping the banner opens progress", "The top 59pt stays clear for the status bar", "Gold coins drift down it slowly"], specs: [["banner-offer", 393, "Offer", "flush"], ["banner-active", 393, "Active", "flush"]] },
+    { name: "FlipTimer", feat: "boost", figma: "BestPlay Design System · 2x coins · FlipTimer", sum: "Hours, minutes and seconds left, as flip cards.", pts: ["Large on the pop-up, Small on the banner", "Digits are tabular so the cards never change width", "The seconds card flips every second"], specs: [["flip-large", 0, "Large", "flush"], ["flip-small", 0, "Small", "flush"]] },
+    { name: "BoostButton", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostButton", sum: "Starts the boost by playing an ad.", pts: ["Flat violet-400 with a white label: no gradient, no shadow", "Always carries the Watch ad tag", "Popup size fills the body; Banner size hugs its label"], specs: [["bbtn-popup", 329, "Popup", "flush"], ["bbtn-banner", 0, "Banner", "flush"]] },
+    { name: "EventTags", feat: "boost", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: time left, on the pink gradient only", "AdTag: marks a button that plays an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
+    { name: "RewardCard", feat: "onboarding", figma: "BestPlay Design System · Onboarding · RewardCard", sum: "The reward moment, built on Popup: a glowing coin pile, the amount and one button.", pts: ["Hero size on a violet card, gold title", "The amount counts up, then coins fly to the balance", "Get double and Boost now play an ad; the link under the card skips it", "Plays a success haptic"], specs: [["reward-welcome", 361, "Welcome", "flush"], ["reward-congrats", 361, "Congrats", "flush"], ["reward-boost", 361, "2x boost", "flush"]] },
+    { name: "TabBar", feat: "core", figma: "TabBar", sum: "The four root destinations, drawn by the system TabView.", pts: ["Use SF Symbols; the selected tab is tinted blue-500", "Never draw the tab bar or safe area into a screen"], specs: [["tabbar", 360, "Tap a tab", "flush"]] }
   ];
 
   /* ---------- live app UI specs: name -> React element ---------- */
@@ -1468,6 +1561,14 @@ main { padding-top: 28px; }
   function MoPop() {
     var r = useReplay();
     return h("div", { style: col(14) }, h("div", { key: r[0], className: "co-anim-pop", style: { width: "100%" } }, h(C.AmountHero, { state: "success", amount: 2.81 })), h(Replay, { go: r[1] }));
+  }
+  /* A home screen behind the event banner, so the banner is shown where it lives. */
+  function homeScreen(top) {
+    return h("div", { className: "scr-home" }, top,
+      h("div", { className: "scr-home-body" },
+        h(C.StatTile, { icon: "star", label: "Game coins", value: "66,378" }),
+        h(C.StatTile, { label: "Ready to cash", value: C.format.money(5378.11) })),
+      h(C.TabBar, { selected: "home" }));
   }
   var SPECS = {
     "hero-earned": function () { return h(C.AmountHero, { amount: 0.32 }, h(C.Pill, { glass: true })); },
@@ -1521,14 +1622,45 @@ main { padding-top: 28px; }
     "sheet-limit": function () { return h(C.CashoutSheet, { amount: 0.32, limitReached: true }); },
     "mo-sheet": function () { return h(MoSheet); },
     "mo-count": function () { return h(MoCount); },
-    "mo-pop": function () { return h(MoPop); }
+    "mo-pop": function () { return h(MoPop); },
+    /* whole screens, for the Screens page */
+    "scr-coach": function () { return h(C.CoachMark, { target: h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claim" }) }, "First task:", h("br"), "claim your reward!"); },
+    "scr-missions": function () {
+      return homeScreen(h("div", { className: "scr-home-top" }, h(C.MissionCard, { done: 1 },
+        h(C.MissionRow, { title: "Collect the welcome bonus", coins: 1000, state: "claimed" }),
+        h(C.MissionRow, { title: "Win 1 regular level", coins: 1000, state: "claim" }),
+        h(C.MissionRow, { title: "Play 10 levels in Kitchen Ninja", coins: 1500, state: "go" }))));
+    },
+    "scr-welcome": function () { return h(C.RewardCard, { tone: "welcome" }); },
+    "scr-congrats": function () { return h(C.RewardCard, { tone: "congrats", amount: "1,500" }); },
+    "scr-reward-boost": function () { return h(C.RewardCard, { tone: "boost", amount: "2x coins \u00b7 15 min" }); },
+    "scr-banner-offer": function () { return homeScreen(h(C.EventBanner, { state: "offer" })); },
+    "scr-banner-active": function () { return homeScreen(h(C.EventBanner, { state: "active" })); },
+    "scr-bpop-offer": function () { return h(C.BoostPopup, { state: "offer" }); },
+    "scr-bpop-active": function () { return h(C.BoostPopup, { state: "active" }); },
+    "scr-bpop-progress": function () { return h(C.BoostPopup, { state: "progress" }); },
+    "scr-bpop-over": function () { return h(C.BoostPopup, { state: "over" }); }
   };
 
   /* ---------- build: components page ---------- */
+  /* Each component belongs to one feature; the catalogue can be searched, filtered, sorted and
+     shown compact. The SwiftUI snippet starts folded away behind the </> button in the name row. */
+  var FEATS = [["core", "Core"], ["cashout", "Cash out"], ["onboarding", "Onboarding"], ["boost", "2x coins"]];
+  var FEAT_NAME = {}, FEAT_ORDER = {};
+  FEATS.forEach(function (f, i) { FEAT_NAME[f[0]] = f[1]; FEAT_ORDER[f[0]] = i; });
+
   var compRoot = document.getElementById("components");
-  COMPONENTS.forEach(function (c) {
-    var a = el("article", "panel"), head = el("div");
-    head.appendChild(el("h2", null, c.name));
+  var CARDS = COMPONENTS.map(function (c) {
+    var a = el("article", "panel comp"), head = el("div", "comp-head");
+    var h2 = el("h2", null, c.name);
+    h2.appendChild(el("span", "comp-feat", FEAT_NAME[c.feat]));
+    if (c.specs.length > 1) h2.appendChild(el("span", "comp-vars", c.specs.length + " variants"));
+    var tog = el("button", "comp-toggle", "</>");
+    tog.type = "button"; tog.setAttribute("aria-expanded", "false");
+    tog.setAttribute("aria-label", "Show the SwiftUI for " + c.name);
+    tog.title = "Show the SwiftUI";
+    h2.appendChild(tog);
+    head.appendChild(h2);
     head.appendChild(el("p", "desc", c.sum));
     var ul = el("ul", "points"); c.pts.forEach(function (p) { ul.appendChild(el("li", null, p)); }); head.appendChild(ul);
     a.appendChild(head);
@@ -1541,12 +1673,136 @@ main { padding-top: 28px; }
       fig.appendChild(cap); fig.appendChild(box); st.appendChild(fig);
     });
     a.appendChild(st);
-    var code = el("div", "code"), pre = el("pre", null, CODE[c.name]), btn = el("button", "copy tag", "Copy");
+    var code = el("div", "code comp-code is-off"), pre = el("pre", null, CODE[c.name]), btn = el("button", "copy tag", "Copy");
+    code.id = "code-" + c.name;
+    tog.setAttribute("aria-controls", code.id);
     btn.type = "button"; btn.setAttribute("data-code", c.name); btn.setAttribute("aria-label", "Copy SwiftUI for " + c.name);
     code.appendChild(pre); code.appendChild(btn); a.appendChild(code);
+    tog.addEventListener("click", function () {
+      var open = !code.classList.toggle("is-off");
+      tog.setAttribute("aria-expanded", open ? "true" : "false");
+      tog.setAttribute("aria-label", (open ? "Hide" : "Show") + " the SwiftUI for " + c.name);
+      tog.title = (open ? "Hide" : "Show") + " the SwiftUI";
+    });
     a.appendChild(el("p", "note", "Figma: " + c.figma));
     compRoot.appendChild(a);
+    return { c: c, node: a, hay: (c.name + " " + c.feat + " " + FEAT_NAME[c.feat] + " " + c.sum + " " + c.pts.join(" ") + " " + c.figma).toLowerCase() };
   });
+
+  var compQ = "", compFeat = "all", compSort = "feature";
+  var compCount = document.getElementById("comp-count"), compEmpty = document.getElementById("comp-empty");
+  function drawComps() {
+    var list = CARDS.filter(function (x) {
+      return (compFeat === "all" || x.c.feat === compFeat) && (!compQ || x.hay.indexOf(compQ) > -1);
+    });
+    list.sort(function (a, b) {
+      if (compSort === "feature" && a.c.feat !== b.c.feat) return FEAT_ORDER[a.c.feat] - FEAT_ORDER[b.c.feat];
+      return a.c.name.localeCompare(b.c.name);
+    });
+    CARDS.forEach(function (x) { x.node.classList.add("is-off"); });
+    compRoot.querySelectorAll(".comp-group").forEach(function (g) { compRoot.removeChild(g); });
+    var group = null;
+    list.forEach(function (x) {
+      /* Moving a card keeps its node, so the live previews mounted inside it keep running. */
+      if (compSort === "feature" && compFeat === "all" && x.c.feat !== group) {
+        group = x.c.feat;
+        compRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
+      }
+      x.node.classList.remove("is-off");
+      compRoot.appendChild(x.node);
+    });
+    compCount.textContent = list.length + (list.length === 1 ? " component" : " components");
+    compEmpty.classList.toggle("is-off", list.length > 0);
+  }
+  document.getElementById("comp-q").addEventListener("input", function (e) {
+    compQ = e.target.value.trim().toLowerCase(); drawComps();
+  });
+  document.getElementById("comp-sort").addEventListener("change", function (e) {
+    compSort = e.target.value; drawComps();
+  });
+  function press(sel, pick) {
+    var all = document.querySelectorAll(sel);
+    all.forEach(function (b) {
+      b.addEventListener("click", function () {
+        all.forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+        pick(b);
+      });
+    });
+  }
+  press("#comp-bar [data-feat]", function (b) { compFeat = b.getAttribute("data-feat"); drawComps(); });
+  press("#comp-bar [data-dense]", function (b) { compRoot.classList.toggle("dense", b.getAttribute("data-dense") === "1"); });
+  drawComps();
+
+  /* ---------- build: screens page ---------- */
+  /* mode: how the screen sits in the frame — "bottom" a system sheet, "center" a pop-up over
+     the game, "fill" a whole screen. lit screens are not modal, so they keep no scrim. */
+  var SCREENS = [
+    { name: "Earned", feat: "cashout", spec: "sheet-earned", mode: "bottom", sum: "Cash out / Keep playing" },
+    { name: "Pending", feat: "cashout", spec: "sheet-pending", mode: "bottom", sum: "Play games / Back to home" },
+    { name: "Empty", feat: "cashout", spec: "sheet-empty", mode: "bottom", sum: "Play games / Back to home" },
+    { name: "Success", feat: "cashout", spec: "sheet-success", mode: "bottom", sum: "Done" },
+    { name: "Cashing out", feat: "cashout", spec: "sheet-loading", mode: "bottom", sum: "The button shows progress and disables" },
+    { name: "Limit reached", feat: "cashout", spec: "sheet-limit", mode: "bottom", sum: "An inline message explains the block" },
+    { name: "First task", feat: "onboarding", spec: "scr-coach", mode: "fill", lit: true, sum: "A coach mark lights one row; the rest of the screen dims" },
+    { name: "Missions", feat: "onboarding", spec: "scr-missions", mode: "fill", lit: true, sum: "The missions card at the top of Home" },
+    { name: "Welcome reward", feat: "onboarding", spec: "scr-welcome", mode: "center", sum: "The first session opens on the welcome coins" },
+    { name: "Missions complete", feat: "onboarding", spec: "scr-congrats", mode: "center", sum: "Claim 1,500 or get double by watching an ad" },
+    { name: "Home banner \u00b7 Offer", feat: "boost", spec: "scr-banner-offer", mode: "fill", lit: true, sum: "Start now, with the time the offer ends under it" },
+    { name: "Home banner \u00b7 Active", feat: "boost", spec: "scr-banner-active", mode: "fill", lit: true, sum: "A live timer; tapping the banner opens progress" },
+    { name: "Boost offer", feat: "boost", spec: "scr-bpop-offer", mode: "center", sum: "Offered on app open, before the ad" },
+    { name: "Boost active", feat: "boost", spec: "scr-bpop-active", mode: "center", sum: "Straight after the ad: the bonus is running" },
+    { name: "Boost progress", feat: "boost", spec: "scr-bpop-progress", mode: "center", sum: "Opened from the banner: time left and coins so far" },
+    { name: "Time over", feat: "boost", spec: "scr-bpop-over", mode: "center", sum: "What the boost earned, doubled" },
+    { name: "2x boost reward", feat: "boost", spec: "scr-reward-boost", mode: "center", sum: "The onboarding reward that starts a boost" }
+  ];
+
+  var scrRoot = document.getElementById("screens");
+  var SCARDS = SCREENS.map(function (s) {
+    var fig = el("figure", "fig"), cap = el("figcaption");
+    cap.appendChild(el("b", null, s.name));
+    cap.appendChild(document.createTextNode(s.sum));
+    var phone = el("div", "phone ui" + (s.lit ? " lit" : ""));
+    var box = el("div", s.mode === "bottom" ? null : "scr " + s.mode);
+    box.setAttribute("data-spec", s.spec);
+    phone.appendChild(box);
+    fig.appendChild(cap); fig.appendChild(phone);
+    scrRoot.appendChild(fig);
+    return { s: s, node: fig, hay: (s.name + " " + s.feat + " " + FEAT_NAME[s.feat] + " " + s.sum).toLowerCase() };
+  });
+
+  var scrQ = "", scrFeat = "all", scrSort = "feature";
+  var scrCount = document.getElementById("scr-count"), scrEmpty = document.getElementById("scr-empty");
+  function drawScreens() {
+    var list = SCARDS.filter(function (x) {
+      return (scrFeat === "all" || x.s.feat === scrFeat) && (!scrQ || x.hay.indexOf(scrQ) > -1);
+    });
+    /* The sort is stable, so screens keep the order of the flow inside their feature. */
+    list.sort(function (a, b) {
+      if (scrSort === "name") return a.s.name.localeCompare(b.s.name);
+      return FEAT_ORDER[a.s.feat] - FEAT_ORDER[b.s.feat];
+    });
+    SCARDS.forEach(function (x) { x.node.classList.add("is-off"); });
+    scrRoot.querySelectorAll(".comp-group").forEach(function (g) { scrRoot.removeChild(g); });
+    var group = null;
+    list.forEach(function (x) {
+      if (scrSort === "feature" && scrFeat === "all" && x.s.feat !== group) {
+        group = x.s.feat;
+        scrRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
+      }
+      x.node.classList.remove("is-off");
+      scrRoot.appendChild(x.node);
+    });
+    scrCount.textContent = list.length + (list.length === 1 ? " screen" : " screens");
+    scrEmpty.classList.toggle("is-off", list.length > 0);
+  }
+  document.getElementById("scr-q").addEventListener("input", function (e) {
+    scrQ = e.target.value.trim().toLowerCase(); drawScreens();
+  });
+  document.getElementById("scr-sort").addEventListener("change", function (e) {
+    scrSort = e.target.value; drawScreens();
+  });
+  press("#scr-bar [data-feat]", function (b) { scrFeat = b.getAttribute("data-feat"); drawScreens(); });
+  drawScreens();
 
   /* ---------- build: overview ---------- */
   var T = TOKENS, colorN = T.color.tokens.length, typeN = T.type.groups.reduce(function (n, g) { return n + g.styles.length; }, 0);
