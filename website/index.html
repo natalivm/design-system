@@ -642,6 +642,22 @@ main { padding-top: 28px; }
 .hero .hero-art { margin-left: 32px; }
 @media (max-width: 600px) { .hero .hero-art { margin-right: 0; margin-left: 0; margin-bottom: 40px; } .hero-art > :nth-child(2) { right: -6px; bottom: -34px; width: 220px; } }
 
+/* ---------- landing: the Overview is a full-screen hero with the navigation under it ---------- */
+body[data-route="overview"] .shell { grid-template-columns: minmax(0, 1fr); }
+body[data-route="overview"] .index { display: none; }
+body[data-route="overview"] main { padding-top: 0; }
+.landing .hero { min-height: calc(100svh - var(--bar-h, 66px)); box-sizing: border-box; padding-block: 40px; align-items: center; align-content: center; }
+.explore { order: 3; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; margin-bottom: 24px; background: var(--site-line); border: 1px solid var(--site-line); border-radius: 20px; overflow: hidden; counter-reset: ex; scroll-margin-top: calc(var(--bar-h, 66px) + 24px); }
+.explore a { counter-increment: ex; display: flex; flex-direction: column; gap: 6px; min-height: 132px; padding: 20px 22px; background: var(--site-canvas); text-decoration: none; transition: background .15s; }
+.explore a::before { content: counter(ex, decimal-leading-zero); font: 500 11px/14px var(--f-mono); letter-spacing: .1em; color: var(--site-faint); }
+.explore b { margin-top: auto; font: 600 19px/1.25 var(--f-display); letter-spacing: -.01em; }
+.explore span { font: 400 13px/1.45 var(--f-mono); color: var(--site-muted); }
+.explore a:hover { background: #0b5a40; }
+.explore a:hover b::after { content: " \2192"; }
+.explore a:focus-visible { outline-offset: -4px; }
+@media (max-width: 1180px) { .explore { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .explore { grid-template-columns: minmax(0, 1fr); } .explore a { min-height: 0; } }
+
 /* ---------- responsive ---------- */
 @media (max-width: 1180px) {
   .grid { grid-template-columns: minmax(0, 1fr); }
@@ -695,88 +711,32 @@ main { padding-top: 28px; }
 <!-- =====================================================================
      ADD A PAGE: copy one <section class="page" data-page="name" data-label="Name"> block.
      The side index builds itself from these sections, in source order.
-     data-page is the link (#name): lowercase letters, digits and hyphens.
+     data-page is the link (#name): lowercase letters, digits and hyphens. data-desc is the
+     one-line summary on the Overview's navigation.
      Put app UI inside <div class="ui float" data-spec="..."> and register the
      spec in the SPECS table at the bottom of this file.
      ===================================================================== -->
 
 <!-- ============================ OVERVIEW ============================ -->
-<section class="page" data-page="overview" data-label="Overview">
+<section class="page landing" data-page="overview" data-label="Overview">
   <div class="page-head hero">
     <div>
       <p class="eyebrow" id="synced">iOS · Version 1</p>
-      <h1>Points, not pixels. Green for money, navy for waiting.</h1>
-      <p class="lede">One system for the cash-out flow on iPhone: a single type family, five radii, three colors with a job each, and components that mirror their SwiftUI initializers.</p>
+      <h1>One system for every BestPlay screen.</h1>
+      <p class="lede">Tokens, components and working prototypes for the iPhone app: cash out, onboarding, 2x coins and every pop-up. Kept in sync with Figma.</p>
       <ul class="counts" id="counts"></ul>
-      <div class="acts" style="margin-left:0;margin-top:28px"><a class="pillbtn" href="#prototype">Try the prototype</a></div>
+      <div class="acts" style="margin-left:0;margin-top:28px"><button type="button" class="pillbtn" id="explore-go">Explore the system</button></div>
     </div>
     <div class="hero-art" aria-label="Cash out sheet and countdown card">
       <div class="ui float flush"><div data-spec="sheet-earned-bare"></div></div>
       <div class="ui float" data-spec="count-card"></div>
     </div>
   </div>
-
-  <div class="grid">
-    <article class="panel">
-      <div>
-        <h2>Green means money</h2>
-        <p class="desc">The balance sits on one reward surface. White text on green&#8209;700 reads at 5.3:1 in both themes.</p>
-        <div class="acts"><a class="pillbtn" href="#components">See AmountHero</a></div>
-      </div>
-      <div class="stage">
-        <div class="ui float" style="width:300px" data-spec="hero-earned"></div>
-        <div class="ui float drop" style="width:250px" data-spec="stats"></div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div>
-        <h2>Navy means waiting</h2>
-        <p class="desc">Stars convert on a timer. Pending states use the inverse navy card and a live countdown.</p>
-        <div class="acts"><a class="pillbtn" href="#components">See Countdown</a></div>
-      </div>
-      <div class="stage">
-        <div class="ui float" style="width:290px" data-spec="count-card"></div>
-        <div class="ui float drop" style="width:330px" data-spec="info"></div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div>
-        <h2>Blue means action</h2>
-        <p class="desc">One filled capsule per screen, 50pt tall. The way out is a plain button with a 44pt tap area.</p>
-        <div class="acts"><a class="pillbtn" href="#components">See Button</a></div>
-      </div>
-      <div class="stage">
-        <div class="ui float" style="width:300px" data-spec="btn-stack"></div>
-        <div class="ui float drop" style="width:300px" data-spec="msg-danger"></div>
-      </div>
-    </article>
-
-    <article class="panel">
-      <div>
-        <h2>Every payout, in a list</h2>
-        <p class="desc">Status is text plus color, never color alone. Amounts align right with tabular digits.</p>
-        <div class="acts"><a class="pillbtn" href="#components">See HistoryList</a></div>
-      </div>
-      <div class="stage">
-        <div class="ui float" style="width:340px" data-spec="history"></div>
-        <div class="ui float flush drop" style="width:330px" data-spec="tabbar"></div>
-      </div>
-    </article>
-
-    <article class="panel wide">
-      <div>
-        <h2>The rules</h2>
-        <p class="desc">Eight decisions that replaced the inconsistencies in the original Figma file.</p>
-      </div>
-      <div class="rules" id="rules"></div>
-    </article>
-  </div>
+  <nav class="explore" id="explore" aria-label="Explore the design system"></nav>
 </section>
 
 <!-- ============================ FOUNDATIONS ============================ -->
-<section class="page" data-page="foundations" data-label="Foundations" hidden>
+<section class="page" data-page="foundations" data-label="Foundations" data-desc="Colour, type, space and shape" hidden>
   <div class="page-head">
     <p class="eyebrow">Foundations</p>
     <h1>Color, type, space and shape.</h1>
@@ -831,11 +791,18 @@ main { padding-top: 28px; }
       </div>
       <div class="radii" id="radii"></div>
     </article>
+    <article class="panel wide">
+      <div>
+        <h2>The rules</h2>
+        <p class="desc">Eight decisions that replaced the inconsistencies in the original Figma file.</p>
+      </div>
+      <div class="rules" id="rules"></div>
+    </article>
   </div>
 </section>
 
 <!-- ============================ COMPONENTS ============================ -->
-<section class="page" data-page="components" data-label="Components" hidden>
+<section class="page" data-page="components" data-label="Components" data-desc="Live components and SwiftUI code" hidden>
   <div class="page-head">
     <p class="eyebrow">Components</p>
     <h1>Every view, built once.</h1>
@@ -845,7 +812,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ SCREENS ============================ -->
-<section class="page" data-page="screens" data-label="Screens" hidden>
+<section class="page" data-page="screens" data-label="Screens" data-desc="Every state of the cash-out sheet" hidden>
   <div class="page-head">
     <p class="eyebrow">Screens</p>
     <h1>One sheet, every state.</h1>
@@ -869,7 +836,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ PROTOTYPE ============================ -->
-<section class="page" data-page="prototype" data-label="Cash out flow" hidden>
+<section class="page" data-page="prototype" data-label="Cash out flow" data-desc="Clickable cash-out prototype" hidden>
   <div class="page-head">
     <p class="eyebrow">Prototype</p>
     <h1>Tap through the whole flow.</h1>
@@ -881,7 +848,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ ONBOARDING ============================ -->
-<section class="page" data-page="onboarding" data-label="Onboarding flow" hidden>
+<section class="page" data-page="onboarding" data-label="Onboarding flow" data-desc="Clickable onboarding prototype" hidden>
   <div class="page-head">
     <p class="eyebrow">Prototype</p>
     <h1>A new player's first session.</h1>
@@ -893,7 +860,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ 2X COINS ============================ -->
-<section class="page" data-page="boost" data-label="2x coins flow" hidden>
+<section class="page" data-page="boost" data-label="2x coins flow" data-desc="Clickable 2x coins prototype" hidden>
   <div class="page-head">
     <p class="eyebrow">Prototype</p>
     <h1>Double coins for 24 hours.</h1>
@@ -905,7 +872,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ MOTION ============================ -->
-<section class="page" data-page="motion" data-label="Motion" hidden>
+<section class="page" data-page="motion" data-label="Motion" data-desc="Durations, curves and springs" hidden>
   <div class="page-head">
     <p class="eyebrow">Motion</p>
     <h1>System springs, nothing custom.</h1>
@@ -960,7 +927,7 @@ main { padding-top: 28px; }
 </section>
 
 <!-- ============================ WRITING ============================ -->
-<section class="page" data-page="writing" data-label="Writing" hidden>
+<section class="page" data-page="writing" data-label="Writing" data-desc="Copy rules and the words we ship" hidden>
   <div class="page-head">
     <p class="eyebrow">Writing</p>
     <h1>“Cash out” is a verb.</h1>
@@ -1581,7 +1548,8 @@ main { padding-top: 28px; }
 
   /* ---------- build: overview ---------- */
   var T = TOKENS, colorN = T.color.tokens.length, typeN = T.type.groups.reduce(function (n, g) { return n + g.styles.length; }, 0);
-  [[colorN, "colors, light and dark"], [typeN, "text styles"], [T.spacing.tokens.length, "spacing steps"], [T.radius.tokens.length, "radii"], [COMPONENTS.length, "components"]].forEach(function (c) {
+  var protoN = document.querySelectorAll(".proto-frame").length;
+  [[colorN, "colors, light and dark"], [typeN, "text styles"], [COMPONENTS.length, "components"], [protoN, "clickable prototypes"]].forEach(function (c) {
     var li = el("li"); li.appendChild(el("b", null, String(c[0]))); li.appendChild(document.createTextNode(c[1])); document.getElementById("counts").appendChild(li);
   });
   var synced = T.meta && T.meta.synced;
@@ -1696,9 +1664,21 @@ main { padding-top: 28px; }
   pages.forEach(function (p) {
     var li = el("li"), a = el("a", null, p.getAttribute("data-label")); a.href = "#" + p.getAttribute("data-page"); li.appendChild(a); list.appendChild(li);
   });
+  // The Overview's navigation: every other page, with its one-line summary.
+  var explore = document.getElementById("explore");
+  pages.slice(1).forEach(function (p) {
+    var a = el("a"); a.href = "#" + p.getAttribute("data-page");
+    a.appendChild(el("b", null, p.getAttribute("data-label"))); a.appendChild(el("span", null, p.getAttribute("data-desc") || ""));
+    explore.appendChild(a);
+  });
+  document.getElementById("explore-go").onclick = function () { explore.scrollIntoView({ behavior: "smooth", block: "start" }); };
+  var bar = document.querySelector(".bar");
+  function barHeight() { document.documentElement.style.setProperty("--bar-h", bar.offsetHeight + "px"); }
+  window.addEventListener("resize", barHeight); barHeight();
   function show(scroll) {
     var id = location.hash.slice(1), cur = pages.filter(function (p) { return p.getAttribute("data-page") === id; })[0] || pages[0];
     pages.forEach(function (p) { p.hidden = p !== cur; });
+    document.body.setAttribute("data-route", cur.getAttribute("data-page"));
     list.querySelectorAll("a").forEach(function (a) { if (a.getAttribute("href") === "#" + cur.getAttribute("data-page")) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
     if (scroll) window.scrollTo(0, 0);
   }
