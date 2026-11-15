@@ -332,15 +332,22 @@ main { min-width: 0; padding-top: 56px; }
 .strip-head h2 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
-/* newly added */
-.new-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 16px; }
-.new-card { display: flex; flex-direction: column; gap: 16px; border: 1px solid var(--site-line); background: var(--site-panel); padding: 18px; transition: transform .35s cubic-bezier(.2,.8,.3,1), background .35s; }
+/* newly added: its own blue band, each card carrying the context behind the component */
+#newly { --nb: #1a33c9; --nb-deep: #0b1879; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+#newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
+#newly .strip-note { color: rgba(255,255,255,.62); }
+.new-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(352px, 1fr)); gap: 18px; }
+.new-card { display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.05); padding: 26px 26px 18px; transition: transform .35s cubic-bezier(.2,.8,.3,1), background .35s; }
 .new-card:hover { transform: translateY(-5px); background: rgba(255,255,255,.1); }
-.new-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 132px; }
-.new-foot { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-.new-name { font: 500 12px/1 var(--f-display); letter-spacing: -.005em; }
-.new-tag { font: 400 11px/1 var(--f-mono); color: var(--site-faint); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; }
-.new-tag.is-today { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
+.nc-text { display: grid; justify-items: start; gap: 12px; }
+.new-card h3 { display: flex; align-items: baseline; gap: 10px; margin: 0; font: 600 19px/1.2 var(--f-display); letter-spacing: -.02em; }
+.new-card h3::before { content: ""; flex: none; width: 6px; height: 6px; border: 1px solid var(--site-fg); transform: translateY(-3px); }
+.new-card p { margin: 0; font-size: 14.5px; line-height: 1.46; color: rgba(255,255,255,.82); max-width: 46ch; }
+.nc-pill { font: 400 12px/1 var(--f-mono); color: var(--site-fg); background: var(--nb-deep); border-radius: 999px; padding: 10px 15px; }
+.new-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 148px; padding: 8px 0 4px; }
+.nc-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); font: 400 11px/1.4 var(--f-mono); color: rgba(255,255,255,.6); }
+.new-tag { font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 5px 9px; }
+.new-tag.is-today { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
 
 /* the mock components themselves, drawn with the app tokens so the theme switch still works */
 .mock { font-family: var(--f-display); color: var(--ink); background: var(--surface); border-radius: 20px; box-shadow: var(--site-shadow); width: 100%; box-sizing: border-box; }
@@ -364,7 +371,49 @@ main { min-width: 0; padding-top: 56px; }
 .me-art span:nth-child(1) { height: 12px; } .me-art span:nth-child(2) { height: 20px; } .me-art span:nth-child(3) { height: 15px; }
 .mock-seg { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--surface-grouped); box-shadow: none; }
 .mock-seg span { flex: 1; text-align: center; font-size: 11.5px; font-weight: 600; color: var(--ink-secondary); border-radius: 999px; padding: 8px 6px; }
-.mock-seg span.is-on { color: var(--ink); background: var(--surface); box-shadow: var(--shadow-card); }
+.mock-seg span.is-on { color: var(--ink); }
+
+
+/* each preview plays back what the component does */
+@property --mg { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
+.new-grid.anim-ready .new-card { opacity: 0; }
+.new-grid.in .new-card { opacity: 1; animation: riseIn .6s cubic-bezier(.2,.9,.3,1) backwards; }
+.new-grid.in .new-card:nth-child(2) { animation-delay: .07s; }
+.new-grid.in .new-card:nth-child(3) { animation-delay: .14s; }
+.new-grid.in .new-card:nth-child(4) { animation-delay: .21s; }
+.new-grid.in .new-card:nth-child(5) { animation-delay: .28s; }
+.new-grid.in .new-card:nth-child(6) { animation-delay: .35s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+
+.ms-flame { animation: flicker 2.6s ease-in-out infinite; }
+@keyframes flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 34% { transform: scale(1.13) rotate(-6deg); } 67% { transform: scale(.95) rotate(5deg); } }
+
+.mock-toast { animation: toastIn 5s ease-in-out infinite; }
+@keyframes toastIn { 0% { opacity: 0; translate: 0 -16px; } 9%, 84% { opacity: 1; translate: 0 0; } 94%, 100% { opacity: 0; translate: 0 -12px; } }
+.mt-dot { animation: ping 2s ease-out infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(11,221,102,.5); } 72% { box-shadow: 0 0 0 10px rgba(11,221,102,0); } 100% { box-shadow: 0 0 0 0 rgba(11,221,102,0); } }
+
+.mr-pill { animation: pillPop 4s ease-in-out infinite; }
+@keyframes pillPop { 0%, 68%, 100% { transform: scale(1); } 77% { transform: scale(1.18); } 86% { transform: scale(.97); } }
+.mr-btn { position: relative; overflow: hidden; }
+.mr-btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 22%, rgba(255,255,255,.4) 50%, transparent 78%); translate: -130% 0; animation: sheen 3.6s ease-in-out infinite; }
+@keyframes sheen { 0%, 52% { translate: -130% 0; } 84%, 100% { translate: 130% 0; } }
+
+.mg-ring { --mg: 60%; animation: fill 4.6s cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes fill { 0% { --mg: 0%; } 46%, 82% { --mg: 60%; } 98%, 100% { --mg: 0%; } }
+
+.me-art span { transform-origin: bottom; animation: bars 1.9s ease-in-out infinite; }
+.me-art span:nth-child(2) { animation-delay: -.28s; }
+.me-art span:nth-child(3) { animation-delay: -.56s; }
+@keyframes bars { 0%, 100% { scale: 1 1; } 50% { scale: 1 1.4; } }
+
+.mock-seg { position: relative; }
+.mseg-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-card); animation: segSlide 6s cubic-bezier(.5,0,.15,1) infinite; }
+@keyframes segSlide { 0%, 26% { translate: 0 0; } 33%, 59% { translate: 100% 0; } 66%, 93% { translate: 200% 0; } 100% { translate: 0 0; } }
+.mock-seg span { position: relative; z-index: 1; animation: segInk 6s steps(1, end) infinite; }
+.mock-seg span:nth-of-type(2) { animation-delay: -4s; }
+.mock-seg span:nth-of-type(3) { animation-delay: -2s; }
+@keyframes segInk { 0%, 32% { color: var(--ink); } 34%, 100% { color: var(--ink-secondary); } }
 
 /* coming soon */
 .soon-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .85fr); gap: 26px; align-items: start; }
@@ -397,11 +446,13 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .soon-card, .note-card { animation: none; }
+  .soon-card, .note-card, .ms-flame, .mock-toast, .mt-dot, .mr-pill, .mr-btn::after,
+  .mg-ring, .me-art span, .mseg-thumb, .mock-seg span, .new-grid.in .new-card { animation: none; }
+  .new-grid.anim-ready .new-card { opacity: 1; }
   .new-card:hover, .note-card:hover { transform: none; }
 }
 @media (max-width: 1000px) { .soon-wrap { grid-template-columns: minmax(0, 1fr); } .notes { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; } .note-card { align-self: auto; flex: 0 1 290px; } }
-@media (max-width: 700px) { .strip { padding-top: 56px; } .new-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); } }
+@media (max-width: 700px) { .strip { padding-top: 56px; } .new-grid { grid-template-columns: minmax(0, 1fr); } .new-card { padding: 20px 20px 16px; } }
 
 /* ---------- panels ---------- */
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -889,26 +940,41 @@ main { padding-top: 28px; }
     <div class="new-grid">
 
       <article class="new-card" data-when="today">
+        <div class="nc-text">
+          <h3>StreakBadge</h3>
+          <p>Counts the days in a row a player has cashed out, and how long is left before the streak breaks. It replaces the three one-off counters that were living on Home.</p>
+          <span class="nc-pill">Draft &middot; needs review</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-streak">
             <span class="ms-flame">&#128293;</span>
             <span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">StreakBadge</span><span class="new-tag is-today">Today</span></div>
+        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Maya &middot; used in Home, Missions</span></p>
       </article>
 
       <article class="new-card" data-when="today">
+        <div class="nc-text">
+          <h3>LevelUpToast</h3>
+          <p>A short confirmation that drops in after a level, carrying the coins it paid. It dismisses itself after four seconds and never blocks a tap underneath.</p>
+          <span class="nc-pill">Draft &middot; motion spec open</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-toast">
             <span class="mt-dot"></span>
             <span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">LevelUpToast</span><span class="new-tag is-today">Today</span></div>
+        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Dani &middot; used in Game, Home</span></p>
       </article>
 
       <article class="new-card" data-when="today">
+        <div class="nc-text">
+          <h3>ReferralCard</h3>
+          <p>Invites a friend and states the reward on both sides before anyone taps. The share sheet wording is the one agreed on the Writing page.</p>
+          <span class="nc-pill">Ready for Figma</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-referral">
             <div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div>
@@ -916,20 +982,30 @@ main { padding-top: 28px; }
             <div class="mr-btn">Share link</div>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">ReferralCard</span><span class="new-tag is-today">Today</span></div>
+        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Robin &middot; used in Profile, Cash out</span></p>
       </article>
 
       <article class="new-card" data-when="yesterday">
+        <div class="nc-text">
+          <h3>ProgressRing</h3>
+          <p>Shows missions done against the number needed to cash out. The ring is the one place that count appears, so Home and Missions can stop disagreeing.</p>
+          <span class="nc-pill">Draft &middot; needs review</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-ring">
             <div class="mg-ring"><span>3<i>/5</i></span></div>
             <span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">ProgressRing</span><span class="new-tag">Yesterday</span></div>
+        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Maya &middot; used in Missions</span></p>
       </article>
 
       <article class="new-card" data-when="yesterday">
+        <div class="nc-text">
+          <h3>EmptyState</h3>
+          <p>What History shows before a first cash out. One line of reassurance and no call to action, so an empty screen never reads as a broken one.</p>
+          <span class="nc-pill">Ready for Figma</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-empty">
             <div class="me-art"><span></span><span></span><span></span></div>
@@ -937,16 +1013,22 @@ main { padding-top: 28px; }
             <i>Your first one shows up here.</i>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">EmptyState</span><span class="new-tag">Yesterday</span></div>
+        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Dani &middot; used in History</span></p>
       </article>
 
       <article class="new-card" data-when="yesterday">
+        <div class="nc-text">
+          <h3>SegmentedPicker</h3>
+          <p>Switches a list between day, week and all-time. One range at a time, and each screen remembers the range you left it on.</p>
+          <span class="nc-pill">Draft &middot; a11y check</span>
+        </div>
         <div class="new-stage">
           <div class="ui mock mock-seg">
+            <div class="mseg-thumb" aria-hidden="true"></div>
             <span class="is-on">Day</span><span>Week</span><span>All time</span>
           </div>
         </div>
-        <div class="new-foot"><span class="new-name">SegmentedPicker</span><span class="new-tag">Yesterday</span></div>
+        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Robin &middot; used in History, Leaderboard</span></p>
       </article>
 
     </div>
@@ -2001,6 +2083,19 @@ main { padding-top: 28px; }
     function fallback() { var pre = b.parentNode.querySelector("pre"); if (pre) { var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } done(false); }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
+
+  /* ---------- newly added: stagger the cards in when the row is reached ---------- */
+  var newGrid = document.querySelector(".new-grid");
+  if (newGrid) {
+    newGrid.classList.add("anim-ready");
+    var revealNew = function () { newGrid.classList.add("in"); };
+    if (window.IntersectionObserver) {
+      var newSpy = new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting) { revealNew(); newSpy.disconnect(); } });
+      }, { rootMargin: "0px 0px -12% 0px" });
+      newSpy.observe(newGrid);
+    } else revealNew();
+  }
 
   /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
