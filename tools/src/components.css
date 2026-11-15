@@ -30,7 +30,7 @@
 /* Popup preview frame for the Components page */
 .pp-demo { position: relative; display: flex; flex-direction: column; align-items: center; padding: 28px 16px; border-radius: 24px; background: #080a1c; font-family: var(--font-sans); }
 .pp-demo.has-dismiss { padding-bottom: 76px; } .pp-demo .pp-dismiss { bottom: 16px; }
-.pp-demo .pp-title { font-family: var(--font-sans); }
+.pp-demo .pp-title { font-family: var(--font-display); }
 .pp-demo-art { display: block; margin: 0 auto; }
 /* ---------- 2x coins: EventBanner, FlipTimer, BoostPopup. Taken from tools/src/boost.html. ---------- */
 .bx { --font: var(--font-sans); --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; --snappy: var(--easing-snappy); --smooth: var(--easing-smooth); --bouncy: var(--easing-bouncy); font-family: var(--font-sans); }

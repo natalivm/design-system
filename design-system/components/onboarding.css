@@ -93,7 +93,7 @@
 .pp-head[data-curve]::after { content: ""; position: absolute; left: -45%; right: -45%; bottom: -190px; height: 220px; border-radius: 50%; background: var(--pp-bg, #fff); transition: background .3s; }
 .pp-body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; padding: 24px 20px 20px; }
 .pp-eyebrow { font-size: 15px; line-height: 20px; font-weight: 600; }
-.pp-title { margin: 0; font-size: 22px; line-height: 28px; font-weight: 700; }
+.pp-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 800; }
 .pp[data-size="hero"] .pp-title { font-size: 37px; line-height: 44px; }
 .pp-text { margin: 8px 0 0; font-size: 19px; line-height: 25px; font-weight: 500; text-wrap: balance; }
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
@@ -111,7 +111,7 @@
 /* Popup preview frame for the Components page */
 .pp-demo { position: relative; display: flex; flex-direction: column; align-items: center; padding: 28px 16px; border-radius: 24px; background: #080a1c; font-family: var(--font-sans); }
 .pp-demo.has-dismiss { padding-bottom: 76px; } .pp-demo .pp-dismiss { bottom: 16px; }
-.pp-demo .pp-title { font-family: var(--font-sans); }
+.pp-demo .pp-title { font-family: var(--font-display); }
 .pp-demo-art { display: block; margin: 0 auto; }
 /* ---------- 2x coins: EventBanner, FlipTimer, BoostPopup. Taken from tools/src/boost.html. ---------- */
 .bx { --font: var(--font-sans); --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; --snappy: var(--easing-snappy); --smooth: var(--easing-smooth); --bouncy: var(--easing-bouncy); font-family: var(--font-sans); }

@@ -54,6 +54,7 @@ __GLOW__
     var amount = props.amount || (welcome ? "+1,000" : boost ? "2x coins · 15 min" : "1,500");
     return h(Popup, {
       size: "hero", card: "dark", bg: "linear-gradient(180deg, var(--violet-500) 10%, var(--indigo-800) 100%)",
+      over: h("img", { className: "bx-coins", src: A.topcoins, alt: "" }),
       title: props.title || (welcome ? "Welcome reward!" : "Congrats!"),
       text: welcome ? null : (props.subtitle || (boost ? "Get a 2x coins boost" : "Missions complete!")),
       action: props.cta || (welcome ? "Awesome!" : boost ? "Boost now" : "Get double"), tone: boost ? "offer" : "claim", ad: !welcome,
