@@ -94,6 +94,7 @@ button { font-family: var(--font); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
+.bx-ev-ends { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .hdr[data-state="offer"] .bx-ev-timer, .hdr[data-state="active"] .bx-ev-offer { display: none; }
 
 /* ---------- FlipTimer ---------- */
@@ -189,7 +190,7 @@ button { font-family: var(--font); }
               <canvas id="confetti" aria-hidden="true"></canvas>
               <span class="bx-ev-left">
                 <span class="bx-ev-offer bx-ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span></span>
-                <span class="bx-ev-offer bx-flip small" id="evEndsFlip" role="timer" aria-label="Time left to start"><i>2</i><i>3</i><em>:</em><i>1</i><i>4</i><em>:</em><i>0</i><i>0</i></span>
+                <span class="bx-ev-offer bx-ev-ends" role="timer">Ends in <span id="evEnds">23:14:00</span></span>
                 <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
               <span class="bx-ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
@@ -210,7 +211,7 @@ button { font-family: var(--font); }
         </div>
         <div class="tabbar" aria-hidden="true"><img src="{{tabbar}}" alt=""></div>
 
-        <div class="pp-scrim" id="modal" data-mode="intro">
+        <div class="pp-scrim" id="modal" data-mode="intro" data-dismiss="popLink">
           <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
           <div class="pp bpop" id="pop" data-size="standard" data-mode="intro" role="dialog" aria-label="2x coins">
             <div class="bx-over-title">Congrats!</div>
@@ -315,8 +316,8 @@ button { font-family: var(--font); }
     if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
     $("popLeft").textContent = leftClock(S.left);
     $("popLeft").parentNode.setAttribute("aria-label", leftSpoken(S.left));
-    var ends = $("evEndsFlip");
-    if (ends) { setFlip(ends, hhmm(S.ends)); ends.setAttribute("aria-label", "Time left to start: " + leftSpoken(S.ends).replace(" left", "")); }
+    var ends = $("evEnds");
+    if (ends) { ends.textContent = leftClock(S.ends); ends.parentNode.setAttribute("aria-label", "Offer ends in " + leftSpoken(S.ends).replace(" left", "")); }
   }
   function startClock() {
     clearInterval(tickT);

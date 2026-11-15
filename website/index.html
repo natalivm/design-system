@@ -550,6 +550,7 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
+.bx-ev-ends { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .hdr[data-state="offer"] .bx-ev-timer, .hdr[data-state="active"] .bx-ev-offer { display: none; }
 
 /* ---------- FlipTimer ---------- */
@@ -1432,7 +1433,7 @@ main { padding-top: 28px; }
     return h("div", { className: "bx" }, h("div", { className: "bx-ev", role: "group", "aria-label": "2x coins, limited event", onClick: active ? props.onOpen : undefined, style: active && props.onOpen ? { cursor: "pointer" } : undefined },
       h("span", { className: "bx-ev-left" },
         active ? h(FlipTimer, { size: "small", value: props.value == null ? "235842" : props.value }) : h(BoostButton, { size: "banner", onAction: props.onAction }, props.label || "Start now"),
-        active ? null : h(FlipTimer, { size: "small", value: props.endsIn == null ? "231400" : props.endsIn })),
+        active ? null : h("span", { className: "bx-ev-offer bx-ev-ends", role: "timer" }, "Ends in ", props.endsIn || "23:14:00")),
       h("span", { className: "bx-ev-right" }, h("span", null, "Limited event"), h("img", { src: A.logo, alt: "2x coins" }))));
   }
   // state: "offer" | "active" | "progress" | "over" · onAction starts the boost, onDismiss closes

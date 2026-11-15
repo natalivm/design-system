@@ -127,6 +127,14 @@ var KIT = (function () {
           var f = el.querySelector("button:not([disabled]):not([hidden])"); if (f) f.focus({ preventScroll: true });
         }, 80);
       }
+      // Tapping the scrim is the same gesture as the overlay's own way out, so an overlay
+      // naming one in data-dismiss gets it for free. Taps inside the card, or on any control,
+      // belong to the card; decorative layers over the scrim (the bokeh canvas) do not.
+      var away = el.getAttribute("data-dismiss");
+      if (away) el.addEventListener("click", function (e) {
+        if (e.target.closest(".pp, .full, .sheet, button, a, [role=\"button\"]")) return;
+        var b = $(away); if (b && !b.hidden && !b.disabled) b.click();
+      });
       new MutationObserver(sync).observe(el, { attributes: true, attributeFilter: ["class"] });
       sync();
     });

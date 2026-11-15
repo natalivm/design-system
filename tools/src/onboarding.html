@@ -151,6 +151,9 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .full { position: absolute; inset: 0; z-index: 70; background: #fff; color: var(--ink); display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; pointer-events: none; transform: translateY(16px); transition: opacity .35s var(--smooth), transform .45s var(--snappy); }
 .full.on { opacity: 1; pointer-events: auto; transform: none; }
 .full-foot { width: 100%; box-sizing: border-box; padding: 16px 16px 34px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+/* The primary sits at the same height on every full screen. A footer with no link under
+   the button reserves the room one would take, instead of dropping 48px lower. */
+.full-foot.solo { padding-bottom: 82px; }
 .primary { width: 100%; height: var(--control-height); border: 0; border-radius: 999px; background: var(--blue-500); color: var(--on-accent); font: 600 17px/22px var(--font); cursor: pointer; transition: transform .15s var(--snappy), opacity .15s; }
 .primary:active { transform: scale(.98); opacity: .7; }
 .plain { min-height: 44px; padding: 0 20px; border: 0; background: none; color: var(--ink); font: 600 17px/22px var(--font); cursor: pointer; }
@@ -275,7 +278,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <div class="coach" id="coach" role="status"><span id="coachText"></span></div>
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
-        <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward">
+        <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward" data-dismiss="rewardOk">
           <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Welcome reward!</h2>
             <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
@@ -285,7 +288,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
           </div></div></div>
         </div>
 
-        <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete">
+        <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete" data-dismiss="congratsClose">
           <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Missions complete!</p>
@@ -296,7 +299,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
           <button class="pp-dismiss" id="congratsClose">Claim 1,500</button>
         </div>
 
-        <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost">
+        <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost" data-dismiss="boostSkip">
           <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Get a 2x coins boost</p>
@@ -315,7 +318,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
             <h2>Terms and conditions</h2>
             <p>To continue playing, confirm that you agree to our <span>Terms of Service</span> and have read our <span>Privacy Policy</span>.</p>
           </div>
-          <div class="full-foot"><button class="primary" id="termsOk">Accept</button></div>
+          <div class="full-foot solo"><button class="primary" id="termsOk">Accept</button></div>
         </div>
 
         <div class="full" id="trust" role="dialog" aria-label="Trusted by players">

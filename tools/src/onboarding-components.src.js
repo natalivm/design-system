@@ -111,7 +111,7 @@ __GLOW__
     return h("div", { className: "bx" }, h("div", { className: "bx-ev", role: "group", "aria-label": "2x coins, limited event", onClick: active ? props.onOpen : undefined, style: active && props.onOpen ? { cursor: "pointer" } : undefined },
       h("span", { className: "bx-ev-left" },
         active ? h(FlipTimer, { size: "small", value: props.value == null ? "235842" : props.value }) : h(BoostButton, { size: "banner", onAction: props.onAction }, props.label || "Start now"),
-        active ? null : h(FlipTimer, { size: "small", value: props.endsIn == null ? "231400" : props.endsIn })),
+        active ? null : h("span", { className: "bx-ev-offer bx-ev-ends", role: "timer" }, "Ends in ", props.endsIn || "23:14:00")),
       h("span", { className: "bx-ev-right" }, h("span", null, "Limited event"), h("img", { src: A.logo, alt: "2x coins" }))));
   }
   // state: "offer" | "active" | "progress" | "over" · onAction starts the boost, onDismiss closes
