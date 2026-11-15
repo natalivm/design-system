@@ -221,6 +221,30 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .ring.show { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; } }
+/* panel:start */
+.panel { --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; width: 320px; gap: 0; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, #10141b, #0a0d12); overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.panel .group { gap: 0; }
+.panel .group:first-child { padding: 22px 22px 20px; }
+.panel h1 { font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
+.panel h1::before { content: "Prototype"; display: block; margin-bottom: 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.panel .label { padding: 0 22px 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; color: var(--muted); }
+.chips { display: block; counter-reset: sc; border-top: 1px solid var(--line); }
+.chip { counter-increment: sc; display: flex; align-items: center; gap: 14px; width: 100%; min-height: 46px; padding: 0 22px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--muted); font: 500 15px/20px var(--font); text-align: left; transition: color .15s, background .15s; }
+.chip::before { content: counter(sc, decimal-leading-zero); font: 500 11px/14px var(--mono); letter-spacing: .08em; color: #5b6676; }
+.chip::after { content: ""; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: #0bdd66; opacity: 0; transform: scale(.4); transition: opacity .2s, transform .2s; }
+.chip:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.chip[aria-pressed="true"] { background: rgba(255,255,255,.05); border-color: var(--line); color: #fff; font-weight: 600; }
+.chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
+.chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: #05070a; border: 1px solid var(--line); }
+.playbtn { justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; background: none; color: var(--muted); font: 600 16px/20px var(--font); transition: background .18s, color .18s; }
+.playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.playbtn:hover { color: var(--text); }
+.playbtn[aria-pressed="true"] { background: #fff; color: #07090c; }
+.reset { align-self: stretch; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
+.reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
+.reset:hover { color: #fff; }
+/* panel:end */
 </style>
 
 <div class="page">
@@ -345,10 +369,10 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       </div>
     </div>
     <div class="transport">
-      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false">▶ Play</button>
-      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true">⏸ Pause</button>
+      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.6v10.8a.7.7 0 0 0 1.06.6l9-5.4a.7.7 0 0 0 0-1.2l-9-5.4A.7.7 0 0 0 3 1.6z"/></svg>Play</button>
+      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1.5" width="3.6" height="11" rx="1"/><rect x="8.4" y="1.5" width="3.6" height="11" rx="1"/></svg>Pause</button>
     </div>
-    <button class="reset" id="reset">Reset prototype</button>
+    <button class="reset" id="reset">Reset</button>
   </aside>
 </div>
 
