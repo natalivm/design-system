@@ -720,9 +720,9 @@ main { padding-top: 28px; }
 .comp > .comp-head { order: 2; }
 .comp > .comp-code { order: 3; }
 .comp > .note { order: 4; }
-.comp .comp-head h2 { align-items: center; flex-wrap: wrap; gap: 8px 10px; font-size: 15px; font-weight: 500; letter-spacing: -.005em; }
-.comp .comp-head h2::before { width: 5px; height: 5px; transform: translateY(-1px); }
-.comp-chips { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.comp .comp-head h2 { align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 10px; font-size: 15px; font-weight: 500; letter-spacing: -.005em; }
+.comp .comp-head h2::before { display: none; }
+.comp-chips { display: inline-flex; align-items: center; gap: 6px; }
 .comp-vars { display: none; font: 400 11px/1 var(--f-mono); color: var(--site-faint); white-space: nowrap; background: none; border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; cursor: pointer; }
 .comp-vars:hover { color: var(--site-fg); }
 .comp-vars[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
