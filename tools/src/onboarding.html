@@ -34,12 +34,12 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .flow li.on { background: var(--chip); color: var(--text); font-weight: 700; }
 .flow li.on::before { background: var(--blue-500); border-color: var(--blue-500); }
 .reset { align-self: flex-start; font: 600 13px/18px var(--font); color: #6ea1ff; background: none; border: 0; padding: 0; cursor: pointer; }
-.playbtn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: 600 15px/20px var(--font); cursor: pointer; }
+.transport { display: flex; gap: 12px; }
+.playbtn { width: 72px; height: 72px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--text); cursor: pointer; transition: background .15s, transform .1s; }
+.playbtn svg { width: 28px; height: 28px; fill: currentColor; }
+.playbtn:active { transform: scale(.94); }
 .playbtn[aria-pressed="true"] { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
 .playbtn:focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
-.playnote[hidden] { display: none; }
-.playnote { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--text) !important; }
-.playnote::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0bdd66; animation: blink 1s infinite; }
 @keyframes blink { 0%, 100% { opacity: .25; } 40% { opacity: 1; } }
 
 /* device */
@@ -333,7 +333,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   <aside class="panel">
     <div class="group">
       <h1>Onboarding missions</h1>
-      <p>A new player's first session: coach marks point at the missions, rewards pop, and coins fly into the balance.</p>
     </div>
     <div class="group">
       <span class="label">Start from</span>
@@ -344,11 +343,9 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <button class="chip" data-s="complete" aria-pressed="false">All missions done</button>
       </div>
     </div>
-    <div class="group">
-      <span class="label">Autoplay</span>
-      <p>Play runs the flow for you from wherever it is. Pause hands it back so you can tap through it yourself.</p>
-      <button class="playbtn" id="playBtn" aria-pressed="false">▶ Play</button>
-      <p class="playnote" id="playNote" hidden>Playing. Pause, or tap the phone, to take over.</p>
+    <div class="transport">
+      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="4" width="4.5" height="16" rx="1.2"/><rect x="14" y="4" width="4.5" height="16" rx="1.2"/></svg></button>
     </div>
     <button class="reset" id="reset">Reset prototype</button>
   </aside>
@@ -650,7 +647,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   /* ---------- scenarios and autoplay ---------- */
   var runId = 0;
   var playing = false;
-  function setPlaying(on) { playing = on; $("playNote").hidden = !on; var b = $("playBtn"); b.textContent = on ? "\u23f8 Pause" : "\u25b6 Play"; b.setAttribute("aria-pressed", on ? "true" : "false"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
+  function setPlaying(on) { playing = on; $("playBtn").setAttribute("aria-pressed", on ? "true" : "false"); $("pauseBtn").setAttribute("aria-pressed", on ? "false" : "true"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
   function stopPlay() { runId++; setPlaying(false); }
   function tapOn(el, id) {
     if (!el || id !== runId) return Promise.resolve();
@@ -698,7 +695,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     if (noPlay) stopPlay(); else autoplay(s);
   }
   Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
-  $("playBtn").onclick = function () { if (playing) stopPlay(); else autoplay(); };
+  $("playBtn").onclick = function () { if (!playing) autoplay(); };
+  $("pauseBtn").onclick = function () { if (playing) stopPlay(); };
   $("reset").onclick = function () { startScenario("first", true); };
   $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
 
