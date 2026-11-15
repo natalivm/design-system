@@ -99,14 +99,14 @@ button { font-family: var(--font); }
 .hdr[data-state="offer"] .ev-timer, .hdr[data-state="active"] .ev-offer { display: none; }
 
 /* ---------- FlipTimer ---------- */
-.flip { display: flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
-.flip i { position: relative; display: grid; place-items: center; width: var(--fw, 52px); height: var(--fh, 82px); border-radius: var(--fr, 8px); background: linear-gradient(180deg, #fff 0 50%, var(--pink-50) 50% 100%); color: var(--pink-ink); font-style: normal; font-size: var(--fs, 54px); line-height: 1; font-weight: 700; box-shadow: 0 2px 4px rgba(120,0,40,.25); }
+.flip { display: flex; align-items: center; gap: 3px; font-variant-numeric: tabular-nums; }
+.flip i { position: relative; display: grid; place-items: center; width: var(--fw, 38px); height: var(--fh, 60px); border-radius: var(--fr, 8px); background: linear-gradient(180deg, #fff 0 50%, var(--pink-50) 50% 100%); color: var(--pink-ink); font-style: normal; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; box-shadow: 0 2px 4px rgba(120,0,40,.25); }
 .flip i::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(238,20,92,.14); }
 .flip i.tick { animation: tick .4s var(--snappy); }
 @keyframes tick { 0% { transform: perspective(200px) rotateX(-70deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
-.flip em { font-style: normal; width: var(--fc, 20px); text-align: center; font-size: var(--fs, 54px); line-height: 1; font-weight: 700; color: var(--pink-ink); animation: colon 1s steps(2, jump-none) infinite; }
+.flip em { font-style: normal; width: var(--fc, 12px); text-align: center; font-size: var(--fs, 40px); line-height: 1; font-weight: 700; color: var(--pink-ink); animation: colon 1s steps(2, jump-none) infinite; }
 @keyframes colon { 50% { opacity: .35; } }
-.flip.small { --fw: 30px; --fh: 42px; --fs: 28px; --fr: 6px; --fc: 10px; gap: 3px; }
+.flip.small { --fw: 23px; --fh: 34px; --fs: 21px; --fr: 5px; --fc: 7px; gap: 2px; }
 .flip.small em { color: #fff; }
 
 {{popup_css}}
@@ -178,7 +178,7 @@ button { font-family: var(--font); }
               <span class="ev-left">
                 <span class="ev-offer ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="adtag">Watch ad</span></span>
                 <span class="ev-offer ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
-                <span class="ev-timer flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i></span>
+                <span class="ev-timer flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
               <span class="ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
             </button>
@@ -211,7 +211,7 @@ button { font-family: var(--font); }
                 <span class="pill"><img src="{{clock}}" alt=""><span id="popLeft">23h 59m left</span></span>
               </div>
               <div class="pp-body">
-                <div class="flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i></div>
+                <div class="flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
                 <p class="pp-text">You have 24 hours to double all the coins you earn playing your favorite games.</p>
                 <div class="pop-active"><b class="pp-title">Bonus is active!</b><span class="pp-text" style="margin:0;display:block">Play games to earn coins</span></div>
                 <div class="pop-earn" id="popEarn">
@@ -306,15 +306,15 @@ button { font-family: var(--font); }
   }
 
   /* ---------- timer ---------- */
-  function hhmm(left) { var m = Math.ceil(left / 60); if (left >= DAY) m = 1440; var h = Math.floor(m / 60); m = m % 60; return (h < 10 ? "0" : "") + h + (m < 10 ? "0" : "") + m; }
+  function hhmm(left) { var p = function (n) { return (n < 10 ? "0" : "") + n; }; return p(Math.floor(left / 3600)) + p(Math.floor(left % 3600 / 60)) + p(left % 60); }   // hours, minutes, seconds
   function setFlip(el, str) {
     var cells = el.querySelectorAll("i");
-    for (var k = 0; k < 4; k++) if (cells[k].textContent !== str[k]) { cells[k].textContent = str[k]; cells[k].classList.remove("tick"); void cells[k].offsetWidth; cells[k].classList.add("tick"); }
+    for (var k = 0; k < cells.length; k++) if (cells[k].textContent !== str[k]) { cells[k].textContent = str[k]; cells[k].classList.remove("tick"); void cells[k].offsetWidth; cells[k].classList.add("tick"); }
   }
   function leftText(left) { var m = Math.ceil(left / 60), h = Math.floor(m / 60); m = m % 60; return (h ? h + "h " : "") + m + "m left"; }
   function renderTime() {
     var t = hhmm(S.left); setFlip($("evFlip"), t);
-    if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "2400");
+    if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
     $("popLeft").textContent = leftText(S.left);
   }
   function startClock() {
@@ -373,7 +373,7 @@ button { font-family: var(--font); }
     interstitial("Rewarded video" + (S.ads > 1 ? " " + (S.seen + 1) + " of " + S.ads : ""), "Your boost starts when it ends").then(function () {
       if (S !== sc) return; S.busy = false; S.seen++;
       if (S.seen < S.ads) { S.state = "offer"; render(); if (from === "pop") openPop("intro", "Skip"); return; }
-      S.state = "active"; S.left = DAY - 60; render(); startClock(); openPop("active", "Close");
+      S.state = "active"; S.left = DAY - 1; render(); startClock(); openPop("active", "Close");
     });
   }
   function onBanner() {
