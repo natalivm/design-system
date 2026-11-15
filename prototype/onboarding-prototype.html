@@ -596,34 +596,62 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       uTime = gl.getUniformLocation(prog, "uTime");
     } catch (e) { gl = null; rays.remove(); }   // no WebGL: the CSS halo stays as the fallback
 
-    var ctx = motes.getContext("2d"), P = [];
-    function spawn(p, first) {
-      var ang = Math.random() * Math.PI * 2, rad = Math.random() * 95;
-      p.x = SIZE / 2 + Math.cos(ang) * rad * 1.25; p.y = SIZE / 2 + 30 + Math.sin(ang) * rad * 0.55;
-      p.vx = (Math.random() - .5) * 14; p.vy = -(14 + Math.random() * 34); p.r = 1.2 + Math.random() * 2.6;
-      p.life = first ? Math.random() : 0; p.span = 1.6 + Math.random() * 2.2; p.tw = Math.random() * 6.28; p.star = Math.random() < 0.15;
-    }
-    for (var i = 0; i < 20; i++) { var p = {}; spawn(p, true); P.push(p); }
+    // Light motes: soft round glows rising past the coins. Each mote has a small bright core and a wide
+    // halo; nearer motes are larger, faster and paler, farther ones smaller, slower and deeper in color.
+    // All motion is computed in the vertex shader from one time uniform.
+    var mg = null, mTime = null, COUNT = 72;
+    try {
+      mg = motes.getContext("webgl", { premultipliedAlpha: true, alpha: true });
+      var msh = function (type, src) { var o = mg.createShader(type); mg.shaderSource(o, src); mg.compileShader(o); if (!mg.getShaderParameter(o, mg.COMPILE_STATUS)) throw new Error(mg.getShaderInfoLog(o)); return o; };
+      var mp = mg.createProgram();
+      mg.attachShader(mp, msh(mg.VERTEX_SHADER, [
+        "attribute vec4 seed;",                       // x position, phase, depth, size
+        "uniform float uTime, uPx;",
+        "varying float vDepth, vAlpha;",
+        "void main(){",
+        "  float depth = seed.z;",
+        "  float rise = fract(seed.y + uTime * mix(0.32, 0.62, depth));",       // a mote lives about 1.6 to 3 seconds
+        "  float sway = sin(uTime * (0.5 + seed.w) + seed.y * 40.0) * 0.045 * (0.4 + rise);",
+        "  float x = (seed.x * 2.0 - 1.0) * mix(0.22, 0.5, rise) + sway;",      // the column widens as it rises
+        "  float y = mix(-0.2, 0.42, rise);",                                  // short climb: they die just above the coins
+        "  gl_Position = vec4(x, y, 0.0, 1.0);",
+        "  gl_PointSize = uPx * mix(0.035, 0.13, seed.w * seed.w) * mix(0.5, 1.0, depth);",   // mostly small, a few large
+        "  vDepth = depth;",
+        "  vAlpha = smoothstep(0.0, 0.12, rise) * (1.0 - smoothstep(0.3, 0.9, rise)) * (0.75 + 0.25 * sin(uTime * 1.7 + seed.x * 30.0));",
+        "}"].join("\n")));
+      mg.attachShader(mp, msh(mg.FRAGMENT_SHADER, [
+        "precision mediump float;",
+        "uniform vec3 uTint;",
+        "varying float vDepth, vAlpha;",
+        "void main(){",
+        "  float d = length(gl_PointCoord - 0.5) * 2.0;",
+        "  float core = 1.0 - smoothstep(0.04, 0.26, d);",                     // small soft centre
+        "  float halo = pow(max(0.0, 1.0 - d), 1.8);",                         // wide falloff, no hard edge
+        "  vec3 far = uTint * 0.9, near = mix(uTint, vec3(1.0, 0.97, 0.86), 0.6);",
+        "  vec3 col = mix(far, near, vDepth);",
+        "  float lum = (core * 0.9 + halo * 0.7) * vAlpha * mix(0.6, 1.0, vDepth);",
+        "  lum = 1.0 - exp(-lum * 1.4);",                                      // gentle highlight rolloff instead of clipping
+        "  gl_FragColor = vec4(col * lum, lum);",
+        "}"].join("\n")));
+      mg.linkProgram(mp); mg.useProgram(mp);
+      var seeds = new Float32Array(COUNT * 4); for (var i = 0; i < seeds.length; i++) seeds[i] = Math.random();
+      mg.bindBuffer(mg.ARRAY_BUFFER, mg.createBuffer()); mg.bufferData(mg.ARRAY_BUFFER, seeds, mg.STATIC_DRAW);
+      var sl = mg.getAttribLocation(mp, "seed"); mg.enableVertexAttribArray(sl); mg.vertexAttribPointer(sl, 4, mg.FLOAT, false, 0, 0);
+      mg.uniform1f(mg.getUniformLocation(mp, "uPx"), motes.height);
+      mg.uniform3f(mg.getUniformLocation(mp, "uTint"), tint[0], tint[1], tint[2]);
+      mTime = mg.getUniformLocation(mp, "uTime");
+      mg.enable(mg.BLEND); mg.blendFunc(mg.ONE, mg.ONE);                       // additive: overlapping motes bloom together
+    } catch (e) { mg = null; motes.remove(); }
     function drawMotes(dt, t) {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, SIZE, SIZE); ctx.globalCompositeOperation = "lighter";
-      for (var i = 0; i < P.length; i++) {
-        var p = P[i]; p.life += dt / p.span; if (p.life >= 1) spawn(p, false);
-        p.x += (p.vx + Math.sin(t * 1.3 + p.tw) * 10) * dt; p.y += p.vy * dt;
-        var fade = Math.sin(Math.PI * p.life), tw = 0.7 + 0.3 * Math.sin(t * 3 + p.tw), a = fade * tw * 0.6, R = p.r * (p.star ? 7 : 5);
-        var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
-        g.addColorStop(0, "rgba(255,252,225," + a + ")"); g.addColorStop(0.25, "rgba(255,221,90," + a * 0.55 + ")"); g.addColorStop(1, "rgba(255,190,40,0)");
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.2832); ctx.fill();
-        if (p.star) {   // four-point glint
-          ctx.strokeStyle = "rgba(255,255,240," + a * 0.9 + ")"; ctx.lineWidth = 1; var L = R * 1.5 * tw;
-          ctx.beginPath(); ctx.moveTo(p.x - L, p.y); ctx.lineTo(p.x + L, p.y); ctx.moveTo(p.x, p.y - L); ctx.lineTo(p.x, p.y + L); ctx.stroke();
-        }
-      }
+      if (!mg) return;
+      mg.viewport(0, 0, motes.width, motes.height); mg.clearColor(0, 0, 0, 0); mg.clear(mg.COLOR_BUFFER_BIT);
+      mg.uniform1f(mTime, t); mg.drawArrays(mg.POINTS, 0, COUNT);
     }
     var raf = 0, last = 0, still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     function frame(now) {
       var dt = Math.min(0.05, (now - last) / 1000); last = now; var t = now / 1000;
       if (gl) { gl.viewport(0, 0, rays.width, rays.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.uniform1f(uTime, still ? 3.0 : t); gl.drawArrays(gl.TRIANGLES, 0, 3); }
-      drawMotes(still ? 0 : dt, t);
+      drawMotes(dt, still ? 3.0 : t);
       raf = (!still && isActive()) ? requestAnimationFrame(frame) : 0;   // stops when no longer shown
     }
     return { start: function () { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } } };
