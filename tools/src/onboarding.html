@@ -2,13 +2,13 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the onboarding missions flow, with a slim scenario panel beside it. */
 :root {
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
-  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --navy-900: #000748; --ink: #02266e; --ink-secondary: #5b6378;
-  --mission-top: #a712f1; --mission-bottom: #0017aa; --row: #eff4fe; --row-coin: #8bd3ff; --gold: #ffdd20; --mint: #0bdd66;
-  --claim-a: #98f73a; --claim-b: #0bdd66; --claim-ink: #ffffff; --orange: #ff7a1a; /* orange-500 */
+  --mission-top: var(--violet-500); --mission-bottom: var(--indigo-800); --row: #eff4fe; --row-coin: var(--sky-200); --gold: var(--gold-400); --mint: var(--mint-400);
+  --claim-b: var(--mint-400); --orange: var(--orange-500);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -111,13 +111,14 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .mr-btn::after { content: ""; position: absolute; inset: -6px -4px; }
 .mr-btn:active { transform: scale(.95); opacity: .8; }
 .mr-btn:disabled { cursor: default; }
-.mr.claim .mr-btn { background: var(--claim-b); color: var(--claim-ink); animation: pulse 1.2s var(--smooth) infinite; }
-@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(11,221,102,.28); } }
+.mr.claim .mr-btn { background: var(--claim-b); color: var(--claim-ink); animation: ob-pulse 1.2s var(--smooth) infinite; }
+@keyframes ob-pulse { 50% { box-shadow: 0 0 0 6px rgba(11,221,102,.28); } }
 .mr.progress .mr-btn { opacity: .45; }
 .mr.claimed { background: var(--green-700); color: #fff; box-shadow: inset 0 0 0 2px var(--mint); }
 .mr.claimed .mr-coin { background: rgba(0,0,0,.18); opacity: .7; }
 .mr.claimed .mr-btn { background: none; color: #fff; animation: none; padding: 0 6px; }
-.mr-btn:focus-visible, .mc-toggle:focus-visible, .pp-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mc-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.mr-btn:focus-visible { outline: 3px solid var(--blue-500); outline-offset: 2px; }
 
 /* ---------- CoachMark ---------- */
 .dim { position: absolute; inset: 0; z-index: 30; background: rgba(8,10,28,.78); opacity: 0; pointer-events: none; transition: opacity .45s var(--smooth); }
@@ -177,7 +178,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 /* ---------- Congrats extras, boost offer, rewarded video ---------- */
 .amount-row { display: flex; align-items: flex-start; justify-content: center; gap: 8px; }
 .x2 { font-size: 22px; line-height: 28px; font-weight: 700; color: var(--gold); transform: rotate(-8deg); text-shadow: 0 2px 0 rgba(60,20,0,.5); }
-.adtag { display: inline-block; margin-left: 10px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
 .boost-row { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 22px; line-height: 28px; font-weight: 700; }
 .boost-row b { color: var(--gold); font-weight: 800; text-shadow: 0 2px 0 rgba(60,20,0,.5); }
 .boost-row img { width: 32px; height: 32px; }
@@ -278,7 +278,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         <img class="hand" id="hand" src="{{hand}}" alt="">
 
         <div class="pp-scrim" id="reward" role="dialog" aria-label="Welcome reward">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Welcome reward!</h2>
             <div class="pile" id="rewardPile"><img src="{{pile}}" alt=""></div>
             <div class="pp-amount" id="rewardAmount">+1,000</div>
@@ -288,23 +288,23 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         </div>
 
         <div class="pp-scrim" id="congrats" role="dialog" aria-label="Missions complete">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Missions complete!</p>
             <div class="pile" id="congratsPile"><img src="{{pile}}" alt=""></div>
             <div class="amount-row"><div class="pp-amount" id="congratsAmount">1,500</div><span class="x2" aria-label="times two">x2</span></div>
-            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="adtag">Watch ad</span></button>
+            <button class="pp-btn" data-tone="claim" id="congratsOk">Get double<span class="pp-adtag">Watch ad</span></button>
           </div></div></div>
           <button class="pp-dismiss" id="congratsClose">Claim 1,500</button>
         </div>
 
         <div class="pp-scrim" id="boost" role="dialog" aria-label="Coins boost">
-          <div class="pp ob-pop" data-size="hero" data-theme="dark"><div class="pp-card"><div class="pp-body">
+          <div class="pp ob-pop" data-size="hero" data-card="dark"><div class="pp-card"><div class="pp-body">
             <h2 class="pp-title">Congrats!</h2>
             <p class="pp-text">Get a 2x coins boost</p>
             <div class="pile" id="boostPile"><img src="{{pile}}" alt=""></div>
             <div class="boost-row"><b>2x coins</b><img src="{{clock}}" alt="">15 min</div>
-            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="adtag">Watch ad</span></button>
+            <button class="pp-btn" data-tone="offer" id="boostOk">Boost now<span class="pp-adtag">Watch ad</span></button>
           </div></div></div>
           <button class="pp-dismiss" id="boostSkip">Skip</button>
         </div>

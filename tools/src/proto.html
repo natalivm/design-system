@@ -2,16 +2,15 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the flow on the left, a slim scenario panel on the right; stacks on narrow screens. */
 :root {
   /* page chrome */
   --page: #07090c; --panel: #12161d; --text: #f1f4f8; --muted: #9aa5b5; --line: #232a35; --chip: #171c25;
-  /* app tokens: Cashout iOS design system (the app itself is light-only, like the Figma) */
-  --blue-500: #1464ff; --on-accent: #ffffff; --green-700: #087a5a; --green-500: #0c9971; --green-400: #49cc3d; --navy-900: #000748;
-  --ink: #02266e; --ink-secondary: #5b6378; --link: #1464ff; --surface: #ffffff; --surface-warm: #f9f8f4;
-  --surface-grouped: #f2f4f7; --surface-info: #eff5fd; --separator: #e3e7ef; --success: #087a5a;
-  --danger: #b42318; --danger-surface: #fff1f0; --strip: #f2f2f2; --strip-ink: #171b20;
+  /* app colours that are not tokens; token colours come from design-system/tokens.css at build time */
+  --surface-warm: #f9f8f4;
+  --strip: #f2f2f2; --strip-ink: #171b20;
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
