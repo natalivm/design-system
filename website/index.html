@@ -743,7 +743,6 @@ main { padding-top: 28px; }
 #components.dense .comp > .stage { zoom: .5; gap: 14px; }
 #components.dense .comp > .stage .fig ~ .fig { display: none; }
 #components.dense .comp.show-vars > .stage .fig ~ .fig { display: flex; }
-#components.dense .comp .fig figcaption { margin-top: 6px; font-size: 22px; }
 #components.dense .comp-vars { display: inline-block; }
 #components.dense .comp-code pre { font-size: 11.5px; max-height: 320px; overflow: auto; }
 @media (max-width: 460px) {
@@ -1620,7 +1619,7 @@ main { padding-top: 28px; }
       var fig = el("figure", "fig"), box = el("div", "ui float" + (s[3] ? " " + s[3] : ""));
       if (s[1]) box.style.width = s[1] + "px";
       box.setAttribute("data-spec", s[0]);
-      var cap = el("figcaption", null, s[2]);
+      var cap = el("figcaption", "vh", s[2]);
       fig.appendChild(cap); fig.appendChild(box); st.appendChild(fig);
     });
     a.appendChild(st);
