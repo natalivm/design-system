@@ -81,4 +81,4 @@ extension Font {
 // MARK: Spacing, radius, size (points)
 enum Space { static let s1: CGFloat = 4, s2: CGFloat = 8, s3: CGFloat = 12, s4: CGFloat = 16, s5: CGFloat = 20, s6: CGFloat = 24, s8: CGFloat = 32, s10: CGFloat = 40 }
 enum Radius { static let sm: CGFloat = 8, md: CGFloat = 12, lg: CGFloat = 16, xl: CGFloat = 24 }
-enum Size { static let controlHeight: CGFloat = 50, hitTarget: CGFloat = 44, pillHeight: CGFloat = 32, iconTile: CGFloat = 40 }
+enum Size { static let controlHeight: CGFloat = 50, hitTarget: CGFloat = 44, pillHeight: CGFloat = 32, iconTile: CGFloat = 40, tabBarHeight: CGFloat = 49 }
