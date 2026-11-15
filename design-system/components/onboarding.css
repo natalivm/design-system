@@ -97,14 +97,15 @@
 .pp[data-size="hero"] .pp-title { font-size: 28px; line-height: 34px; }
 .pp-text { margin: 8px 0 0; font-size: 17px; line-height: 22px; font-weight: 500; text-wrap: balance; }
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
-.pp-btn { margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.pp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
 .pp-btn:active { transform: scale(.97); }
 .pp-btn, .pp-btn[data-tone="claim"] { background: var(--mint-400, #0bdd66); color: var(--claim-ink, #ffffff); }
 .pp-btn[data-tone="boost"] { background: var(--violet-400, #9b51e0); color: var(--on-accent, #fff); }
 .pp-btn[data-tone="offer"] { background: var(--orange-500, #ff7a1a); color: var(--on-accent, #fff); }
 .pp-btn:focus-visible { outline: 3px solid var(--blue-500, #1464ff); outline-offset: 2px; }
-/* "Watch ad" after the label of any button that plays an ad */
-.pp-adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+/* A button that plays an ad leads with this icon. It carries its own label for screen
+   readers, so the button still announces "Watch ad" with nothing written on it. */
+.pp-adtag { flex: none; display: inline-block; width: 22px; height: 22px; border-radius: 7px; vertical-align: -5px; background: rgba(0,0,0,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M4.4 2.11 10.44 5.6a.46.46 0 0 1 0 .8L4.4 9.89A.46.46 0 0 1 3.7 9.49V2.51a.46.46 0 0 1 .7-.4Z'/%3E%3C/svg%3E") center/12px no-repeat; }
 .pp-dismiss { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; padding: 0 12px; background: none; border: 0; color: #fff; font-family: inherit; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; cursor: pointer; }
 /* popup:end */
 /* Popup preview frame for the Components page */
@@ -124,7 +125,7 @@
 .bx-ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
 .bx-ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.bx-ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
 .bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .bx-ev-ends img { width: 16px; height: 16px; }
@@ -180,3 +181,4 @@
 .bx-over { padding-top: 110px; }
 .bx-swatch { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 20px; border-radius: 16px; background: linear-gradient(180deg, var(--pink-400), var(--pink-600)); font-family: var(--font-sans); color: #fff; }
 .bx-swatch.light { background: #fff; }
+.bx-swatch.fill { display: flex; }  /* for a preview of a button that fills its body */

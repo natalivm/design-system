@@ -40,7 +40,7 @@ Pick the tone that fits the action and stands out from the card.
 | `boost` | Starting a multiplier, on light cards | Flat violet-400, white text |
 | `offer` | An optional extra, on dark cards | Flat orange-500, white text |
 
-Buttons are flat: one solid colour, no gradient, no drop shadow, and the label is always white. A button that plays an ad carries the "Watch ad" tag after its label.
+Buttons are flat: one solid colour, no gradient, no drop shadow, and the label is always white. A button that plays an ad leads with the ad icon: a 22pt rounded square holding a play triangle, 10pt before the label, with the label and icon centred together. The icon carries "Watch ad" as its accessibility label, so the button still announces the ad with nothing written on it.
 
 ## Sizes
 

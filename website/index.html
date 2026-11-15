@@ -508,14 +508,15 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .pp[data-size="hero"] .pp-title { font-size: 28px; line-height: 34px; }
 .pp-text { margin: 8px 0 0; font-size: 17px; line-height: 22px; font-weight: 500; text-wrap: balance; }
 .pp-amount { font-size: 54px; line-height: 58px; font-weight: 800; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
-.pp-btn { margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.pp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; height: 50px; border: 0; border-radius: 999px; font-family: inherit; font-size: 17px; line-height: 22px; font-weight: 700; cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
 .pp-btn:active { transform: scale(.97); }
 .pp-btn, .pp-btn[data-tone="claim"] { background: var(--mint-400, #0bdd66); color: var(--claim-ink, #ffffff); }
 .pp-btn[data-tone="boost"] { background: var(--violet-400, #9b51e0); color: var(--on-accent, #fff); }
 .pp-btn[data-tone="offer"] { background: var(--orange-500, #ff7a1a); color: var(--on-accent, #fff); }
 .pp-btn:focus-visible { outline: 3px solid var(--blue-500, #1464ff); outline-offset: 2px; }
-/* "Watch ad" after the label of any button that plays an ad */
-.pp-adtag { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.78); color: #fff; font: 500 12px/16px "DM Mono", ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+/* A button that plays an ad leads with this icon. It carries its own label for screen
+   readers, so the button still announces "Watch ad" with nothing written on it. */
+.pp-adtag { flex: none; display: inline-block; width: 22px; height: 22px; border-radius: 7px; vertical-align: -5px; background: rgba(0,0,0,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23fff' d='M4.4 2.11 10.44 5.6a.46.46 0 0 1 0 .8L4.4 9.89A.46.46 0 0 1 3.7 9.49V2.51a.46.46 0 0 1 .7-.4Z'/%3E%3C/svg%3E") center/12px no-repeat; }
 .pp-dismiss { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); min-width: 120px; padding: 0 12px; background: none; border: 0; color: #fff; font-family: inherit; font-size: 17px; line-height: 44px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; white-space: nowrap; cursor: pointer; }
 /* popup:end */
 /* Popup preview frame for the Components page */
@@ -535,7 +536,7 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .bx-ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
 .bx-ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.bx-ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
 .bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .bx-ev-ends img { width: 16px; height: 16px; }
@@ -591,6 +592,7 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .bx-over { padding-top: 110px; }
 .bx-swatch { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 20px; border-radius: 16px; background: linear-gradient(180deg, var(--pink-400), var(--pink-600)); font-family: var(--font-sans); color: #fff; }
 .bx-swatch.light { background: #fff; }
+.bx-swatch.fill { display: flex; }  /* for a preview of a button that fills its body */
 /* @end onboarding.css */
 /* ---------- visuals first: screens and examples lead, small text follows ---------- */
 main { padding-top: 28px; }
@@ -1429,7 +1431,7 @@ main { padding-top: 28px; }
             props.text ? h("p", { className: "pp-text" }, props.text) : null,
             props.children,
             props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,
-            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.action, props.ad ? h("span", { className: "pp-adtag" }, "Watch ad") : null) : null))),
+            props.action ? h("button", { type: "button", className: "pp-btn", "data-tone": props.tone || "claim", onClick: props.onAction }, props.ad ? h(AdTag, { key: "ad" }) : null, props.action) : null))),
       props.dismiss ? h("button", { type: "button", className: "pp-dismiss", onClick: props.onDismiss }, props.dismiss) : null);
   }
   Popup.art = A;
@@ -1444,13 +1446,13 @@ main { padding-top: 28px; }
     return h("span", { className: "bx-flip" + (props.size === "small" ? " small" : ""), role: "timer", "aria-label": +v.slice(0, 2) + " hours " + +v.slice(2, 4) + " minutes " + +v.slice(4) + " seconds left" }, kids);
   }
   function TimePill(props) { return h("span", { className: "bx-pill" }, h("img", { src: A.clock, alt: "" }), props.children || "23h 59m left"); }
-  function AdTag() { return h("span", { className: "pp-adtag" }, "Watch ad"); }
+  function AdTag() { return h("span", { className: "pp-adtag", role: "img", "aria-label": "Watch ad", title: "Watch ad" }); }
   function BoostTag() { return h("span", { className: "bx-tag" }, "2x"); }
   // size: "popup" (50pt, fills the body) | "banner" (44pt, hugs its label)
   function BoostButton(props) {
     var label = props.children || "Start now";
-    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, label, h(AdTag));
-    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, label, h(AdTag));
+    if (props.size === "banner") return h("button", { type: "button", className: "bx-ev-start bx-reset", onClick: props.onAction }, h(AdTag), label);
+    return h("button", { type: "button", className: "pp-btn", "data-tone": "boost", onClick: props.onAction }, h(AdTag), label);
   }
   // state: "offer" (Start now plays the ad: onAction) | "active" (tapping opens progress: onOpen)
   function EventBanner(props) {
@@ -1529,8 +1531,8 @@ main { padding-top: 28px; }
     { name: "BoostPopup", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostPopup", sum: "The 2x coins pop-up in its four moments, built on the Popup frame.", pts: ["Offer on app open; Active right after the ad", "Progress opens from the active banner and shows the time left", "Time over sums up what was earned, with Congrats! above the card", "The base amount is struck through; the doubled amount is violet"], specs: [["bpop-offer", 361, "Offer", "flush"], ["bpop-active", 361, "Active", "flush"], ["bpop-progress", 361, "Progress", "flush"], ["bpop-over", 361, "Time over", "flush"]] },
     { name: "EventBanner", feat: "boost", figma: "BestPlay Design System · 2x coins · EventBanner", sum: "The pink home header while the 2x coins event is on.", pts: ["Offer: Start now with the time the offer ends under it", "Active: a live timer; tapping the banner opens progress", "The top 59pt stays clear for the status bar", "Gold coins drift down it slowly"], specs: [["banner-offer", 393, "Offer", "flush"], ["banner-active", 393, "Active", "flush"]] },
     { name: "FlipTimer", feat: "boost", figma: "BestPlay Design System · 2x coins · FlipTimer", sum: "Hours, minutes and seconds left, as flip cards.", pts: ["Large on the pop-up, Small on the banner", "Digits are tabular so the cards never change width", "The seconds card flips every second"], specs: [["flip-large", 0, "Large", "flush"], ["flip-small", 0, "Small", "flush"]] },
-    { name: "BoostButton", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostButton", sum: "Starts the boost by playing an ad.", pts: ["Flat violet-400 with a white label: no gradient, no shadow", "Always carries the Watch ad tag", "Popup size fills the body; Banner size hugs its label"], specs: [["bbtn-popup", 329, "Popup", "flush"], ["bbtn-banner", 0, "Banner", "flush"]] },
-    { name: "EventTags", feat: "boost", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: time left, on the pink gradient only", "AdTag: marks a button that plays an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
+    { name: "BoostButton", feat: "boost", figma: "BestPlay Design System · 2x coins · BoostButton", sum: "Starts the boost by playing an ad.", pts: ["Flat violet-400 with a white label: no gradient, no shadow", "Always leads with the ad icon, which reads as \u201cWatch ad\u201d", "Popup size fills the body; Banner size hugs its label"], specs: [["bbtn-popup", 329, "Popup", "flush"], ["bbtn-banner", 0, "Banner", "flush"]] },
+    { name: "EventTags", feat: "boost", figma: "BestPlay Design System · 2x coins · TimePill, AdTag, BoostTag", sum: "The three small labels of the event.", pts: ["TimePill: time left, on the pink gradient only", "AdTag: the icon that leads a button playing an ad", "BoostTag: next to the balance while the boost runs"], specs: [["tag-time", 0, "TimePill", "flush"], ["tag-ad", 0, "AdTag", "flush"], ["tag-boost", 0, "BoostTag", "flush"]] },
     { name: "RewardCard", feat: "onboarding", figma: "BestPlay Design System · Onboarding · RewardCard", sum: "The reward moment, built on Popup: a glowing coin pile, the amount and one button.", pts: ["Hero size on a violet card, gold title", "The amount counts up, then coins fly to the balance", "Get double and Boost now play an ad; the link under the card skips it", "Plays a success haptic"], specs: [["reward-welcome", 361, "Welcome", "flush"], ["reward-congrats", 361, "Congrats", "flush"], ["reward-boost", 361, "2x boost", "flush"]] },
     { name: "TabBar", feat: "core", figma: "TabBar", sum: "The four root destinations, drawn by the system TabView.", pts: ["Use SF Symbols; the selected tab is tinted blue-500", "Never draw the tab bar or safe area into a screen"], specs: [["tabbar", 360, "Tap a tab", "flush"]] }
   ];
@@ -1605,10 +1607,10 @@ main { padding-top: 28px; }
     "banner-active": function () { return h(C.EventBanner, { state: "active" }); },
     "flip-large": function () { return h("div", { className: "bx bx-swatch light" }, h(C.FlipTimer, { value: "235959" })); },
     "flip-small": function () { return h("div", { className: "bx bx-swatch" }, h(C.FlipTimer, { value: "235842", size: "small" })); },
-    "bbtn-popup": function () { return h("div", { className: "bx bx-swatch light" }, h(C.BoostButton, null, "Start now")); },
+    "bbtn-popup": function () { return h("div", { className: "bx bx-swatch light fill" }, h(C.BoostButton, null, "Start now")); },
     "bbtn-banner": function () { return h("div", { className: "bx bx-swatch" }, h(C.BoostButton, { size: "banner" }, "Start (1/2)")); },
     "tag-time": function () { return h("div", { className: "bx bx-swatch" }, h(C.TimePill, null, "23h 59m left")); },
-    "tag-ad": function () { return h("div", { className: "bx bx-swatch light" }, h(C.AdTag)); },
+    "tag-ad": function () { return h("div", { className: "bx bx-swatch" }, h(C.AdTag)); },
     "tag-boost": function () { return h("div", { className: "bx bx-swatch light" }, h(C.BoostTag)); },
     "reward-welcome": function () { return h(C.RewardCard, { tone: "welcome" }); },
     "reward-congrats": function () { return h(C.RewardCard, { tone: "congrats", amount: "1,500" }); },

@@ -92,7 +92,7 @@ button { font-family: var(--font); }
 .bx-ev-right span { display: block; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: #ffe27a; margin-bottom: 2px; }
 .bx-ev-right img { display: block; width: 160px; margin-left: auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.bx-ev-start { display: inline-flex; align-items: center; gap: 0; min-height: 44px; padding: 0 12px 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
+.bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
 .bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .bx-ev-ends img { width: 16px; height: 16px; }
@@ -175,7 +175,7 @@ button { font-family: var(--font); }
             <button class="bx-ev" id="ev" aria-label="2x coins, limited event">
               <canvas id="confetti" aria-hidden="true"></canvas>
               <span class="bx-ev-left">
-                <span class="bx-ev-offer bx-ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></span>
+                <span class="bx-ev-offer bx-ev-start" id="evStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="evStartLabel">Start now</span></span>
                 <span class="bx-ev-offer bx-ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
                 <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
@@ -220,7 +220,7 @@ button { font-family: var(--font); }
                   <b class="pp-amount" id="earnTotal">+10,000</b>
                   <p class="pp-text" id="earnNone" style="font-size:15px;line-height:20px" hidden>Play a game and every coin counts twice.</p>
                 </div>
-                <button class="pp-btn" data-tone="boost" id="popStart"><span id="popStartLabel">Start now</span><span class="pp-adtag">Watch ad</span></button>
+                <button class="pp-btn" data-tone="boost" id="popStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="popStartLabel">Start now</span></button>
               </div>
             </div>
           </div>
