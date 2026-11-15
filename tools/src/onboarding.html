@@ -345,27 +345,10 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       </div>
     </div>
     <div class="group">
-      <span class="label">Where you are</span>
-      <ol class="flow" id="flow">
-        <li data-f="terms">Terms and conditions</li>
-        <li data-f="trust">Trusted by players</li>
-        <li data-f="balance">Coach marks: coins and cash</li>
-        <li data-f="intro">Coach mark: your tasks</li>
-        <li data-f="first">First task: claim</li>
-        <li data-f="reward">Welcome reward</li>
-        <li data-f="fly">Coins fly to balance</li>
-        <li data-f="second">Second task</li>
-        <li data-f="play">Playing and claiming</li>
-        <li data-f="congrats">Missions complete</li>
-        <li data-f="boost">2x boost offer</li>
-        <li data-f="done">Home, missions collapsed</li>
-      </ol>
-    </div>
-    <div class="group">
-      <span class="label">Try</span>
-      <p>Press Play to watch the flow, or Pause and tap through it yourself. Picking a state jumps to it. Tapping the phone also pauses.</p>
+      <span class="label">Autoplay</span>
+      <p>Play runs the flow for you from wherever it is. Pause hands it back so you can tap through it yourself.</p>
       <button class="playbtn" id="playBtn" aria-pressed="false">▶ Play</button>
-      <p class="playnote" id="playNote" hidden>Playing. Tap the phone to take over.</p>
+      <p class="playnote" id="playNote" hidden>Playing. Pause, or tap the phone, to take over.</p>
     </div>
     <button class="reset" id="reset">Reset prototype</button>
   </aside>
@@ -393,7 +376,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   var toastT;
   function toast(t) { var el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("on"); }, 1700); }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function setStep(f) { Array.prototype.forEach.call($("flow").children, function (li) { li.classList.toggle("on", li.getAttribute("data-f") === f); }); }
+  function setStep(f) { Array.prototype.forEach.call(($("flow") || { children: [] }).children, function (li) { li.classList.toggle("on", li.getAttribute("data-f") === f); }); }
   function scale() { var scr = $("screen"); return scr.getBoundingClientRect().width / scr.offsetWidth; }
   function local(el) { var sr = $("screen").getBoundingClientRect(), k = scale(), r = el.getBoundingClientRect(); return { x: (r.left - sr.left) / k, y: (r.top - sr.top) / k, w: r.width / k, h: r.height / k }; }
   function countCoins(to, ms) {
@@ -477,7 +460,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   function claimRow(i, fromEl) {
     S.busy = true;
     return flyCoins(fromEl, i === 2 ? 16 : 12, MISSIONS[i].coins).then(function () {
-      S.m[i] = "claimed"; S.busy = false; renderRows();
+      S.m[i] = "claimed"; S.busy = false; S.settle = Date.now() + 1400; renderRows();
       if (S.m.every(function (x) { return x === "claimed"; })) return sleep(700).then(showCongrats);
       setStep("play");
     });
@@ -508,7 +491,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     return sleep(1900).then(function () { ad.classList.remove("on"); return sleep(250); });
   }
   function finish(mult) {
-    if (S.busy) return; S.busy = true;
+    if (S.busy || !isOn("congrats")) return; S.busy = true;
     var run = mult === 2 ? watchVideo() : Promise.resolve(), sc = S;
     run.then(function () {
       if (S !== sc) return;
@@ -523,10 +506,10 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   function showBoost() { setStep("boost"); $("homeInd").classList.add("light"); $("boost").classList.add("on"); glowBoost.start(); }
   var boostT = 0;
   function endBoost(taken) {
-    if (S.busy) return; var sc = S;
+    if (S.busy || !isOn("boost")) return; var sc = S;
     var done = function () {
       if (S !== sc) return;
-      S.busy = false; $("boost").classList.remove("on"); $("homeInd").classList.remove("light"); setStep("done");
+      S.busy = false; S.ended = true; $("boost").classList.remove("on"); $("homeInd").classList.remove("light"); setStep("done");
       if (taken) {
         $("mc").classList.add("boosted"); toast("2x coins for 15 minutes"); var left = 900; clearInterval(boostT);
         boostT = setInterval(function () { left = Math.max(0, left - 1); $("boostClock").textContent = Math.floor(left / 60) + ":" + (left % 60 < 10 ? "0" : "") + left % 60; }, 1000);
@@ -599,7 +582,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     // Light motes: soft round glows rising past the coins. Each mote has a small bright core and a wide
     // halo; nearer motes are larger, faster and paler, farther ones smaller, slower and deeper in color.
     // All motion is computed in the vertex shader from one time uniform.
-    var mg = null, mTime = null, COUNT = 72;
+    var mg = null, mTime = null, COUNT = 40;
     try {
       mg = motes.getContext("webgl", { premultipliedAlpha: true, alpha: true });
       var msh = function (type, src) { var o = mg.createShader(type); mg.shaderSource(o, src); mg.compileShader(o); if (!mg.getShaderParameter(o, mg.COMPILE_STATUS)) throw new Error(mg.getShaderInfoLog(o)); return o; };
@@ -608,16 +591,18 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
         "attribute vec4 seed;",                       // x position, phase, depth, size
         "uniform float uTime, uPx;",
         "varying float vDepth, vAlpha;",
+        "float hash(float n){ return fract(sin(n * 91.345) * 47453.5453); }",
         "void main(){",
         "  float depth = seed.z;",
-        "  float rise = fract(seed.y + uTime * mix(0.32, 0.62, depth));",       // a mote lives about 1.6 to 3 seconds
-        "  float sway = sin(uTime * (0.5 + seed.w) + seed.y * 40.0) * 0.045 * (0.4 + rise);",
-        "  float x = (seed.x * 2.0 - 1.0) * mix(0.22, 0.5, rise) + sway;",      // the column widens as it rises
-        "  float y = mix(-0.2, 0.42, rise);",                                  // short climb: they die just above the coins
-        "  gl_Position = vec4(x, y, 0.0, 1.0);",
+        "  float clock = seed.y + uTime * mix(0.30, 0.46, depth);",              // one life lasts about 2.2 to 3.3 seconds
+        "  float life = fract(clock), born = floor(clock);",
+        "  float rx = hash(seed.x * 13.7 + born), ry = hash(seed.w * 29.1 + born * 1.7);",   // a new spot each life
+        "  float drift = life * mix(0.05, 0.11, depth);",                        // slow: under 25px of travel in a whole life
+        "  float sway = sin(uTime * 0.6 + seed.y * 40.0) * 0.012;",
+        "  gl_Position = vec4((rx * 2.0 - 1.0) * 0.42 + sway, mix(-0.28, 0.34, ry) + drift, 0.0, 1.0);",
         "  gl_PointSize = uPx * mix(0.035, 0.13, seed.w * seed.w) * mix(0.5, 1.0, depth);",   // mostly small, a few large
         "  vDepth = depth;",
-        "  vAlpha = smoothstep(0.0, 0.12, rise) * (1.0 - smoothstep(0.3, 0.9, rise)) * (0.75 + 0.25 * sin(uTime * 1.7 + seed.x * 30.0));",
+        "  vAlpha = smoothstep(0.0, 0.35, life) * (1.0 - smoothstep(0.5, 1.0, life));",       // eases in and out, no popping
         "}"].join("\n")));
       mg.attachShader(mp, msh(mg.FRAGMENT_SHADER, [
         "precision mediump float;",
@@ -664,12 +649,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 
   /* ---------- scenarios and autoplay ---------- */
   var runId = 0;
-  var SCRIPTS = {
-    first: [["termsOk", 900], ["trustOk", 1500], ["coachNext", 900], ["coachNext", 900], ["coachNext", 1500], ["btn0", 2300], ["rewardOk", 3400], ["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 6600], ["boostOk", 3600]],
-    progress: [["btn1", 2400], ["btn1", 2600], ["btn2", 3600], ["btn2", 3800], ["congratsOk", 6600], ["boostOk", 3600]],
-    push: [["push", 1700], ["btn1", 2400], ["btn1", 2600]],
-    complete: [["congratsOk", 6600], ["boostOk", 3600]]
-  };
   var playing = false;
   function setPlaying(on) { playing = on; $("playNote").hidden = !on; var b = $("playBtn"); b.textContent = on ? "\u23f8 Pause" : "\u25b6 Play"; b.setAttribute("aria-pressed", on ? "true" : "false"); if (!on) { $("tap").classList.remove("show", "down"); $("ring").classList.remove("show"); } }
   function stopPlay() { runId++; setPlaying(false); }
@@ -684,10 +663,31 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
       .then(function () { if (id !== runId) return; tap.classList.remove("down"); ring.classList.remove("show"); el.click(); return sleep(300); })
       .then(function () { if (id === runId) tap.classList.remove("show"); });
   }
-  function autoplay(s) {
-    var id = ++runId, p = sleep(1400); setPlaying(true);
-    SCRIPTS[s].forEach(function (st) { p = p.then(function () { if (id !== runId) return; return tapOn($(st[0]), id).then(function () { return sleep(st[1]); }); }); });
-    p.then(function () { if (id === runId) setPlaying(false); });   // plays once, no loop
+  // Autoplay looks at what is on screen and taps the next control, so Play can start from any state.
+  function isOn(id) { return $(id).classList.contains("on"); }
+  function nextTarget() {
+    if (isOn("ad")) return null;
+    if (isOn("terms")) return $("termsOk");
+    if (isOn("trust")) return $("trustOk");
+    if (isOn("push")) return $("push");
+    if (isOn("reward")) return $("rewardOk");
+    if (isOn("congrats")) return $("congratsOk");
+    if (isOn("boost")) return $("boostOk");
+    if (S.busy || Date.now() < (S.settle || 0)) return null;
+    if (isOn("coach") && !$("coachNext").hidden) return $("coachNext");
+    if (S.ended) return "done";
+    for (var i = 0; i < 3; i++) { if (S.m[i] === "progress") return null; if (S.m[i] === "claim" || S.m[i] === "go") return $("btn" + i); }
+    return null;
+  }
+  function autoplay() {
+    var id = ++runId, idle = 0; setPlaying(true);
+    (function step() {
+      if (id !== runId) return;
+      var t = nextTarget();
+      if (t === "done" || idle > 60) { setPlaying(false); return; }
+      if (!t) { idle++; sleep(300).then(step); return; }
+      idle = 0; tapOn(t, id).then(function () { return sleep(900); }).then(step);
+    })();
   }
   function startScenario(s, noPlay) {
     Array.prototype.forEach.call($("scenarios").children, function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-s") === s ? "true" : "false"); });
@@ -698,7 +698,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
     if (noPlay) stopPlay(); else autoplay(s);
   }
   Array.prototype.forEach.call($("scenarios").children, function (c) { c.onclick = function () { startScenario(c.getAttribute("data-s"), !playing); }; });
-  $("playBtn").onclick = function () { if (playing) stopPlay(); else startScenario(S.scenario); };
+  $("playBtn").onclick = function () { if (playing) stopPlay(); else autoplay(); };
   $("reset").onclick = function () { startScenario("first", true); };
   $("screen").addEventListener("pointerdown", function (e) { if (e.isTrusted) stopPlay(); }, true);
 
@@ -711,6 +711,6 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
   window.addEventListener("resize", fit); fit();
 
   S = fresh("first"); renderRows(); setStep("terms");
-  setTimeout(function () { if (runId === 0) startScenario("first"); }, 900);
+  startScenario("first", true);   // starts paused on the first screen; Play runs it
 })();
 </script>

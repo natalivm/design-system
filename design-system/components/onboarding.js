@@ -84,7 +84,7 @@
     // Light motes: soft round glows rising past the coins. Each mote has a small bright core and a wide
     // halo; nearer motes are larger, faster and paler, farther ones smaller, slower and deeper in color.
     // All motion is computed in the vertex shader from one time uniform.
-    var mg = null, mTime = null, COUNT = 72;
+    var mg = null, mTime = null, COUNT = 40;
     try {
       mg = motes.getContext("webgl", { premultipliedAlpha: true, alpha: true });
       var msh = function (type, src) { var o = mg.createShader(type); mg.shaderSource(o, src); mg.compileShader(o); if (!mg.getShaderParameter(o, mg.COMPILE_STATUS)) throw new Error(mg.getShaderInfoLog(o)); return o; };
@@ -93,16 +93,18 @@
         "attribute vec4 seed;",                       // x position, phase, depth, size
         "uniform float uTime, uPx;",
         "varying float vDepth, vAlpha;",
+        "float hash(float n){ return fract(sin(n * 91.345) * 47453.5453); }",
         "void main(){",
         "  float depth = seed.z;",
-        "  float rise = fract(seed.y + uTime * mix(0.32, 0.62, depth));",       // a mote lives about 1.6 to 3 seconds
-        "  float sway = sin(uTime * (0.5 + seed.w) + seed.y * 40.0) * 0.045 * (0.4 + rise);",
-        "  float x = (seed.x * 2.0 - 1.0) * mix(0.22, 0.5, rise) + sway;",      // the column widens as it rises
-        "  float y = mix(-0.2, 0.42, rise);",                                  // short climb: they die just above the coins
-        "  gl_Position = vec4(x, y, 0.0, 1.0);",
+        "  float clock = seed.y + uTime * mix(0.30, 0.46, depth);",              // one life lasts about 2.2 to 3.3 seconds
+        "  float life = fract(clock), born = floor(clock);",
+        "  float rx = hash(seed.x * 13.7 + born), ry = hash(seed.w * 29.1 + born * 1.7);",   // a new spot each life
+        "  float drift = life * mix(0.05, 0.11, depth);",                        // slow: under 25px of travel in a whole life
+        "  float sway = sin(uTime * 0.6 + seed.y * 40.0) * 0.012;",
+        "  gl_Position = vec4((rx * 2.0 - 1.0) * 0.42 + sway, mix(-0.28, 0.34, ry) + drift, 0.0, 1.0);",
         "  gl_PointSize = uPx * mix(0.035, 0.13, seed.w * seed.w) * mix(0.5, 1.0, depth);",   // mostly small, a few large
         "  vDepth = depth;",
-        "  vAlpha = smoothstep(0.0, 0.12, rise) * (1.0 - smoothstep(0.3, 0.9, rise)) * (0.75 + 0.25 * sin(uTime * 1.7 + seed.x * 30.0));",
+        "  vAlpha = smoothstep(0.0, 0.35, life) * (1.0 - smoothstep(0.5, 1.0, life));",       // eases in and out, no popping
         "}"].join("\n")));
       mg.attachShader(mp, msh(mg.FRAGMENT_SHADER, [
         "precision mediump float;",
