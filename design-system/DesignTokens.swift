@@ -8,6 +8,11 @@ extension Color {
     static let green500       = Color("green-500")
     static let lime400        = Color("lime-400")
     static let navy900        = Color("navy-900")
+    static let violet500      = Color("violet-500")
+    static let indigo800      = Color("indigo-800")
+    static let gold400        = Color("gold-400")
+    static let mint400        = Color("mint-400")
+    static let sky200         = Color("sky-200")
     static let ink            = Color("ink")
     static let inkSecondary   = Color("ink-secondary")
     static let link           = Color("link")
@@ -27,14 +32,22 @@ extension ShapeStyle where Self == LinearGradient {
     }
 }
 
+extension ShapeStyle where Self == LinearGradient {
+    /// MissionCard and Congrats card fill.
+    static var mission: LinearGradient {
+        LinearGradient(colors: [.violet500, .indigo800], startPoint: .top, endPoint: .bottom)
+    }
+}
+
 // MARK: Type — Plus Jakarta Sans, scaled like the system text styles
 enum DSTextStyle {
-    case amount, largeTitle, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
+    case amount, largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
 
     var spec: (size: CGFloat, weight: Font.Weight, relativeTo: Font.TextStyle) {
         switch self {
         case .amount:      (54, .heavy,    .largeTitle)
         case .largeTitle:  (34, .bold,     .largeTitle)
+        case .title1:      (28, .bold,     .title)
         case .title2:      (22, .bold,     .title2)
         case .title3:      (20, .semibold, .title3)
         case .headline:    (17, .semibold, .headline)

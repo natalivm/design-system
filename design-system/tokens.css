@@ -6,6 +6,11 @@
   --green-500: #0c9971;
   --lime-400: #60e041;
   --navy-900: #000748;
+  --violet-500: #a712f1;
+  --indigo-800: #0017aa;
+  --gold-400: #ffdd20;
+  --mint-400: #0bdd66;
+  --sky-200: #8bd3ff;
   --ink: #02266e;
   --ink-secondary: #5b6378;
   --link: #1464ff;
@@ -27,6 +32,11 @@
   --green-500: #0c9971;
   --lime-400: #60e041;
   --navy-900: #1a2350;
+  --violet-500: #a712f1;
+  --indigo-800: #0017aa;
+  --gold-400: #ffdd20;
+  --mint-400: #0bdd66;
+  --sky-200: #8bd3ff;
   --ink: #e8edf7;
   --ink-secondary: #a7b3cc;
   --link: #4d8bff;
@@ -71,6 +81,7 @@
 }
 .amount { font-family: var(--font-sans); font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; }
 .large-title { font-family: var(--font-sans); font-size: 34px; line-height: 41px; font-weight: 700; }
+.title1 { font-family: var(--font-sans); font-size: 28px; line-height: 34px; font-weight: 700; }
 .title2 { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 700; }
 .title3 { font-family: var(--font-sans); font-size: 20px; line-height: 25px; font-weight: 600; }
 .headline { font-family: var(--font-sans); font-size: 17px; line-height: 22px; font-weight: 600; }

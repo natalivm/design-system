@@ -5,6 +5,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | Folder | What's in it |
 |---|---|
 | `prototype/cashout-prototype.html` | Clickable iPhone prototype of the flow. Open it in a browser; all art is embedded. |
+| `prototype/onboarding-prototype.html` | Clickable prototype of the onboarding missions: coach marks, the welcome reward, coins flying to the balance, and the missions-complete card. It plays by itself in a loop. |
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Scripts and source art used to generate the files above. |
@@ -42,4 +43,4 @@ Both pages are private until shared from their Share menu.
 
 ## Rebuilding
 
-`tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.
+`tools/css.py` regenerates `tokens.css` from `tokens.json`. `tools/build_onboarding.py` and `tools/build_onboarding_components.py` rebuild the onboarding prototype and its components from `tools/src/` and `tools/assets/onboarding/`. `tools/build_proto.py` embeds the art in `tools/assets/prototype/` into the prototype template `tools/src/proto.html`. The scripts were written for a temporary working folder, so update their paths before running them again.
