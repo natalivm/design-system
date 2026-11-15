@@ -331,7 +331,7 @@ main { min-width: 0; padding-top: 56px; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
 /* newly added: its own blue band, each card carrying the context behind the component */
-#newly { --nb: #1a33c9; --nb-deep: #0b1879; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+#newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
 #newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
 #newly .strip-note { color: rgba(255,255,255,.62); }
 .new-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(352px, 1fr)); gap: 18px; }
@@ -413,7 +413,10 @@ main { min-width: 0; padding-top: 56px; }
 .mock-seg span:nth-of-type(3) { animation-delay: -2s; }
 @keyframes segInk { 0%, 32% { color: var(--ink); } 34%, 100% { color: var(--ink-secondary); } }
 
-/* coming soon */
+/* coming soon: the plum band */
+#soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+#soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
+#soon .strip-note { color: rgba(255,255,255,.62); }
 .soon-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .85fr); gap: 26px; align-items: start; }
 .soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: 16px; }
 .soon-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; border: 1px dashed var(--site-line); background: rgba(255,255,255,.035); padding: 18px; animation: drift 9s ease-in-out infinite; transition: background .35s, border-color .35s; }
