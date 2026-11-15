@@ -10,7 +10,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Sources (`tools/src/`), art (`tools/assets/`) and the build (`tools/build.py`) that generates the files above. |
-| `website/index.html` | The website's home page: the green BestPlay Design System page, with Overview, Foundations, Components, Screens, Prototype, Motion and Writing pages. Components and Screens are built from the `COMPONENTS` and `SCREENS` arrays in the page's script: each entry names its feature (Core, Cash out, Onboarding, 2x coins), which drives the search, the feature filter and the sorting on both pages. The prototype runs inside its Prototype page. |
+| `website/index.html` | The website's home page: the green BestPlay Design System page, with Overview, Foundations, Components, Prototype, Motion and Writing pages. Components is built from the `COMPONENTS` array in the page's script: each entry names its feature (Core, Cash out, Onboarding, 2x coins), which drives the search and the feature filter, and lists the variants to draw. Screens used to be a separate page showing the same variants inside a phone frame; it was folded into Components. The prototype runs inside its Prototype page. |
 
 ## Website (GitHub Pages)
 

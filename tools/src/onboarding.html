@@ -1,14 +1,14 @@
 <title>Onboarding Prototype</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Nunito:wght@800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>{{tokens_css}}</style>
 <style>
 /* Layout: a phone running the onboarding missions flow, with a slim scenario panel beside it. */
 :root {
   --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08);
   --mission-top: var(--violet-500); --mission-bottom: var(--indigo-800); --row: #eff4fe; --row-coin: var(--sky-200); --gold: var(--gold-400); --mint: var(--mint-400);
-  --claim-b: var(--mint-400); --orange: var(--orange-500);
+  --claim-b: var(--green-400); --orange: var(--orange-500);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
   color-scheme: dark;
@@ -75,7 +75,7 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .mc { position: relative; border-radius: 16px; background: linear-gradient(180deg, var(--mission-top) 24%, var(--mission-bottom)); box-shadow: 0 2px 4px rgba(0,0,0,.4); color: #fff; }
 .mc-head { position: relative; height: 112px; border-radius: 16px 16px 0 0; }
 .mc-fox { position: absolute; left: 2px; top: -6px; width: 128px; pointer-events: none; }
-.mc-timer { position: absolute; left: 50%; top: 10px; margin-left: -34px; display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 12px 0 2px; border-radius: 999px; background: rgba(0,0,0,.5); color: var(--gold); font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.mc-timer { position: absolute; left: 50%; top: 10px; margin-left: -34px; display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 12px 0 2px; border-radius: 999px; background: var(--chip-dark, rgba(0,0,0,.55)); color: var(--gold); font-size: 15px; line-height: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .mc-timer img { width: 22px; height: 22px; }
 .mc-title { position: absolute; left: 132px; right: 12px; top: 44px; text-align: center; font-size: 17px; line-height: 22px; font-weight: 700; text-shadow: 0 2px 0 rgba(20,0,60,.45); }
 .mc-dots { position: absolute; left: 132px; right: 12px; top: 74px; display: flex; justify-content: center; gap: 8px; }

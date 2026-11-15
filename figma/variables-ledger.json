@@ -55,6 +55,33 @@
     "green-400": {
       "primitive": "VariableID:31336:2452",
       "color": "VariableID:31336:2453"
+    },
+    "pink-800": {
+      "primitive": "VariableID:31379:761",
+      "color": "VariableID:31379:762",
+      "value": "#950c3a",
+      "use": "TimePill Kind=Clock fill"
+    },
+    "scrim-strong": {
+      "primitive": "VariableID:31379:763",
+      "color": "VariableID:31379:764",
+      "value": "rgba(8,10,28,0.84)",
+      "use": "the pop-up backdrop and the coach mark"
+    },
+    "chip-dark": {
+      "primitive": "VariableID:31381:761",
+      "color": "VariableID:31381:762",
+      "value": "rgba(0,0,0,0.55)",
+      "use": "AdTag and the missions card timer chip, both bound"
     }
+  },
+  "textStyles": {
+    "note": "Titles are Nunito ExtraBold; Amount and everything from Headline down stay Plus Jakarta Sans.",
+    "nunito": [
+      "Cashout/Display/Large Title",
+      "Cashout/Text/Title 1",
+      "Cashout/Text/Title 2",
+      "Cashout/Text/Title 3"
+    ]
   }
 }

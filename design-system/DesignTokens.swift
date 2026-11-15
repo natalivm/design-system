@@ -49,17 +49,17 @@ extension ShapeStyle where Self == LinearGradient {
     }
 }
 
-// MARK: Type — Plus Jakarta Sans, scaled like the system text styles
+// MARK: Type — Plus Jakarta Sans for UI, Nunito ExtraBold for titles, scaled like the system text styles
 enum DSTextStyle {
     case amount, largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
 
     var spec: (size: CGFloat, weight: Font.Weight, relativeTo: Font.TextStyle) {
         switch self {
         case .amount:      (54, .heavy,    .largeTitle)
-        case .largeTitle:  (34, .bold,     .largeTitle)
-        case .title1:      (28, .bold,     .title)
-        case .title2:      (22, .bold,     .title2)
-        case .title3:      (20, .semibold, .title3)
+        case .largeTitle:  (34, .heavy,    .largeTitle)
+        case .title1:      (28, .heavy,    .title)
+        case .title2:      (22, .heavy,    .title2)
+        case .title3:      (20, .heavy,    .title3)
         case .headline:    (17, .semibold, .headline)
         case .body:        (17, .regular,  .body)
         case .callout:     (16, .medium,   .callout)
@@ -69,12 +69,20 @@ enum DSTextStyle {
         case .tabLabel:    (10, .semibold, .caption2)
         }
     }
+
+    /// Titles are set in Nunito ExtraBold; everything else is Plus Jakarta Sans.
+    var family: String {
+        switch self {
+        case .largeTitle, .title1, .title2, .title3: "Nunito-ExtraBold"
+        default: "PlusJakartaSans"
+        }
+    }
 }
 
 extension Font {
     static func ds(_ style: DSTextStyle) -> Font {
         let s = style.spec
-        return .custom("PlusJakartaSans", size: s.size, relativeTo: s.relativeTo).weight(s.weight)
+        return .custom(style.family, size: s.size, relativeTo: s.relativeTo).weight(s.weight)
     }
 }
 
