@@ -163,7 +163,7 @@ struct BoostPopup: View {
             }
             .padding(.top, bodyTopInset)
             .padding(.horizontal, 20)
-            .padding(.bottom, 106)          // the pinned button's room
+            .padding(.bottom, Size.controlHeight + 40)   // the pinned button and the 20 either side of it
 
         case .active:
             VStack(spacing: 0) {
@@ -180,7 +180,7 @@ struct BoostPopup: View {
             }
             .padding(.top, bodyTopInset)
             .padding(.horizontal, 20)
-            .padding(.bottom, 86)
+            .padding(.bottom, Size.controlHeight + 20)
 
         case .progress, .timeOver:
             VStack(spacing: 0) {

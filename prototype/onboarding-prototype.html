@@ -56,7 +56,7 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-pill: 999px;
-  --control-height: 66px;
+  --control-height: 62px;
   --hit-target: 44px;
   --pill-height: 32px;
   --icon-tile: 40px;
@@ -280,7 +280,8 @@ body { margin: 0; background: var(--page); color: var(--text); font-family: var(
 .pp[data-size="hero"] .pp-title { font-size: var(--text-popup-title-size); line-height: var(--text-popup-title-line); }
 .pp-text { margin: 8px 0 0; font-size: var(--text-popup-body-size); line-height: var(--text-popup-body-line); font-weight: var(--text-popup-body-weight); text-wrap: balance; }
 .pp-amount { font-size: var(--text-amount-size); line-height: var(--text-amount-line); font-weight: var(--text-amount-weight); letter-spacing: var(--text-amount-track); font-variant-numeric: tabular-nums; }
-.pp[data-size="hero"] .pp-body, .bpop[data-mode="intro"] .pp-body { padding-bottom: 106px; }
+/* the pinned button plus the 20 above and below it, so it follows the control height */
+.pp[data-size="hero"] .pp-body, .bpop[data-mode="intro"] .pp-body { padding-bottom: calc(var(--control-height) + 40px); }
 .pp[data-size="hero"] .pp-btn, .bpop[data-mode="intro"] .pp-btn { position: absolute; z-index: 3; left: 20px; right: 20px; bottom: 20px; width: auto; margin-top: 0; }
 .pp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; width: 100%; height: var(--control-height, 66px); border: 0; border-radius: 999px; font-family: inherit; font-size: var(--text-button-large-size); line-height: var(--text-button-large-line); font-weight: var(--text-button-large-weight); cursor: pointer; transition: transform .15s cubic-bezier(0.2, 0.9, 0.3, 1); }
 .pp-btn:active { transform: scale(.97); }
