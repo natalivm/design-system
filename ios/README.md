@@ -11,9 +11,11 @@ ios/Cashout/
   Info.plist                font registration, portrait only
   Sources/
     DesignTokens.swift      generated from design-system/tokens.json
-    Components/             AdTag, TimePill, FlipTimer, Bokeh
-    Screens/BoostPopup.swift   the 2x coins pop-up, four states
-    CashoutApp.swift        the app, with a state picker and a running clock
+    Components/             AdTag, TimePill, FlipTimer, Bokeh, PopupScaffold,
+                            EventBanner, MissionRow, MissionCard, CoachMark
+    Screens/                BoostPopup, RewardCard, OnboardingStep,
+                            CashoutSheet, CashoutHistory, CashoutSuccess
+    CashoutApp.swift        a gallery of all twenty screens, with a running clock
 ```
 
 `Assets.xcassets` and `DesignTokens.swift` are **generated** by `python3 tools/build.py`.
@@ -48,25 +50,28 @@ than thirty seconds of setup.
 5. Point the target's Info.plist at `ios/Cashout/Info.plist`, or copy the `UIAppFonts` array into
    the one Xcode generated.
 
-Run it. You get the pop-up over the home backdrop and a segmented control to move between Offer,
-Active, Progress and Time over. In Active the clock counts for real.
+Run it. You get a list of every screen; tap one to open it on the backdrop the prototype uses,
+tap the screen to come back. On the two Active states the clock counts for real.
 
-## What this screen proves
+## How it is put together
 
-The card frame, the 184pt head and its curve, the clock pinned so Offer and Active open on it at
-the same height, the earned block bottom-aligned so both amounts land 20 from the card bottom,
-the ad chip trailing its label, the time pill without its icon, tap-outside-to-close, and the
-bokeh field as a `Canvas` driven by `TimelineView`.
+`PopupScaffold` is the frame all four pop-ups share — the scrim that closes on a tap, the 345x544
+card on its 26pt corner, the gold coins over the top edge, the dismiss link below. `CashoutSheet`
+is one sheet with five states rather than five screens, because that is what it is: the hero says
+where you stand, the info row says what happens next, and the actions never move between states.
+`MissionRow` has three states and `RewardCard` three tones, for the same reason.
+
+Nothing sets a font size or a control height by hand. They come from the ramp and the tokens, so
+62 became 62 everywhere by changing one number.
 
 ## Not done yet
 
-- The cash-out sheet and history, onboarding, the 2x banner states.
 - The rays and motes behind the coin piles — a Metal shader through `.colorEffect`, the one
   effect that is real work rather than a port.
 - The coin-fly between the mission row and the balance.
-- Three type sizes the pop-up uses (19/25, 22/28, 37/44) are written out by hand in
-  `BoostPopup.swift` because the ramp does not carry them. Figma already has Popup Title and
-  Button Large; `tokens.json` should get them so they generate like everything else.
+- Sheet drag-to-dismiss, and the transitions between states; everything here is static layout.
+- The six backdrops are the host game's screens. They are fine standing behind a pop-up and
+  wrong as app UI, which is the line between this being standalone and being integrated.
 
 Nothing in here has been compiled: the container this was written in has no Swift toolchain.
 The first Xcode build is the first real check.

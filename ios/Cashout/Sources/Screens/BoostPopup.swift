@@ -2,10 +2,10 @@ import SwiftUI
 
 /// The 2x coins pop-up, in the four states the prototype runs.
 ///
-/// Geometry comes from the design system rather than from taste: a 345x544 card with a 26pt
-/// corner, one 184pt pink head in every state, the clock pinned 230 from the card top so Offer
-/// and Active open on it at the same height, and the earned block bottom-aligned on Progress and
-/// Time over so both amounts land 20 from the card bottom.
+/// Geometry comes from the design system rather than from taste: one 184pt pink head in every
+/// state, the clock pinned 230 from the card top so Offer and Active open on it at the same
+/// height, and the earned block bottom-aligned on Progress and Time over so both amounts land
+/// 20 from the card bottom. The card, the coins and the dismiss link come from PopupScaffold.
 struct BoostPopup: View {
     enum BoostState: String, CaseIterable, Identifiable {
         case offer, active, progress, timeOver
@@ -43,71 +43,29 @@ struct BoostPopup: View {
     var onPrimary: () -> Void = {}
     var onDismiss: () -> Void = {}
 
-    private let cardWidth: CGFloat = 345
-    private let cardHeight: CGFloat = 544
     private let headHeight: CGFloat = 184
     /// The clock sits 230 from the card top in every state that shows one.
     private var bodyTopInset: CGFloat { 230 - headHeight }
-
     private var cardFill: Color { state == .active ? .violet400 : .surface }
     private var showsBokeh: Bool { state == .progress || state == .timeOver }
 
     var body: some View {
-        ZStack {
-            Color.scrimStrong
-                .ignoresSafeArea()
-                .contentShape(Rectangle())
-                .onTapGesture(perform: onDismiss)   // tapping outside closes, like the scrim in the prototypes
-
-            if state == .timeOver {
-                Text("Congrats!")
-                    .font(.ds(.popupTitle))
-                    .foregroundStyle(Color.onAccent)
-                    .shadow(color: .black.opacity(0.5), radius: 6, y: 2)
-                    .offset(y: -(cardHeight / 2) - 42)
-                    .allowsHitTesting(false)
-            }
-
-            card
-                .frame(width: cardWidth, height: cardHeight)
-                .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-                .shadow(color: .black.opacity(0.5), radius: 30, y: 20)
-                .overlay(alignment: .top) {
-                    Image("topcoins")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 272)
-                        .offset(y: -19)
-                        .shadow(color: .black.opacity(0.25), radius: 3, y: 4)
-                        .allowsHitTesting(false)
-                }
-        }
-        .overlay(alignment: .bottom) {
-            Button(state.dismissLabel, action: onDismiss)
-                .font(.ds(.buttonLarge).weight(.semibold))
-                .foregroundStyle(Color.onAccent)
-                .underline()
-                .frame(minHeight: Size.hitTarget)
-                .padding(.bottom, 52)
-        }
-    }
-
-    // MARK: Card
-
-    private var card: some View {
-        ZStack(alignment: .top) {
-            cardFill
-            if showsBokeh { Bokeh() }
-            VStack(spacing: 0) {
-                head
-                content
-            }
-            if state == .offer {
+        PopupScaffold(cardFill: AnyShapeStyle(cardFill),
+                      aboveCard: state == .timeOver ? "Congrats!" : nil,
+                      dismissLabel: state.dismissLabel,
+                      onDismiss: onDismiss) {
+            ZStack(alignment: .top) {
+                if showsBokeh { Bokeh() }
                 VStack(spacing: 0) {
-                    Spacer(minLength: 0)
-                    primaryButton
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 20)
+                    head
+                    content
+                }
+                if state == .offer {
+                    VStack(spacing: 0) {
+                        Spacer(minLength: 0)
+                        PopupButton(title: "Start now", tone: .violet400,
+                                    showsAd: true, action: onPrimary)
+                    }
                 }
             }
         }
@@ -142,12 +100,10 @@ struct BoostPopup: View {
         .overlay(alignment: .bottom) {
             Ellipse()
                 .fill(cardFill)
-                .frame(width: cardWidth * 1.9, height: 220)
+                .frame(width: PopupMetrics.width * 1.9, height: 220)
                 .offset(y: 190)
         }
     }
-
-    // MARK: Bodies
 
     @ViewBuilder private var content: some View {
         switch state {
@@ -163,7 +119,7 @@ struct BoostPopup: View {
             }
             .padding(.top, bodyTopInset)
             .padding(.horizontal, 20)
-            .padding(.bottom, Size.controlHeight + 40)   // the pinned button and the 20 either side of it
+            .padding(.bottom, PopupMetrics.buttonWell)
 
         case .active:
             VStack(spacing: 0) {
@@ -208,23 +164,7 @@ struct BoostPopup: View {
             .padding(.bottom, 20)
         }
     }
-
-    private var primaryButton: some View {
-        Button(action: onPrimary) {
-            HStack(spacing: 10) {
-                Text("Start now")
-                AdTag()
-            }
-            .font(.ds(.buttonLarge))
-            .foregroundStyle(Color.onAccent)
-            .frame(maxWidth: .infinity)
-            .frame(height: Size.controlHeight)
-            .background(Color.violet400, in: Capsule())
-        }
-        .buttonStyle(.plain)
-    }
 }
-
 
 #Preview("Offer") { BoostPopup(state: .offer) }
 #Preview("Active") { BoostPopup(state: .active) }
