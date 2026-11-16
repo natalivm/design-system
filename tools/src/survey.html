@@ -13,7 +13,6 @@
   --sv-ink: #11478d;            /* question, labels and the footer's first line */
   --sv-sub: #5c80b1;            /* the footer's small print */
   --sv-answer: #d0e1f4;         /* an answer waiting to be picked */
-  --sv-go: #73c025;             /* Next and Collect */
   --sv-track: #022c7f;          /* the unfilled part of the progress bar */
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -108,7 +107,7 @@ button { font-family: var(--font); }
 .sv-ck svg { width: 15px; height: 15px; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0; transition: opacity .18s; }
 .sv-a[aria-pressed="true"] .sv-ck { background: #fff; }
 .sv-a[aria-pressed="true"] .sv-ck svg { stroke: var(--blue-500); opacity: 1; }
-.sv-go { margin: auto 16px 0; min-height: 61px; display: flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; background: var(--sv-go); color: #fff; font-size: 19px; line-height: 24px; font-weight: 700; cursor: pointer; transition: opacity .25s, transform .25s var(--bouncy); }
+.sv-go { margin: auto 16px 0; min-height: 61px; display: flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; background: var(--claim-fill); color: var(--claim-ink); font-size: 19px; line-height: 24px; font-weight: 700; cursor: pointer; transition: opacity .25s, transform .25s var(--bouncy); }
 .sv-go img { width: 23px; height: 23px; }
 .sv-go[hidden] { display: none; }
 .sv-go:active { transform: scale(.98); }
@@ -149,7 +148,7 @@ button { font-family: var(--font); }
         </div>
         <div class="tabbar" aria-hidden="true"><img src="{{tabbar}}" alt=""></div>
 
-        <div class="scrim" id="scrim">
+        <div class="scrim" id="scrim" data-dismiss="close">
           <div class="sheet" id="sheet" role="dialog" aria-label="Quick Survey">
             <div class="sv-head">
               <img class="sv-fox" src="{{fox}}" alt="">
