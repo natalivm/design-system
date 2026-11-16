@@ -69,7 +69,8 @@ def tokens_css():
 # ---------- iOS tokens ----------
 # How each text style scales with Dynamic Type. This is an iOS mapping, not a design token,
 # so it lives here; every style must be listed, or the build stops rather than guessing .body.
-RELATIVE_TO = {'amount': 'largeTitle', 'large-title': 'largeTitle', 'title1': 'title', 'title2': 'title2',
+RELATIVE_TO = {'amount': 'largeTitle', 'large-title': 'largeTitle', 'popup-title': 'largeTitle',
+               'button-large': 'title2', 'popup-body': 'body', 'title1': 'title', 'title2': 'title2',
                'title3': 'title3', 'headline': 'headline', 'body': 'body', 'callout': 'callout',
                'subheadline': 'subheadline', 'footnote': 'footnote', 'caption': 'caption', 'tab-label': 'caption2'}
 WEIGHTS = {800: 'heavy', 700: 'bold', 600: 'semibold', 500: 'medium', 400: 'regular'}

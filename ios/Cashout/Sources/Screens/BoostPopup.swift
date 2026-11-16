@@ -61,7 +61,7 @@ struct BoostPopup: View {
 
             if state == .timeOver {
                 Text("Congrats!")
-                    .font(PopupType.title)
+                    .font(.ds(.popupTitle))
                     .foregroundStyle(Color.onAccent)
                     .shadow(color: .black.opacity(0.5), radius: 6, y: 2)
                     .offset(y: -(cardHeight / 2) - 42)
@@ -84,7 +84,7 @@ struct BoostPopup: View {
         }
         .overlay(alignment: .bottom) {
             Button(state.dismissLabel, action: onDismiss)
-                .font(PopupType.dismiss)
+                .font(.ds(.buttonLarge).weight(.semibold))
                 .foregroundStyle(Color.onAccent)
                 .underline()
                 .frame(minHeight: Size.hitTarget)
@@ -155,7 +155,7 @@ struct BoostPopup: View {
             VStack(spacing: 0) {
                 FlipTimer(digits: "240000")
                 Text("You have 24 hours to double all the coins you earn playing your favorite games.")
-                    .font(PopupType.text)
+                    .font(.ds(.popupBody))
                     .foregroundStyle(Color.ink)
                     .multilineTextAlignment(.center)
                     .padding(.top, 20)
@@ -172,9 +172,9 @@ struct BoostPopup: View {
                 // No button here, so the headline takes the place the button holds elsewhere.
                 VStack(spacing: 4) {
                     Text("Bonus is active!")
-                        .font(PopupType.button)
+                        .font(.ds(.buttonLarge))
                     Text("Play games to earn coins")
-                        .font(PopupType.text)
+                        .font(.ds(.popupBody))
                 }
                 .foregroundStyle(Color.onAccent)
             }
@@ -191,10 +191,10 @@ struct BoostPopup: View {
                     .frame(width: 300)
                     .shadow(color: Color(red: 60 / 255, green: 10 / 255, blue: 0).opacity(0.35), radius: 9, y: 10)
                 Text(state == .progress ? "So far you’ve earned" : "You’ve earned")
-                    .font(PopupType.textStrong)
+                    .font(.ds(.popupBody).weight(.semibold))
                     .padding(.top, 12)
                 Text("5,000")
-                    .font(PopupType.button)
+                    .font(.ds(.buttonLarge))
                     .strikethrough(true, color: .orange500)
                     .monospacedDigit()
                     .padding(.top, 4)
@@ -215,7 +215,7 @@ struct BoostPopup: View {
                 Text("Start now")
                 AdTag()
             }
-            .font(PopupType.button)
+            .font(.ds(.buttonLarge))
             .foregroundStyle(Color.onAccent)
             .frame(maxWidth: .infinity)
             .frame(height: Size.controlHeight)
@@ -225,16 +225,6 @@ struct BoostPopup: View {
     }
 }
 
-/// The pop-up frame uses three sizes the type ramp does not carry yet — 19/25 body, 37/44 title
-/// and 22/28 button. Figma already has Popup Title and Button Large for exactly this; the next
-/// pass should put them in tokens.json so these stop being written out by hand.
-private enum PopupType {
-    static let text = Font.system(size: 19, weight: .medium)
-    static let textStrong = Font.system(size: 19, weight: .semibold)
-    static let button = Font.system(size: 22, weight: .bold)
-    static let dismiss = Font.system(size: 22, weight: .semibold)
-    static let title = Font.custom("Nunito-ExtraBold", size: 37)
-}
 
 #Preview("Offer") { BoostPopup(state: .offer) }
 #Preview("Active") { BoostPopup(state: .active) }

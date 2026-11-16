@@ -110,6 +110,7 @@
 }
 .amount { font-family: var(--font-sans); font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; }
 .large-title { font-family: var(--font-display); font-size: 34px; line-height: 41px; font-weight: 800; }
+.popup-title { font-family: var(--font-display); font-size: 37px; line-height: 44px; font-weight: 800; }
 .title1 { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 800; }
 .title2 { font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 800; }
 .title3 { font-family: var(--font-display); font-size: 20px; line-height: 25px; font-weight: 800; }
@@ -120,3 +121,5 @@
 .footnote { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 500; }
 .caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; }
 .tab-label { font-family: var(--font-sans); font-size: 10px; line-height: 12px; font-weight: 600; }
+.button-large { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 700; }
+.popup-body { font-family: var(--font-sans); font-size: 19px; line-height: 25px; font-weight: 500; }

@@ -93,7 +93,8 @@
     ],
     "added": {
       "Cashout/Display/Popup Title": "Nunito ExtraBold 37/44 - the hero pop-up title, a size the ramp did not have",
-      "Cashout/Text/Button Large": "Plus Jakarta Sans Bold 22/28 - the 66pt pop-up button label"
+      "Cashout/Text/Button Large": "Plus Jakarta Sans Bold 22/28 - the 66pt pop-up button label",
+      "Cashout/Text/Popup Body": "Plus Jakarta Sans Medium 19/25 - pop-up body copy. Added with the token, so the three pop-up sizes now exist in tokens.json, in Figma and in the Swift ramp rather than only in CSS."
     }
   },
   "popupFrame": {
