@@ -1199,6 +1199,7 @@ main { padding-top: 28px; }
     <a href="#prototype" data-sub="prototype">Cash out</a>
     <a href="#onboarding" data-sub="onboarding">Onboarding</a>
     <a href="#boost" data-sub="boost">2x coins</a>
+    <a href="#survey" data-sub="survey">Quick Survey</a>
   </nav>
   <div class="protos-main">
 <section class="page proto-sec" data-page="prototype" data-label="Cash out flow" hidden>
@@ -1226,6 +1227,15 @@ main { padding-top: 28px; }
       <p class="desc">Double coins for 24 hours: the offer, the home banner, the live timer, progress and time over.</p>
     </div>
     <iframe class="proto-frame" title="2x coins prototype" src="prototype/boost.html" loading="lazy"></iframe>
+  </article>
+</section>
+<section class="page proto-sec" data-page="survey" data-label="Quick Survey flow" hidden>
+  <article class="panel proto-panel">
+    <div class="proto-head">
+      <h2>Quick Survey</h2>
+      <p class="desc">The survey card on Home, two questions, the multiple-answer variation and collecting the 1,500 coins.</p>
+    </div>
+    <iframe class="proto-frame" title="Quick Survey prototype" src="prototype/survey.html" loading="lazy"></iframe>
   </article>
 </section>
   </div>
@@ -2102,7 +2112,7 @@ main { padding-top: 28px; }
 
   /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
-  var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", components: "components" };
+  var TAB = { prototype: "prototypes", onboarding: "prototypes", boost: "prototypes", survey: "prototypes", components: "components" };
   var protos = document.getElementById("protos");
   var bar = document.querySelector(".bar");
   function barHeight() {
