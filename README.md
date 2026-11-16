@@ -7,6 +7,7 @@ Design system and clickable prototype for the cash-out flow, rebuilt from the Fi
 | `prototype/cashout-prototype.html` | Clickable iPhone prototype of the flow. Open it in a browser; all art is embedded. |
 | `prototype/onboarding-prototype.html` | Clickable prototype of the onboarding missions: coach marks, the welcome reward, coins flying to the balance, and the missions-complete card. Press Play to watch it run by itself; press Pause to tap through it yourself. |
 | `prototype/boost-prototype.html` | Clickable prototype of the 2x coins boost: the offer pop-up, the home banner with a live timer, progress and the time-over summary. |
+| `prototype/survey-prototype.html` | Clickable prototype of the Quick Survey, built from the Figma page "Survey System": the card on Home, two questions, the check-all-that-apply variation and collecting the 1,500 coins. |
 | `design-system/` | Tokens (`tokens.json`, `tokens.css`), the rules (`README.md`), component previews and guidelines (`components/`), and `DesignTokens.swift` for the app. |
 | `figma/variables-ledger.json` | IDs of the Cashout variable collections, modes and variables created in the Figma file. |
 | `tools/` | Sources (`tools/src/`), art (`tools/assets/`) and the build (`tools/build.py`) that generates the files above. |
@@ -67,9 +68,9 @@ python3 tools/build.py
 | `design-system/tokens.json` | `design-system/tokens.css` |
 | `tools/src/bundle.src.js` and `tools/assets/icons/` | `design-system/components/bundle.js` |
 | `tools/src/onboarding-components.src.js` and `tools/src/components.css` | `design-system/components/onboarding.js` and `.css` |
-| `tools/src/proto.html`, `onboarding.html`, `boost.html` and `tools/assets/` | `prototype/*.html` |
+| `tools/src/proto.html`, `onboarding.html`, `boost.html`, `survey.html` and `tools/assets/` | `prototype/*.html` |
 | `tools/src/popup.css` | copied into the onboarding and 2x coins prototypes and into `onboarding.css` |
-| `tools/src/kit.js` | copied into all three prototypes: autoplay, the tap marker, coin flights, overlays, fitting the phone to the window |
+| `tools/src/kit.js` | copied into all four prototypes: autoplay, the tap marker, coin flights, overlays, fitting the phone to the window |
 | `design-system/DesignTokens.swift` | the SwiftTokens and Typography previews |
 | all of the above | the blocks between `/* @gen … */` and `/* @end … */` in `website/index.html` |
 
