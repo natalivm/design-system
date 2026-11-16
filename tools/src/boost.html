@@ -8,7 +8,7 @@
 :root {
   --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2);
   --gold: var(--gold-400);
-  --claim-b: var(--green-400);
+  --claim-b: var(--claim-fill);
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -94,8 +94,7 @@ button { font-family: var(--font); }
 .bx-ev-left { position: absolute; left: 14px; top: 108px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .bx-ev-start { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--violet-400); color: #fff; font-size: 15px; line-height: 20px; font-weight: 700; transition: transform .15s var(--snappy); }
 .bx-ev:active .bx-ev-start { transform: scale(.96); }
-.bx-ev-ends { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 10px 0 4px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.bx-ev-ends img { width: 16px; height: 16px; }
+.bx-ev-ends { display: inline-flex; align-items: center; height: 22px; padding: 0 10px; border-radius: 999px; background: rgba(90,0,30,.55); font-size: 12px; line-height: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .hdr[data-state="offer"] .bx-ev-timer, .hdr[data-state="active"] .bx-ev-offer { display: none; }
 
 /* ---------- FlipTimer ---------- */
@@ -117,9 +116,6 @@ button { font-family: var(--font); }
 .bx-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
   background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: bx-spin 60s linear infinite; }
 @keyframes bx-spin { to { transform: rotate(360deg); } }
-.bx-coins { display: block; width: 272px; margin: -19px auto 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.25)); }
-.pp-scrim.on .bx-coins { animation: bx-coins-in .7s .15s var(--bouncy) both; }
-@keyframes bx-coins-in { from { transform: translateY(-26px) scale(.9); opacity: 0; } to { transform: none; opacity: 1; } }
 /* the 2x coins logo only: a bare `img` here also caught the clock inside the time pill,
    which this rule then stretched to 176px */
 .bpop .pp-head > img { display: block; width: 176px; margin: 0 auto; filter: drop-shadow(0 3px 6px rgba(120,0,40,.35)); }
@@ -127,13 +123,18 @@ button { font-family: var(--font); }
    half of the curve it turned a dusty #a47383 and its white text fell to 3.9:1.
    #950c3a is what the old fill already computed to over the pink, so the pill reads the
    same on the gradient and holds 8.8:1 wherever it lands. */
-.bx-pill { display: inline-flex; align-items: center; gap: 5px; height: 28px; margin-top: 8px; padding: 0 12px 0 5px; border-radius: 999px; background: var(--pink-800, #950c3a); font-size: 14px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
-.bx-pill img { width: 20px; height: 20px; margin: 0; filter: none; }
+.bx-pill { display: inline-flex; align-items: center; justify-content: center; height: 32px; margin-top: 8px; padding: 0 14px; border-radius: 999px; background: var(--pink-800, #950c3a); font-size: 18px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; position: relative; z-index: 2; }
 .bpop .pp-body { padding-top: 0; margin-top: -14px; }
+/* Offer and Active both open on the clock, so it is pinned rather than centred:
+   centring put it 51px lower in Active, where the card carries no button. */
+.bpop[data-mode="intro"] .pp-body, .bpop[data-mode="active"] .pp-body { justify-content: flex-start; padding-top: 60px; }
+/* Active carries no button, so its headline takes the place the button holds in the
+   other states instead of leaving the lower half of the card empty. */
+.bpop[data-mode="active"] .pp-body { justify-content: space-between; padding-bottom: 86px; }
 .bpop .pp-text { margin-top: 20px; }
 .bx-active { margin-top: 20px; color: #fff; display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; }
 .bx-earn { display: flex; flex-direction: column; align-items: center; }
-.bx-earn img { width: 176px; filter: drop-shadow(0 8px 12px rgba(120,70,0,.3)); }
+.bx-earn img { width: 300px; filter: drop-shadow(0 10px 18px rgba(120,70,0,.3)); }
 .pp-scrim.on .bx-earn img { animation: bx-pop .6s .1s var(--bouncy) both; }
 .bx-earn .pp-eyebrow { margin-top: 6px; font-size: 17px; line-height: 22px; }
 .bx-earn s { margin-top: 2px; font-size: 22px; line-height: 28px; font-weight: 600; text-decoration-color: #ff7a1a; text-decoration-thickness: 3px; font-variant-numeric: tabular-nums; }
@@ -145,9 +146,10 @@ button { font-family: var(--font); }
 .bpop[data-mode="active"] .bx-flip em { color: #fff; }
 .bpop[data-mode="progress"] .bx-flip, .bpop[data-mode="progress"] .pp-text, .bpop[data-mode="progress"] .bx-active, .bpop[data-mode="progress"] .pp-btn { display: none; }
 .bpop[data-mode="over"] .bx-flip, .bpop[data-mode="over"] .pp-text, .bpop[data-mode="over"] .bx-active, .bpop[data-mode="over"] .pp-btn, .bpop[data-mode="over"] .bx-pill { display: none; }
-/* Progress is the only state with the pill: give the head enough pink under it that the
-   pill sits on the gradient instead of straddling the curve. */
-.bpop[data-mode="progress"] .pp-head { padding-bottom: 40px; }
+/* Every 2x state carries the same pink head: Progress needs the depth so its pill sits
+   on the gradient instead of straddling the curve, and the rest match it. */
+.bpop .pp-head { min-height: 184px; }
+.bpop[data-mode="progress"] .pp-head { padding-bottom: 33px; }
 .bpop[data-mode="progress"] .bx-rays, .bpop[data-mode="over"] .bx-rays { display: block; }
 .bpop[data-mode="over"] .pp-body { margin-top: -30px; }
 .bpop[data-mode="over"] .bx-over-title { display: block; animation: bx-pop .5s var(--bouncy) both; }
@@ -184,8 +186,8 @@ button { font-family: var(--font); }
             <button class="bx-ev" id="ev" aria-label="2x coins, limited event">
               <canvas id="confetti" aria-hidden="true"></canvas>
               <span class="bx-ev-left">
-                <span class="bx-ev-offer bx-ev-start" id="evStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="evStartLabel">Start now</span></span>
-                <span class="bx-ev-offer bx-ev-ends"><img src="{{clock}}" alt="">Ends in 23h 14m</span>
+                <span class="bx-ev-offer bx-ev-start" id="evStart"><span id="evStartLabel">Start now</span><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span></span>
+                <span class="bx-ev-offer bx-ev-ends" role="timer">Ends in <span id="evEnds">23:14:00</span></span>
                 <span class="bx-ev-timer bx-flip small" id="evFlip" aria-label="Time left"><i>2</i><i>3</i><em>:</em><i>5</i><i>9</i><em>:</em><i>5</i><i>9</i></span>
               </span>
               <span class="bx-ev-right"><span>Limited event</span><img src="{{logo}}" alt="2x coins"></span>
@@ -206,7 +208,7 @@ button { font-family: var(--font); }
         </div>
         <div class="tabbar" aria-hidden="true"><img src="{{tabbar}}" alt=""></div>
 
-        <div class="pp-scrim" id="modal" data-mode="intro">
+        <div class="pp-scrim" id="modal" data-mode="intro" data-dismiss="popLink">
           <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
           <div class="pp bpop" id="pop" data-size="standard" data-mode="intro" role="dialog" aria-label="2x coins">
             <div class="bx-over-title">Congrats!</div>
@@ -216,7 +218,7 @@ button { font-family: var(--font); }
               <div class="pp-head" data-curve>
                 <img src="{{logo}}" alt="2x coins">
                 <div class="pp-eyebrow" id="popSub">Start ahead</div>
-                <span class="bx-pill" role="timer"><img src="{{clock}}" alt=""><span id="popLeft">23:59:59</span></span>
+                <span class="bx-pill" role="timer"><span id="popLeft">23:59:59</span></span>
               </div>
               <div class="pp-body">
                 <div class="bx-flip" id="popFlip" aria-label="Boost time"><i>2</i><i>4</i><em>:</em><i>0</i><i>0</i><em>:</em><i>0</i><i>0</i></div>
@@ -229,7 +231,7 @@ button { font-family: var(--font); }
                   <b class="pp-amount" id="earnTotal">+10,000</b>
                   <p class="pp-text" id="earnNone" style="font-size:15px;line-height:20px" hidden>Play a game and every coin counts twice.</p>
                 </div>
-                <button class="pp-btn" data-tone="boost" id="popStart"><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span><span id="popStartLabel">Start now</span></button>
+                <button class="pp-btn" data-tone="boost" id="popStart"><span id="popStartLabel">Start now</span><span class="pp-adtag" role="img" aria-label="Watch ad" title="Watch ad"></span></button>
               </div>
             </div>
           </div>
@@ -276,7 +278,7 @@ button { font-family: var(--font); }
   var S, tickT;
   // state: "default" (no event), "offer" (banner with Start now), "active" (boost running), "done" (boost ended)
   function fresh(s) {
-    var o = { scenario: s, state: "default", coins: 236378, ads: s === "two" ? 2 : 1, seen: 0, left: DAY, base: 0, plays: 0, busy: false, sawProgress: false, ff: false, from: "pop" };
+    var o = { scenario: s, state: "default", coins: 236378, ads: s === "two" ? 2 : 1, seen: 0, left: DAY, ends: 83640, base: 0, plays: 0, busy: false, sawProgress: false, ff: false, from: "pop" };
     if (s === "active") { o.state = "active"; o.left = DAY - 120; }
     if (s === "over") { o.state = "active"; o.left = 4; o.base = 5000; o.plays = 2; o.coins += 10000; o.sawProgress = true; o.ff = true; }
     return o;
@@ -311,10 +313,13 @@ button { font-family: var(--font); }
     if ($("pop").getAttribute("data-mode") === "active" || $("pop").getAttribute("data-mode") === "intro") setFlip($("popFlip"), S.state === "active" ? t : "240000");
     $("popLeft").textContent = leftClock(S.left);
     $("popLeft").parentNode.setAttribute("aria-label", leftSpoken(S.left));
+    var ends = $("evEnds");
+    if (ends) { ends.textContent = leftClock(S.ends); ends.parentNode.setAttribute("aria-label", "Offer ends in " + leftSpoken(S.ends).replace(" left", "")); }
   }
   function startClock() {
     clearInterval(tickT);
     tickT = setInterval(function () {
+      if (S.state !== "active" && S.state !== "over") { S.ends = Math.max(0, S.ends - 1); renderTime(); }
       if (S.state !== "active" || S.fast) return;
       S.left = Math.max(0, S.left - 1); renderTime();
       if (S.left === 0) timeOver();
@@ -471,7 +476,7 @@ button { font-family: var(--font); }
     clearInterval(tickT); $("modal").classList.remove("on"); $("ad").classList.remove("on");
     KIT.clearCoins();
     S = fresh(s); S.skipFirst = s === "first"; $("home").scrollTop = 0; render(); bokeh.sync();
-    if (S.state === "active") startClock();
+    startClock();
     setTimeout(function () { if (S.scenario !== s || S.state !== "default") return; openPop("intro", "Skip"); }, 500);
     if (noPlay) KIT.stopPlay(); else autoplay();
   }
