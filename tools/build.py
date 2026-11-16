@@ -24,7 +24,7 @@ def read(p): return open(p, encoding='utf-8').read()
 def write(p, s): open(p, 'w', encoding='utf-8').write(s)
 
 MIME = {'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'svg': 'image/svg+xml', 'webp': 'image/webp'}
-GENERATED = ['design-system/tokens.css', 'design-system/DesignTokens.swift', 'ios/Cashout/Assets.xcassets', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
+GENERATED = ['design-system/tokens.css', 'ios/Cashout/Sources/DesignTokens.swift', 'ios/Cashout/Assets.xcassets', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
              'design-system/components/onboarding.css', 'prototype/cashout-prototype.html', 'prototype/onboarding-prototype.html',
              'prototype/boost-prototype.html', 'design-system/components/SwiftTokens/preview.html',
              'design-system/components/Typography/preview.html', 'website/index.html']
@@ -130,7 +130,9 @@ def design_tokens_swift():
     curves.append('}')
     src = inline(src, 'motion', '\n'.join(curves), W)
 
-    write(P('design-system', 'DesignTokens.swift'), src)
+    out = P('ios', 'Cashout', 'Sources', 'DesignTokens.swift')
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    write(out, src)
 
 
 # ---------- iOS asset catalog ----------
@@ -303,7 +305,7 @@ WEIGHT_NAME = {400: 'Regular 400', 500: 'Medium 500', 600: 'SemiBold 600', 700: 
 
 
 def previews():
-    swift = read(P('design-system', 'DesignTokens.swift'))
+    swift = read(P('ios', 'Cashout', 'Sources', 'DesignTokens.swift'))
     p = P('design-system', 'components', 'SwiftTokens', 'preview.html'); s = read(p)
     s, n = re.subn(r"code:\"(?:[^\"\\]|\\.)*\"", lambda m: 'code:' + json.dumps(swift), s, count=1)
     assert n == 1, 'SwiftTokens preview: code block not found'
