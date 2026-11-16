@@ -183,7 +183,9 @@
         h("div", { className: "pp-card" },
           hasHead ? h("div", { className: "pp-head", "data-curve": props.curve ? "" : undefined }, props.head, props.eyebrow ? h("div", { className: "pp-eyebrow" }, props.eyebrow) : null) : null,
           h("div", { className: "pp-body" },
-            props.title ? h("h4", { className: "pp-title" }, props.title) : null,
+            /* h2, not h4: the pop-up's title is the top heading of what it presents. As an h4 it
+               followed the specimen's own h2 on the Components page and skipped two levels. */
+            props.title ? h("h2", { className: "pp-title" }, props.title) : null,
             props.text ? h("p", { className: "pp-text" }, props.text) : null,
             props.children,
             props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,

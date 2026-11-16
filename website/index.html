@@ -1,5 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>BestPlay Design System</title>
+<meta name="description" content="Tokens, components and working prototypes for the BestPlay iPhone app: cash out, onboarding, 2x coins and every pop-up. Kept in sync with Figma.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23075c46'/%3E%3Cpath d='M11 20.5c0 1.9 2.2 3.2 5 3.2s5-1.3 5-3.4c0-2.2-1.8-3-4.6-3.6-2.4-.5-3.6-1-3.6-2.3 0-1.4 1.5-2.3 3.4-2.3 2 0 3.4.9 3.7 2.4m-4.2-4.6v-2m0 16v-2' stroke='%238df06f' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nunito:wght@800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
@@ -11,7 +13,9 @@
   --site-canvas-deep: #05493a;
   --site-fg: #ffffff;
   --site-muted: rgba(255,255,255,.78);
-  --site-faint: rgba(255,255,255,.56);
+  /* .70 is the floor that still clears 4.5:1 on --site-canvas (4.8:1). At .56 every use of this
+     token — footer notes, Figma captions, the prototype sublist, the card controls — sat at 3.7:1. */
+  --site-faint: rgba(255,255,255,.70);
   --site-line: rgba(255,255,255,.2);
   --site-panel: rgba(255,255,255,.055);
   --site-chip: #03301f;
@@ -29,6 +33,7 @@
   --blue-500: #1464ff;
   --on-accent: #ffffff;
   --green-700: #087a5a;
+  --green-800: #06684c;
   --green-500: #0c9971;
   --green-400: #49cc3d;
   --lime-400: #60e041;
@@ -61,7 +66,7 @@
   --scrim-strong: rgba(8,10,28,0.84);
   --chip-dark: rgba(0,0,0,0.55);
   --claim-fill: #77c926;
-  --claim-ink: #ffffff;
+  --claim-ink: #0b2a00;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
 }
@@ -69,6 +74,7 @@
   --blue-500: #1464ff;
   --on-accent: #ffffff;
   --green-700: #087a5a;
+  --green-800: #06684c;
   --green-500: #0c9971;
   --green-400: #49cc3d;
   --lime-400: #60e041;
@@ -101,7 +107,7 @@
   --scrim-strong: rgba(8,10,28,0.84);
   --chip-dark: rgba(0,0,0,0.55);
   --claim-fill: #77c926;
-  --claim-ink: #ffffff;
+  --claim-ink: #0b2a00;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
 }
@@ -168,7 +174,9 @@
 
 /* AmountHero */
 .co-hero { border-radius: var(--radius-xl); padding: var(--space-6) var(--space-5); color: var(--on-accent); text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
-.co-hero-earned, .co-hero-success { background: linear-gradient(196deg, var(--green-400) 0%, var(--green-500) 55%); }
+/* green-700 to green-800, not green-400 to green-500: the old ramp ran 2.1:1 to 3.6:1 against white,
+   so the eyebrow, the subtitle and the History pill all failed AA on their own card. */
+.co-hero-earned, .co-hero-success { background: linear-gradient(196deg, var(--green-700) 0%, var(--green-800) 55%); }
 .co-hero-empty, .co-hero-pending { background: var(--navy-900); }
 .co-hero-eyebrow { font-size: 16px; line-height: 21px; font-weight: 500; }
 .co-hero-amount { font-size: 54px; line-height: 60px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
@@ -270,7 +278,11 @@
 @keyframes co-pop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes co-rise { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-  .co-digit, .co-anim-sheet-in, .co-anim-pop, .co-anim-rise { animation-name: co-fade-in; }
+  /* The entrance animations soften to a fade. The clock digit gets nothing: it remounts every
+     second, so a fade there is a digit that blinks out and back once a second, which is the
+     opposite of what reduced motion asks for. */
+  .co-anim-sheet-in, .co-anim-pop, .co-anim-rise { animation-name: co-fade-in; }
+  .co-digit { animation: none; }
 }
 /* @end bundle.css */
 
@@ -304,9 +316,15 @@ a { color: inherit; }
 .bar-sp { flex: 1; }
 .seg { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--site-line); border-radius: 999px; font: 500 12px/1 var(--f-mono); }
 .seg span { padding: 0 8px 0 10px; color: var(--site-muted); }
-.seg button { font: inherit; color: var(--site-fg); background: none; border: 0; border-radius: 999px; padding: 8px 12px; cursor: pointer; }
+/* min-height is the 44px hit target the system's own size tokens require; the visible pill stays
+   the same height because the seg centres it. */
+.seg button { font: inherit; color: var(--site-fg); background: none; border: 0; border-radius: 999px; padding: 8px 12px; min-height: 38px; display: inline-flex; align-items: center; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--site-fg); color: var(--site-canvas-deep); }
 .cta { display: inline-flex; align-items: center; gap: 6px; background: var(--site-fg); color: var(--site-canvas-deep); text-decoration: none; font-weight: 700; font-size: 15px; padding: 10px 18px; border-radius: 999px; }
+/* First tab stop on the page: off-screen until focused. */
+.skip { position: absolute; left: -9999px; top: 0; z-index: 40; background: var(--site-fg); color: var(--site-canvas-deep); font: 600 14px/1 var(--f-display); padding: 12px 18px; border-radius: 0 0 12px 0; text-decoration: none; }
+.skip:focus { left: 0; }
+#main:focus { outline: none; }
 /* Section nav. Built in the script from the data-label on every top-level .page, so adding a page
    adds its link. --site-muted, not --site-faint: the faint value is 3.66:1 and fails AA. */
 .mainnav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; }
@@ -351,7 +369,10 @@ main { min-width: 0; padding-top: 56px; }
 .nc-text { display: grid; justify-items: start; gap: 12px; }
 .new-card h3 { display: flex; align-items: baseline; gap: 10px; margin: 0; font: 600 19px/1.2 var(--f-display); letter-spacing: -.02em; }
 .new-card h3::before { content: ""; flex: none; width: 6px; height: 6px; border: 1px solid var(--site-fg); transform: translateY(-3px); }
-.new-card p { margin: 0; font-size: 14.5px; line-height: 1.46; color: rgba(255,255,255,.82); max-width: 46ch; }
+/* :not(.mock *) keeps the dark-card text colour out of the light app mocks nested inside these
+   cards. Without it .new-card p (0,1,1) beat .mr-sub (0,1,0) and painted the referral card's
+   subtitle white on white. */
+.new-card p:not(.mock p) { margin: 0; font-size: 14.5px; line-height: 1.46; color: rgba(255,255,255,.82); max-width: 46ch; }
 .nc-pill { font: 400 12px/1 var(--f-mono); color: var(--site-fg); background: var(--nb-deep); border-radius: 999px; padding: 10px 15px; }
 .new-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 148px; padding: 8px 0 4px; }
 .nc-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); font: 400 11px/1.4 var(--f-mono); color: rgba(255,255,255,.6); }
@@ -399,7 +420,8 @@ main { min-width: 0; padding-top: 56px; }
 
 .mock-toast { animation: toastIn 5s ease-in-out infinite; }
 @keyframes toastIn { 0% { opacity: 0; translate: 0 -16px; } 9%, 84% { opacity: 1; translate: 0 0; } 94%, 100% { opacity: 0; translate: 0 -12px; } }
-.mt-dot { animation: ping 2s ease-out infinite; }
+/* No ping: this dot sits in a static toast specimen and is tied to nothing live, so the pulse was
+   decorative liveness. It stays as a plain status dot. */
 @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(11,221,102,.5); } 72% { box-shadow: 0 0 0 10px rgba(11,221,102,0); } 100% { box-shadow: 0 0 0 0 rgba(11,221,102,0); } }
 
 .mr-pill { animation: pillPop 4s ease-in-out infinite; }
@@ -436,7 +458,9 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 .soon-status { font: 400 11px/1 var(--f-mono); color: var(--site-faint); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; }
 .soon-status.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
-.soon-status.is-wait { opacity: .62; }
+/* Dimmed with a lighter border rather than opacity: opacity multiplied into --site-faint and
+   dropped "Backlog" to 2.8:1. */
+.soon-status.is-wait { border-color: rgba(255,255,255,.12); }
 .soon-card h3 { margin: 2px 0 0; font: 600 19px/1.18 var(--f-display); letter-spacing: -.02em; }
 .soon-card h3::before { content: none; }
 .soon-card p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--site-muted); }
@@ -509,10 +533,10 @@ main { min-width: 0; padding-top: 56px; }
 .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
 .sw { background: #fff; color: #0b1220; border-radius: 18px; overflow: hidden; box-shadow: var(--site-shadow); display: flex; flex-direction: column; }
 .sw-c { display: grid; grid-template-columns: 1fr 1fr; height: 84px; }
-.sw-c span { display: flex; align-items: flex-end; padding: 8px 10px; font: 500 10px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
+.sw-c span { display: flex; align-items: flex-end; padding: 8px 10px; font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; }
 .sw-b { padding: 12px 14px 14px; display: grid; gap: 4px; }
 .sw-n { font: 500 14px/1.3 var(--f-mono); }
-.sw-v { font: 400 11.5px/1.4 var(--f-mono); color: #4a5568; overflow-wrap: anywhere; }
+.sw-v { font: 400 12px/1.4 var(--f-mono); color: #4a5568; overflow-wrap: anywhere; }
 .sw-u { font-size: 13px; line-height: 1.4; color: #3b4558; margin-top: 4px; }
 .pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .pair { border-radius: 16px; padding: 16px; min-height: 96px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; box-shadow: var(--site-shadow); font-family: var(--font-sans); }
@@ -715,7 +739,9 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 
 /* ---------- 2x coins pop-up: what this feature puts in the Popup's free slots ---------- */
 .bokeh { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.bpop { --pp-head: radial-gradient(90% 70% at 50% 0%, #ff7a9b 0%, transparent 70%), linear-gradient(180deg, var(--pink-400), var(--pink-600)); }
+/* pink-600 to pink-800 (4.6:1 and 8.8:1). The old pink-400 top plus the #ff7a9b radial left the
+   white eyebrow at 4.1:1. */
+.bpop { --pp-head: linear-gradient(180deg, var(--pink-600), var(--pink-800)); }
 .bx-over-title { position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: 30px; text-align: center; color: #fff; font-size: 34px; line-height: 41px; font-weight: 800; text-shadow: 0 3px 0 rgba(238,20,92,.9); display: none; }
 .bx-rays { position: absolute; left: 50%; top: -40px; width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; display: none; pointer-events: none;
   background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.13) 0 7deg, transparent 7deg 22deg); -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%); mask: radial-gradient(circle, #000 8%, transparent 62%); animation: bx-spin 60s linear infinite; }
@@ -766,11 +792,13 @@ footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--site-l
 .bx-swatch.light { background: #fff; }
 .bx-swatch.fill { display: flex; }  /* for a preview of a button that fills its body */
 /* @end onboarding.css */
-/* ---------- visuals first: screens and examples lead, small text follows ---------- */
+/* ---------- compact page heads: the title leads, then the screens and examples ----------
+   These used to carry `order` overrides that painted every page title *after* its content while
+   DOM order kept it first, so a sighted reader and a screen reader got different documents
+   (WCAG 1.3.2). The title is small instead of late. */
 main { padding-top: 28px; }
 .page { gap: 20px; }
-.page-head { order: 2; padding: 4px 0 0; }
-.page > .grid, .page > .panel { order: 1; }
+.page-head { padding: 4px 0 0; }
 .eyebrow { margin-bottom: 8px; }
 .page-head h1 { font-size: clamp(20px, 1.8vw, 24px); line-height: 1.25; letter-spacing: -.015em; max-width: none; }
 .page-head .lede { font-size: 15px; line-height: 1.5; max-width: 72ch; margin-top: 6px; }
@@ -779,7 +807,6 @@ main { padding-top: 28px; }
 .counts { margin-top: 18px; gap: 8px 26px; font-size: 12px; }
 .counts b { font-size: 24px; }
 .panel { padding: 24px; gap: 18px; }
-.panel > :first-child { order: 2; }
 .panel > .stage { margin-top: 0; }
 .panel h2, .panel h3 { font-size: 17px; letter-spacing: -.01em; }
 .panel h2::before, .panel h3::before { transform: translateY(-2px); }
@@ -788,7 +815,7 @@ main { padding-top: 28px; }
 .pillbtn { font-size: 13px; min-height: 32px; padding: 7px 14px; }
 .points { font-size: 14px; margin-top: 10px; }
 .chips { margin-top: 12px; }
-.proto-frame { background: transparent; }
+.proto-frame { background: var(--site-panel); }
 .fig figcaption { margin-top: 10px; }
 .fig figcaption b { font-size: 15px; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
@@ -797,10 +824,19 @@ main { padding-top: 28px; }
 /* overview hero: the sheet at its real width with the countdown card pinned to its corner */
 .hero { grid-template-columns: auto minmax(0, 1fr); gap: 48px; }
 .hero .hero-art { display: block; position: relative; width: min(393px, 100%); margin-right: 150px; }
-.hero-art > :nth-child(2) { position: absolute; right: -150px; bottom: 44px; width: 280px; margin-top: 0; }
+/* Hangs off the bottom-right corner, clear of the sheet's primary action. At bottom: 44px it sat
+   across the Cash out button and clipped its label. */
+.hero-art > :nth-child(2) { position: absolute; right: -150px; bottom: -70px; width: 280px; margin-top: 0; }
 @media (max-width: 1180px) { .hero { grid-template-columns: minmax(0, 1fr); } }
 .hero .hero-art { margin-left: 32px; }
-@media (max-width: 600px) { .hero .hero-art { margin-right: 0; margin-left: 0; margin-bottom: 40px; } .hero-art > :nth-child(2) { right: -6px; bottom: -34px; width: 220px; } }
+/* Narrow: the headline leads instead of a decorative phone mock, and the countdown card stops
+   being pinned over the sheet — absolutely positioned it covered the Cash out button and clipped
+   "Keep playing" to "Ke". It stacks under the phone instead. */
+@media (max-width: 600px) {
+  .hero .hero-art { margin-right: 0; margin-left: 0; margin-bottom: 40px; order: 1; }
+  .hero > div:first-child { order: 0; }
+  .hero-art > :nth-child(2) { position: static; right: auto; bottom: auto; width: min(280px, 100%); margin: 16px auto 0; }
+}
 
 /* ---------- landing: the Overview is a full-screen hero with the navigation under it ---------- */
 .landing .hero { min-height: calc(100svh - var(--bar-h, 66px)); box-sizing: border-box; padding-block: 40px; align-items: center; align-content: center; }
@@ -810,7 +846,7 @@ main { padding-top: 28px; }
 .protos { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; align-items: start; }
 .protos[hidden] { display: none; }
 .sublist { position: sticky; top: calc(var(--bar-h, 66px) + 24px); display: flex; flex-direction: column; }
-.sublist a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; font: 400 16px/1.3 var(--f-mono); color: var(--site-faint); text-decoration: none; }
+.sublist a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; min-height: 44px; font: 400 16px/1.3 var(--f-mono); color: var(--site-faint); text-decoration: none; }
 .sublist a::after { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; border: 1px solid currentColor; }
 .sublist a:hover, .sublist a[aria-current="page"] { color: var(--site-fg); }
 .sublist a[aria-current="page"]::after { background: var(--site-spark); border-color: var(--site-spark); }
@@ -839,12 +875,15 @@ main { padding-top: 28px; }
   .rule { grid-template-columns: minmax(0, 1fr); }
   .rule.head { display: none; }
   .ty-row { grid-template-columns: minmax(0, 1fr); }
-  .seg span { display: none; }
+  /* "App UI" stays: it is the only thing that says Light/Dark themes the examples and not the
+     site, and hiding it left two unexplained toggles. */
+  .seg span { padding: 0 6px 0 8px; }
   .hero-art > :nth-child(2) { margin-top: 200px; }
 }
 @media (max-width: 460px) {
   :root { --gutter-l: max(16px, env(safe-area-inset-left, 0px)); --gutter-r: max(16px, env(safe-area-inset-right, 0px)); }
-  .cta { display: none; }
+  /* The Figma link is the one route to the source; it shrinks here rather than disappearing. */
+  .cta { font-size: 14px; padding: 9px 14px; }
   .panel .desc, .acts, .points, .chips { margin-left: 0; }
   .sc-row { grid-template-columns: 84px 44px minmax(0, 1fr); }
 }
@@ -855,7 +894,9 @@ main { padding-top: 28px; }
 .comp-bar { order: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-bottom: 4px; }
 .comp-find { flex: 1 1 220px; min-width: 180px; max-width: 360px; }
 .comp-find input { width: 100%; box-sizing: border-box; font: 400 14px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 11px 16px; }
-.comp-find input::placeholder { color: var(--site-muted); }
+/* Tinted toward the field's own green rather than a neutral gray, which reads as washed out on a
+   saturated surface. 7.9:1 on --site-chip. */
+.comp-find input::placeholder { color: #9ec9b4; }
 .sum { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--site-muted); }
 .comp-find input:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
 .comp-pick { display: inline-flex; align-items: center; gap: 8px; font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); }
@@ -904,6 +945,7 @@ main { padding-top: 28px; }
 }
 </style>
 
+<a class="skip" href="#main">Skip to content</a>
 <header class="bar">
   <div class="bar-in">
     <a class="brand" href="#overview">BestPlay Design System</a>
@@ -919,7 +961,7 @@ main { padding-top: 28px; }
 </header>
 
 <div class="shell">
-  <main>
+  <main id="main" tabindex="-1">
 <!-- =====================================================================
      ADD A PAGE: copy one <section class="page" data-page="name" data-label="Name"> block.
      data-page is the link (#name): lowercase letters, digits and hyphens. Add the page to TAB in the
@@ -1117,7 +1159,6 @@ main { padding-top: 28px; }
 <!-- ============================ FOUNDATIONS ============================ -->
 <section class="page" data-page="foundations" data-label="Foundations" hidden>
   <div class="page-head">
-    <p class="eyebrow">Foundations</p>
     <h1>Color, type, space and shape.</h1>
     <p class="lede">All lengths are iOS points at 1x on a 393 × 852 canvas. Token names match the asset catalog and the Figma variables.</p>
   </div>
@@ -1183,7 +1224,6 @@ main { padding-top: 28px; }
 <!-- ============================ COMPONENTS ============================ -->
 <section class="page" data-page="components" data-label="Components" hidden>
   <div class="page-head">
-    <p class="eyebrow">Components</p>
     <h1>Every view, built once.</h1>
     <p class="lede">Each example below is the live component. Props mirror the Swift initializers, and the snippet is ready to paste.</p>
   </div>
@@ -1253,7 +1293,6 @@ main { padding-top: 28px; }
 <!-- ============================ MOTION ============================ -->
 <section class="page" data-page="motion" data-label="Motion" hidden>
   <div class="page-head">
-    <p class="eyebrow">Motion</p>
     <h1>System springs, nothing custom.</h1>
     <p class="lede">Four durations and three curves that approximate SwiftUI's named springs. Under Reduce Motion every movement becomes a crossfade.</p>
   </div>
@@ -1308,7 +1347,6 @@ main { padding-top: 28px; }
 <!-- ============================ WRITING ============================ -->
 <section class="page" data-page="writing" data-label="Writing" hidden>
   <div class="page-head">
-    <p class="eyebrow">Writing</p>
     <h1>“Cash out” is a verb.</h1>
     <p class="lede">Sentence case, verbs on buttons, and money formatted by the locale. The words below are the ones shipped in each state.</p>
   </div>
@@ -1516,7 +1554,7 @@ main { padding-top: 28px; }
 <script>
 (function () {
 /* @gen tokens.json */
-  var TOKENS = {"name": "Cashout iOS Design System", "version": 1, "meta": {"source": "figma", "file": "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=16671-42948", "frames": ["https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=23690-153334", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=17094-39643", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=17094-48749", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=27975-368"], "components": {"AmountHero": "23690:155778", "Pill": "23690:155753", "InfoRow": "23690:155719", "Button": "23690:155716", "CashoutSheet": "23690:155027", "StatTile": "17094:48752", "InlineMessage": "17094:48990", "TabBar": "17094:48890", "MissionCard": "28330:11129", "MissionRow": "28330:11132", "CoachMark": "28318:6250", "RewardCard": "28318:7612"}, "synced": "2026-11-15", "unit": "All lengths are iOS points (pt) at 1x on a 393 x 852 canvas. Figma frames were 1074px wide and were divided by 2.754 (1074 / 390), then snapped to the 4pt grid."}, "color": {"themes": [{"id": "light", "name": "Light"}, {"id": "dark", "name": "Dark"}], "tokens": [{"name": "blue-500", "value": {"light": "#1464ff", "dark": "#1464ff"}, "usage": "Primary action fill (Cash out button), selected tab tint. Merges Figma #1464FF and #1364FF. White text on it is 4.89:1 in both themes."}, {"name": "on-accent", "value": {"light": "#ffffff", "dark": "#ffffff"}, "usage": "Text and icons on blue-500, green-700 and navy-900. Replaces the off-whites #F2F2F2, #F9F8F4 and #F2EDFF used on colored fills."}, {"name": "green-700", "value": {"light": "#087a5a", "dark": "#087a5a"}, "usage": "Green that carries small text (History pill, info icon tile, success text). White on it is 5.33:1."}, {"name": "green-500", "value": {"light": "#0c9971", "dark": "#0c9971"}, "usage": "The brand green and the base of the reward gradient (AmountHero earned and success). White on it is 3.61:1, so only large text (24pt, or 19pt bold) passes on it."}, {"name": "green-400", "value": {"light": "#49cc3d", "dark": "#49cc3d"}, "usage": "Top-right end of the reward gradient. Keep text off it: white on it is 2.1:1. The green buttons use claim-fill, not this."}, {"name": "lime-400", "value": {"light": "#60e041", "dark": "#60e041"}, "usage": "Decorative sparkle in reward illustrations only. Never a text background: white on it is 1.72:1."}, {"name": "navy-900", "value": {"light": "#000748", "dark": "#1a2350"}, "usage": "Inverse card for waiting and pending states (Countdown card). The Figma annotation asked for #000748; it also replaces #20262D."}, {"name": "violet-500", "value": {"light": "#a712f1", "dark": "#a712f1"}, "usage": "Top of the mission gradient (MissionCard header, Congrats card). White text on it is 4.6:1; keep text 17pt bold or larger."}, {"name": "indigo-800", "value": {"light": "#0017aa", "dark": "#0017aa"}, "usage": "Bottom of the mission gradient. White text on it is 11.9:1."}, {"name": "gold-400", "value": {"light": "#ffdd20", "dark": "#ffdd20"}, "usage": "Coin amounts and the mission timer on dark or violet surfaces. Never on white."}, {"name": "mint-400", "value": {"light": "#0bdd66", "dark": "#0bdd66"}, "usage": "Claim buttons (flat) and done states. Text on it is white, like every button label."}, {"name": "sky-200", "value": {"light": "#8bd3ff", "dark": "#8bd3ff"}, "usage": "Coin cell at the start of a MissionRow. Text on it is near-black."}, {"name": "orange-500", "value": {"light": "#ff7a1a", "dark": "#ff7a1a"}, "usage": "Boost offers only (the 2x coins button and timer chip), flat. Text on it is white."}, {"name": "pink-400", "value": {"light": "#f4517c", "dark": "#f4517c"}, "usage": "Top of the 2x coins event gradient (home banner, pop-up header)."}, {"name": "pink-600", "value": {"light": "#dd1a5c", "dark": "#dd1a5c"}, "usage": "Bottom of the 2x coins event gradient. White text on it is 4.6:1."}, {"name": "pink-50", "value": {"light": "#ffecf2", "dark": "#ffecf2"}, "usage": "Lower half of a flip-timer digit card."}, {"name": "pink-ink", "value": {"light": "#ee145c", "dark": "#ee145c"}, "usage": "Flip-timer digits on white. 4.1:1 on white, so large digits only."}, {"name": "pink-800", "value": {"light": "#950c3a", "dark": "#950c3a"}, "usage": "The time pill's fill on the 2x coins gradient. Solid, not translucent: the pill sits across the header's curve, and a translucent fill turned a dusty #a47383 over the white half. White on it is 8.8:1."}, {"name": "violet-400", "value": {"light": "#9b51e0", "dark": "#9b51e0"}, "usage": "Boost button fill (flat, white label), boosted amounts and the active pop-up body."}, {"name": "violet-600", "value": {"light": "#7a35c4", "dark": "#7a35c4"}, "usage": "The boosted balance number on white."}, {"name": "ink", "value": {"light": "#02266e", "dark": "#e8edf7"}, "usage": "Primary text and icons on surface, surface-grouped and surface-info. Replaces #20262D and #0A0A0A body text."}, {"name": "ink-secondary", "value": {"light": "#5b6378", "dark": "#a7b3cc"}, "usage": "Secondary text: subtitles, row metadata, inactive tab labels. Replaces #848589, which failed contrast (3.69:1)."}, {"name": "link", "value": {"light": "#1464ff", "dark": "#4d8bff"}, "usage": "Plain (text-only) buttons such as Keep playing and See all. Dark value lifted so it reads 5.75:1 on the dark surface."}, {"name": "surface", "value": {"light": "#ffffff", "dark": "#0b1220"}, "usage": "Sheet and screen background."}, {"name": "surface-grouped", "value": {"light": "#f2f4f7", "dark": "#161f33"}, "usage": "Grouped list background, stat tiles, game cards. Merges #F2F2F2 and #F5F8FA."}, {"name": "surface-info", "value": {"light": "#eff5fd", "dark": "#14233f"}, "usage": "Background of InfoRow, the notice explaining when coins convert."}, {"name": "separator", "value": {"light": "#e3e7ef", "dark": "#26314a"}, "usage": "Hairline row separators inside HistoryList; 0.5pt on device."}, {"name": "success", "value": {"light": "#087a5a", "dark": "#34c48f"}, "usage": "Success status text (Paid) in HistoryList. 4.9:1 on surface-grouped light, 7.4:1 dark."}, {"name": "danger", "value": {"light": "#b42318", "dark": "#ff6b5e"}, "usage": "Error and limit messages, 5.98:1 on danger-surface. Replaces pure red at 60% opacity, which was 2.86:1."}, {"name": "danger-surface", "value": {"light": "#fff1f0", "dark": "#2a1414"}, "usage": "Background of InlineMessage in the danger tone."}, {"name": "grabber", "value": {"light": "rgba(2,38,110,0.2)", "dark": "rgba(232,237,247,0.3)"}, "usage": "Sheet drag indicator. On device use the system indicator (.presentationDragIndicator(.visible)) instead."}, {"name": "scrim", "value": {"light": "rgba(0,0,0,0.3)", "dark": "rgba(0,0,0,0.5)"}, "usage": "Dimming behind a presented sheet. On device the system sheet supplies it."}, {"name": "scrim-strong", "value": {"light": "rgba(8,10,28,0.84)", "dark": "rgba(8,10,28,0.84)"}, "usage": "Dimming behind a pop-up and behind a coach mark. Heavier than scrim, which is for a system sheet; the system supplies that one on device."}, {"name": "chip-dark", "value": {"light": "rgba(0,0,0,0.55)", "dark": "rgba(0,0,0,0.55)"}, "usage": "A dark chip on a coloured surface: the ad icon after a button label, the timer on the missions card. White on it holds 4.8:1 even over white."}, {"name": "claim-fill", "value": {"light": "#77c926", "dark": "#77c926"}, "usage": "Fill of the green action buttons: Claim, Go, Get double, Awesome. Its white label is 2.07:1 on it, the same as the green-400 it replaced, so it carries the large bold button label and nothing smaller."}, {"name": "claim-ink", "value": {"light": "#ffffff", "dark": "#ffffff"}, "usage": "Label on green (mint) buttons and tiles: white, like every button label."}, {"name": "overlay", "value": {"light": "#0a0c1e", "dark": "#0a0c1e"}, "usage": "Added from Figma (surface/overlay)."}]}, "type": {"fonts": [], "families": {"sans": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", system-ui, sans-serif", "display": "\"Nunito\", \"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, system-ui, sans-serif"}, "groups": [{"name": "Display", "family": "sans", "styles": [{"name": "amount", "fontSize": "54px", "lineHeight": "60px", "fontWeight": 800, "letterSpacing": "-0.5px", "sample": "$0.32", "usage": "The balance in AmountHero. Scales with Dynamic Type relative to .largeTitle; use monospaced digits so the number does not jump while counting up. Replaces Figtree ExtraBold 150px / 57px leading."}, {"name": "large-title", "fontSize": "34px", "lineHeight": "41px", "fontWeight": 800, "sample": "Cash out", "usage": "Screen titles in a navigation bar (.largeTitle).", "family": "display"}]}, {"name": "Text", "family": "sans", "styles": [{"name": "title1", "fontSize": "28px", "lineHeight": "34px", "fontWeight": 800, "sample": "Welcome reward!", "usage": "Coach-mark sentences and reward titles (.title). Fills the gap between title2 and large-title.", "family": "display"}, {"name": "title2", "fontSize": "22px", "lineHeight": "28px", "fontWeight": 800, "sample": "Cash out successful", "usage": "Success and empty-state headlines (.title2).", "family": "display"}, {"name": "title3", "fontSize": "20px", "lineHeight": "25px", "fontWeight": 800, "sample": "Mission board", "usage": "Section headers on Home (.title3).", "family": "display"}, {"name": "headline", "fontSize": "17px", "lineHeight": "22px", "fontWeight": 600, "sample": "Cash out", "usage": "Button labels and list row titles (.headline)."}, {"name": "body", "fontSize": "17px", "lineHeight": "22px", "fontWeight": 400, "sample": "Earned and ready to cash out.", "usage": "Default running text (.body)."}, {"name": "callout", "fontSize": "16px", "lineHeight": "21px", "fontWeight": 500, "sample": "Well done!", "usage": "Eyebrow above the amount in AmountHero (.callout)."}, {"name": "subheadline", "fontSize": "15px", "lineHeight": "20px", "fontWeight": 500, "sample": "Your stars turn into rewards in 3h 45m.", "usage": "InfoRow text and AmountHero subtitle (.subheadline). Bold the duration with the semibold weight, not a second font."}, {"name": "footnote", "fontSize": "13px", "lineHeight": "18px", "fontWeight": 500, "sample": "April 26 \u00b7 Success", "usage": "Row metadata in HistoryList (.footnote)."}, {"name": "caption", "fontSize": "12px", "lineHeight": "16px", "fontWeight": 600, "sample": "Game coins", "usage": "StatTile labels and the History pill label (.caption)."}, {"name": "tab-label", "fontSize": "10px", "lineHeight": "12px", "fontWeight": 600, "sample": "Cash out", "usage": "Tab bar item labels, matching the system tab bar."}]}]}, "spacing": {"note": "A 4pt grid. Screen margin is space-4 (16pt); Figma used 8, 9.4 and 6.5pt margins on the same sheet.", "tokens": [{"name": "space-1", "value": "4px", "usage": "Icon-to-label gap inside the History pill."}, {"name": "space-2", "value": "8px", "usage": "Gap between a title and its subtitle; stack spacing inside StatTile."}, {"name": "space-3", "value": "12px", "usage": "InfoRow icon-to-text gap; gap between game cards."}, {"name": "space-4", "value": "16px", "usage": "Screen side margin (matches the system readable margin on iPhone), card padding, row padding."}, {"name": "space-5", "value": "20px", "usage": "Padding inside AmountHero."}, {"name": "space-6", "value": "24px", "usage": "Gap between sheet sections (hero, notice, actions)."}, {"name": "space-8", "value": "32px", "usage": "Gap above the primary action group."}, {"name": "space-10", "value": "40px", "usage": "Top padding above an empty-state illustration."}]}, "radius": {"note": "Draw every radius with continuous corners on device (RoundedRectangle(cornerRadius:style: .continuous)). Figma had 13 different radii, including 19.794px.", "tokens": [{"name": "radius-sm", "value": "8px", "usage": "Game thumbnails, small icon tiles."}, {"name": "radius-md", "value": "12px", "usage": "Stat tiles, InlineMessage, list rows in an inset group."}, {"name": "radius-lg", "value": "16px", "usage": "InfoRow, game cards, HistoryList inset group."}, {"name": "radius-xl", "value": "24px", "usage": "AmountHero card. Replaces 75px@3x (27pt) and 50pt."}, {"name": "radius-pill", "value": "999px", "usage": "Buttons, the History pill, any capsule. On device use Capsule()."}]}, "size": {"note": "Fixed dimensions, in points.", "tokens": [{"name": "control-height", "value": "66px", "usage": "Height of the primary action button, everywhere it appears: the cash-out sheet, the pop-up frame and the full-screen onboarding steps. Figma had 67pt; this is that height, rounded to the 2pt the 4pt grid allows here. Plain text buttons keep hit-target instead."}, {"name": "hit-target", "value": "44px", "usage": "Minimum tappable area for any control, including plain buttons and the History pill."}, {"name": "pill-height", "value": "32px", "usage": "Visible height of the History pill; pad its hit area to hit-target."}, {"name": "icon-tile", "value": "40px", "usage": "The circular icon tile at the start of InfoRow."}, {"name": "tab-bar-height", "value": "49px", "usage": "Tab bar height above the home-indicator safe area (system value)."}]}, "shadow": {"note": "One elevation. iOS buttons are flat: the 0 4 2 rgba(0,0,0,.3) button shadow from Figma is removed.", "tokens": [{"name": "shadow-card", "value": {"light": "0 4px 24px rgba(2,38,110,0.08)", "dark": "0 4px 24px rgba(0,0,0,0.4)"}, "usage": "Floating cards on the home feed only. Cards inside a sheet get no shadow."}]}, "duration": {"note": "Animation durations. In SwiftUI prefer the named springs; these are their web equivalents.", "tokens": [{"name": "duration-fast", "value": "150ms", "usage": "Press feedback on buttons and pills. SwiftUI: .snappy(duration: 0.15)."}, {"name": "duration-base", "value": "250ms", "usage": "Fades, digit roll on the countdown, content rising in."}, {"name": "duration-slow", "value": "400ms", "usage": "Sheet presentation, success pop."}, {"name": "duration-count", "value": "600ms", "usage": "Balance count-up after a cash out."}]}, "easing": {"note": "Curves that approximate SwiftUI's springs on the web.", "tokens": [{"name": "easing-snappy", "value": "cubic-bezier(0.2, 0.9, 0.3, 1)", "usage": "SwiftUI .snappy. Presses, digit changes."}, {"name": "easing-smooth", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "usage": "SwiftUI .smooth. Sheets, fades, layout changes."}, {"name": "easing-bouncy", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "usage": "SwiftUI .bouncy. Only the success moment."}]}};
+  var TOKENS = {"name": "Cashout iOS Design System", "version": 1, "meta": {"source": "figma", "file": "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=16671-42948", "frames": ["https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=23690-153334", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=17094-39643", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=17094-48749", "https://www.figma.com/design/xx3Wl01iiG5MWSoqtC0vz8/test?node-id=27975-368"], "components": {"AmountHero": "23690:155778", "Pill": "23690:155753", "InfoRow": "23690:155719", "Button": "23690:155716", "CashoutSheet": "23690:155027", "StatTile": "17094:48752", "InlineMessage": "17094:48990", "TabBar": "17094:48890", "MissionCard": "28330:11129", "MissionRow": "28330:11132", "CoachMark": "28318:6250", "RewardCard": "28318:7612"}, "synced": "2026-11-15", "unit": "All lengths are iOS points (pt) at 1x on a 393 x 852 canvas. Figma frames were 1074px wide and were divided by 2.754 (1074 / 390), then snapped to the 4pt grid."}, "color": {"themes": [{"id": "light", "name": "Light"}, {"id": "dark", "name": "Dark"}], "tokens": [{"name": "blue-500", "value": {"light": "#1464ff", "dark": "#1464ff"}, "usage": "Primary action fill (Cash out button), selected tab tint. Merges Figma #1464FF and #1364FF. White text on it is 4.89:1 in both themes."}, {"name": "on-accent", "value": {"light": "#ffffff", "dark": "#ffffff"}, "usage": "Text and icons on blue-500, green-700 and navy-900. Replaces the off-whites #F2F2F2, #F9F8F4 and #F2EDFF used on colored fills."}, {"name": "green-700", "value": {"light": "#087a5a", "dark": "#087a5a"}, "usage": "Green that carries small text (History pill, info icon tile, success text). White on it is 5.33:1. Also the top of the reward gradient."}, {"name": "green-800", "value": {"light": "#06684c", "dark": "#06684c"}, "usage": "Bottom of the reward gradient (AmountHero earned and success). White on it is 6.79:1. Added so the whole gradient carries the eyebrow and subtitle: the previous green-400 to green-500 ramp ran 2.1:1 to 3.6:1, which no text passed."}, {"name": "green-500", "value": {"light": "#0c9971", "dark": "#0c9971"}, "usage": "The brand green and the base of the reward gradient (AmountHero earned and success). White on it is 3.61:1, so only large text (24pt, or 19pt bold) passes on it."}, {"name": "green-400", "value": {"light": "#49cc3d", "dark": "#49cc3d"}, "usage": "Top-right end of the reward gradient. Keep text off it: white on it is 2.1:1. The green buttons use claim-fill, not this."}, {"name": "lime-400", "value": {"light": "#60e041", "dark": "#60e041"}, "usage": "Decorative sparkle in reward illustrations only. Never a text background: white on it is 1.72:1."}, {"name": "navy-900", "value": {"light": "#000748", "dark": "#1a2350"}, "usage": "Inverse card for waiting and pending states (Countdown card). The Figma annotation asked for #000748; it also replaces #20262D."}, {"name": "violet-500", "value": {"light": "#a712f1", "dark": "#a712f1"}, "usage": "Top of the mission gradient (MissionCard header, Congrats card). White text on it is 4.6:1; keep text 17pt bold or larger."}, {"name": "indigo-800", "value": {"light": "#0017aa", "dark": "#0017aa"}, "usage": "Bottom of the mission gradient. White text on it is 11.9:1."}, {"name": "gold-400", "value": {"light": "#ffdd20", "dark": "#ffdd20"}, "usage": "Coin amounts and the mission timer on dark or violet surfaces. Never on white."}, {"name": "mint-400", "value": {"light": "#0bdd66", "dark": "#0bdd66"}, "usage": "Claim buttons (flat) and done states. Text on it is claim-ink, not white: white on it is 1.82:1."}, {"name": "sky-200", "value": {"light": "#8bd3ff", "dark": "#8bd3ff"}, "usage": "Coin cell at the start of a MissionRow. Text on it is near-black."}, {"name": "orange-500", "value": {"light": "#ff7a1a", "dark": "#ff7a1a"}, "usage": "Boost offers only (the 2x coins button and timer chip), flat. Text on it is white."}, {"name": "pink-400", "value": {"light": "#f4517c", "dark": "#f4517c"}, "usage": "Top of the 2x coins event gradient (home banner, pop-up header)."}, {"name": "pink-600", "value": {"light": "#dd1a5c", "dark": "#dd1a5c"}, "usage": "Bottom of the 2x coins event gradient. White text on it is 4.6:1."}, {"name": "pink-50", "value": {"light": "#ffecf2", "dark": "#ffecf2"}, "usage": "Lower half of a flip-timer digit card."}, {"name": "pink-ink", "value": {"light": "#ee145c", "dark": "#ee145c"}, "usage": "Flip-timer digits on white. 4.1:1 on white, so large digits only."}, {"name": "pink-800", "value": {"light": "#950c3a", "dark": "#950c3a"}, "usage": "The time pill's fill on the 2x coins gradient. Solid, not translucent: the pill sits across the header's curve, and a translucent fill turned a dusty #a47383 over the white half. White on it is 8.8:1."}, {"name": "violet-400", "value": {"light": "#9b51e0", "dark": "#9b51e0"}, "usage": "Boost button fill (flat, white label), boosted amounts and the active pop-up body."}, {"name": "violet-600", "value": {"light": "#7a35c4", "dark": "#7a35c4"}, "usage": "The boosted balance number on white."}, {"name": "ink", "value": {"light": "#02266e", "dark": "#e8edf7"}, "usage": "Primary text and icons on surface, surface-grouped and surface-info. Replaces #20262D and #0A0A0A body text."}, {"name": "ink-secondary", "value": {"light": "#5b6378", "dark": "#a7b3cc"}, "usage": "Secondary text: subtitles, row metadata, inactive tab labels. Replaces #848589, which failed contrast (3.69:1)."}, {"name": "link", "value": {"light": "#1464ff", "dark": "#4d8bff"}, "usage": "Plain (text-only) buttons such as Keep playing and See all. Dark value lifted so it reads 5.75:1 on the dark surface."}, {"name": "surface", "value": {"light": "#ffffff", "dark": "#0b1220"}, "usage": "Sheet and screen background."}, {"name": "surface-grouped", "value": {"light": "#f2f4f7", "dark": "#161f33"}, "usage": "Grouped list background, stat tiles, game cards. Merges #F2F2F2 and #F5F8FA."}, {"name": "surface-info", "value": {"light": "#eff5fd", "dark": "#14233f"}, "usage": "Background of InfoRow, the notice explaining when coins convert."}, {"name": "separator", "value": {"light": "#e3e7ef", "dark": "#26314a"}, "usage": "Hairline row separators inside HistoryList; 0.5pt on device."}, {"name": "success", "value": {"light": "#087a5a", "dark": "#34c48f"}, "usage": "Success status text (Paid) in HistoryList. 4.9:1 on surface-grouped light, 7.4:1 dark."}, {"name": "danger", "value": {"light": "#b42318", "dark": "#ff6b5e"}, "usage": "Error and limit messages, 5.98:1 on danger-surface. Replaces pure red at 60% opacity, which was 2.86:1."}, {"name": "danger-surface", "value": {"light": "#fff1f0", "dark": "#2a1414"}, "usage": "Background of InlineMessage in the danger tone."}, {"name": "grabber", "value": {"light": "rgba(2,38,110,0.2)", "dark": "rgba(232,237,247,0.3)"}, "usage": "Sheet drag indicator. On device use the system indicator (.presentationDragIndicator(.visible)) instead."}, {"name": "scrim", "value": {"light": "rgba(0,0,0,0.3)", "dark": "rgba(0,0,0,0.5)"}, "usage": "Dimming behind a presented sheet. On device the system sheet supplies it."}, {"name": "scrim-strong", "value": {"light": "rgba(8,10,28,0.84)", "dark": "rgba(8,10,28,0.84)"}, "usage": "Dimming behind a pop-up and behind a coach mark. Heavier than scrim, which is for a system sheet; the system supplies that one on device."}, {"name": "chip-dark", "value": {"light": "rgba(0,0,0,0.55)", "dark": "rgba(0,0,0,0.55)"}, "usage": "A dark chip on a coloured surface: the ad icon after a button label, the timer on the missions card. White on it holds 4.8:1 even over white."}, {"name": "claim-fill", "value": {"light": "#77c926", "dark": "#77c926"}, "usage": "Fill of the green action buttons: Claim, Go, Get double, Awesome. Pair it with claim-ink, never with white: white on it is 2.07:1, which fails even the 3:1 large-text threshold."}, {"name": "claim-ink", "value": {"light": "#0b2a00", "dark": "#0b2a00"}, "usage": "Label on the bright green buttons and tiles (claim-fill, mint-400). Near-black green rather than white: 7.6:1 on claim-fill and 8.6:1 on mint-400, where white was 2.07:1 and 1.82:1. The one button label that is not white, because these two greens are too light to carry one."}, {"name": "overlay", "value": {"light": "#0a0c1e", "dark": "#0a0c1e"}, "usage": "Added from Figma (surface/overlay)."}]}, "type": {"fonts": [], "families": {"sans": "\"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, \"SF Pro Text\", system-ui, sans-serif", "display": "\"Nunito\", \"Plus Jakarta Sans\", -apple-system, BlinkMacSystemFont, system-ui, sans-serif"}, "groups": [{"name": "Display", "family": "sans", "styles": [{"name": "amount", "fontSize": "54px", "lineHeight": "60px", "fontWeight": 800, "letterSpacing": "-0.5px", "sample": "$0.32", "usage": "The balance in AmountHero. Scales with Dynamic Type relative to .largeTitle; use monospaced digits so the number does not jump while counting up. Replaces Figtree ExtraBold 150px / 57px leading."}, {"name": "large-title", "fontSize": "34px", "lineHeight": "41px", "fontWeight": 800, "sample": "Cash out", "usage": "Screen titles in a navigation bar (.largeTitle).", "family": "display"}]}, {"name": "Text", "family": "sans", "styles": [{"name": "title1", "fontSize": "28px", "lineHeight": "34px", "fontWeight": 800, "sample": "Welcome reward!", "usage": "Coach-mark sentences and reward titles (.title). Fills the gap between title2 and large-title.", "family": "display"}, {"name": "title2", "fontSize": "22px", "lineHeight": "28px", "fontWeight": 800, "sample": "Cash out successful", "usage": "Success and empty-state headlines (.title2).", "family": "display"}, {"name": "title3", "fontSize": "20px", "lineHeight": "25px", "fontWeight": 800, "sample": "Mission board", "usage": "Section headers on Home (.title3).", "family": "display"}, {"name": "headline", "fontSize": "17px", "lineHeight": "22px", "fontWeight": 600, "sample": "Cash out", "usage": "Button labels and list row titles (.headline)."}, {"name": "body", "fontSize": "17px", "lineHeight": "22px", "fontWeight": 400, "sample": "Earned and ready to cash out.", "usage": "Default running text (.body)."}, {"name": "callout", "fontSize": "16px", "lineHeight": "21px", "fontWeight": 500, "sample": "Well done!", "usage": "Eyebrow above the amount in AmountHero (.callout)."}, {"name": "subheadline", "fontSize": "15px", "lineHeight": "20px", "fontWeight": 500, "sample": "Your stars turn into rewards in 3h 45m.", "usage": "InfoRow text and AmountHero subtitle (.subheadline). Bold the duration with the semibold weight, not a second font."}, {"name": "footnote", "fontSize": "13px", "lineHeight": "18px", "fontWeight": 500, "sample": "April 26 \u00b7 Success", "usage": "Row metadata in HistoryList (.footnote)."}, {"name": "caption", "fontSize": "12px", "lineHeight": "16px", "fontWeight": 600, "sample": "Game coins", "usage": "StatTile labels and the History pill label (.caption)."}, {"name": "tab-label", "fontSize": "10px", "lineHeight": "12px", "fontWeight": 600, "sample": "Cash out", "usage": "Tab bar item labels, matching the system tab bar."}]}]}, "spacing": {"note": "A 4pt grid. Screen margin is space-4 (16pt); Figma used 8, 9.4 and 6.5pt margins on the same sheet.", "tokens": [{"name": "space-1", "value": "4px", "usage": "Icon-to-label gap inside the History pill."}, {"name": "space-2", "value": "8px", "usage": "Gap between a title and its subtitle; stack spacing inside StatTile."}, {"name": "space-3", "value": "12px", "usage": "InfoRow icon-to-text gap; gap between game cards."}, {"name": "space-4", "value": "16px", "usage": "Screen side margin (matches the system readable margin on iPhone), card padding, row padding."}, {"name": "space-5", "value": "20px", "usage": "Padding inside AmountHero."}, {"name": "space-6", "value": "24px", "usage": "Gap between sheet sections (hero, notice, actions)."}, {"name": "space-8", "value": "32px", "usage": "Gap above the primary action group."}, {"name": "space-10", "value": "40px", "usage": "Top padding above an empty-state illustration."}]}, "radius": {"note": "Draw every radius with continuous corners on device (RoundedRectangle(cornerRadius:style: .continuous)). Figma had 13 different radii, including 19.794px.", "tokens": [{"name": "radius-sm", "value": "8px", "usage": "Game thumbnails, small icon tiles."}, {"name": "radius-md", "value": "12px", "usage": "Stat tiles, InlineMessage, list rows in an inset group."}, {"name": "radius-lg", "value": "16px", "usage": "InfoRow, game cards, HistoryList inset group."}, {"name": "radius-xl", "value": "24px", "usage": "AmountHero card. Replaces 75px@3x (27pt) and 50pt."}, {"name": "radius-pill", "value": "999px", "usage": "Buttons, the History pill, any capsule. On device use Capsule()."}]}, "size": {"note": "Fixed dimensions, in points.", "tokens": [{"name": "control-height", "value": "66px", "usage": "Height of the primary action button, everywhere it appears: the cash-out sheet, the pop-up frame and the full-screen onboarding steps. Figma had 67pt; this is that height, rounded to the 2pt the 4pt grid allows here. Plain text buttons keep hit-target instead."}, {"name": "hit-target", "value": "44px", "usage": "Minimum tappable area for any control, including plain buttons and the History pill."}, {"name": "pill-height", "value": "32px", "usage": "Visible height of the History pill; pad its hit area to hit-target."}, {"name": "icon-tile", "value": "40px", "usage": "The circular icon tile at the start of InfoRow."}, {"name": "tab-bar-height", "value": "49px", "usage": "Tab bar height above the home-indicator safe area (system value)."}]}, "shadow": {"note": "One elevation. iOS buttons are flat: the 0 4 2 rgba(0,0,0,.3) button shadow from Figma is removed.", "tokens": [{"name": "shadow-card", "value": {"light": "0 4px 24px rgba(2,38,110,0.08)", "dark": "0 4px 24px rgba(0,0,0,0.4)"}, "usage": "Floating cards on the home feed only. Cards inside a sheet get no shadow."}]}, "duration": {"note": "Animation durations. In SwiftUI prefer the named springs; these are their web equivalents.", "tokens": [{"name": "duration-fast", "value": "150ms", "usage": "Press feedback on buttons and pills. SwiftUI: .snappy(duration: 0.15)."}, {"name": "duration-base", "value": "250ms", "usage": "Fades, digit roll on the countdown, content rising in."}, {"name": "duration-slow", "value": "400ms", "usage": "Sheet presentation, success pop."}, {"name": "duration-count", "value": "600ms", "usage": "Balance count-up after a cash out."}]}, "easing": {"note": "Curves that approximate SwiftUI's springs on the web.", "tokens": [{"name": "easing-snappy", "value": "cubic-bezier(0.2, 0.9, 0.3, 1)", "usage": "SwiftUI .snappy. Presses, digit changes."}, {"name": "easing-smooth", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "usage": "SwiftUI .smooth. Sheets, fades, layout changes."}, {"name": "easing-bouncy", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "usage": "SwiftUI .bouncy. Only the success moment."}]}};
 /* @end tokens.json */
   var C = window.Cashout, h = React.createElement;
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -1710,7 +1748,9 @@ main { padding-top: 28px; }
         h("div", { className: "pp-card" },
           hasHead ? h("div", { className: "pp-head", "data-curve": props.curve ? "" : undefined }, props.head, props.eyebrow ? h("div", { className: "pp-eyebrow" }, props.eyebrow) : null) : null,
           h("div", { className: "pp-body" },
-            props.title ? h("h4", { className: "pp-title" }, props.title) : null,
+            /* h2, not h4: the pop-up's title is the top heading of what it presents. As an h4 it
+               followed the specimen's own h2 on the Components page and skipped two levels. */
+            props.title ? h("h2", { className: "pp-title" }, props.title) : null,
             props.text ? h("p", { className: "pp-text" }, props.text) : null,
             props.children,
             props.amount ? h("div", { className: "pp-amount" }, props.amount) : null,
@@ -2055,13 +2095,28 @@ main { padding-top: 28px; }
 
   /* ---------- build: foundations ---------- */
   function lum(hex) { var m = /^#([0-9a-f]{6})$/i.exec(hex); if (!m) return 1; var n = parseInt(m[1], 16); return [n >> 16, n >> 8 & 255, n & 255].reduce(function (a, v, i) { v /= 255; v = v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); return a + v * [.2126, .7152, .0722][i]; }, 0); }
+  /* Flatten "rgba(r,g,b,a)" onto a solid hex base, so a translucent token can be judged by what it
+     actually looks like on the swatch. */
+  function over(rgba, baseHex) {
+    var p = rgba.match(/[\d.]+/g); if (!p || p.length < 4) return baseHex;
+    var m = /^#([0-9a-f]{6})$/i.exec(baseHex), n = m ? parseInt(m[1], 16) : 0xffffff;
+    var base = [n >> 16, n >> 8 & 255, n & 255], a = parseFloat(p[3]);
+    return "#" + base.map(function (b, i) {
+      return Math.round(parseFloat(p[i]) * a + b * (1 - a)).toString(16).padStart(2, "0");
+    }).join("");
+  }
   var checker = "repeating-conic-gradient(#d5dae3 0 25%, #fff 0 50%) 0 0 / 12px 12px";
   T.color.tokens.forEach(function (t) {
     var sw = el("div", "sw"), cc = el("div", "sw-c");
     ["light", "dark"].forEach(function (th) {
       var v = t.value[th], s = el("span", null, th);
       s.style.background = /^rgba/.test(v) ? "linear-gradient(" + v + "," + v + "), " + (th === "light" ? "#fff" : "#0b1220") : v;
-      s.style.color = /^rgba/.test(v) ? (th === "light" ? "#0b1220" : "#fff") : (lum(v) > .4 ? "#0b1220" : "#fff");
+      /* Threshold .18, not .4: white clears 4.5:1 only up to luminance .183, and black from .175,
+         so .18 is the one crossover where whichever ink is chosen passes. At .4 every swatch
+         between those points got white and failed — nine of them did. A translucent value is
+         composited over the base it is shown on first, because the theme it belongs to does not
+         tell you how light it ends up: scrim-strong on light lands at #303140. */
+      s.style.color = lum(/^rgba/.test(v) ? over(v, th === "light" ? "#ffffff" : "#0b1220") : v) > .18 ? "#000" : "#fff";
       cc.appendChild(s);
     });
     var b = el("div", "sw-b"); b.appendChild(el("div", "sw-n", t.name));
@@ -2106,6 +2161,15 @@ main { padding-top: 28px; }
   document.querySelectorAll("[data-spec]").forEach(function (node) {
     var f = SPECS[node.getAttribute("data-spec")]; if (f) ReactDOM.createRoot(node).render(f());
   });
+  /* These are specimens, not controls: every button inside one is a picture of a button. Left
+     reachable they put 26 dead stops in the tab order on Components alone, and a screen reader
+     announced "Cash out, button", "Claim, button" for things that do nothing. inert takes the
+     whole subtree out of the tab order and the accessibility tree; the preview still renders and
+     still re-themes. Applied after render so it covers the mounted tree. */
+  function sealPreviews() {
+    document.querySelectorAll(".ui").forEach(function (n) { n.inert = true; });
+  }
+  requestAnimationFrame(function () { requestAnimationFrame(sealPreviews); });
 
   /* ---------- app theme toggle (examples only; the site keeps one look) ---------- */
   function setTheme(th, save) {
