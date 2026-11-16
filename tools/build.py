@@ -58,6 +58,15 @@ def tokens_css():
         out.append('[data-theme="%s"] {\n%s\n}' % (x, '\n'.join(b)))
     root = ['  --%s: %s;' % (c['name'], c['value']) for fam in ('spacing', 'radius', 'size', 'duration', 'easing') for c in t[fam]['tokens']]
     root += ['  --font-%s: %s;' % (k, s) for k, s in t['type']['families'].items()]
+    # the ramp as variables as well as classes, so component CSS can reference a step
+    # without taking the whole class on the element
+    for g in t['type']['groups']:
+        for st in g['styles']:
+            root += ['  --text-%s-size: %s;' % (st['name'], st['fontSize']),
+                     '  --text-%s-line: %s;' % (st['name'], st['lineHeight']),
+                     '  --text-%s-weight: %s;' % (st['name'], st['fontWeight'])]
+            if 'letterSpacing' in st:
+                root.append('  --text-%s-track: %s;' % (st['name'], st['letterSpacing']))
     out.append(':root {\n%s\n}' % '\n'.join(root))
     for g in t['type']['groups']:
         for s in g['styles']:
@@ -70,7 +79,8 @@ def tokens_css():
 # ---------- iOS tokens ----------
 # How each text style scales with Dynamic Type. This is an iOS mapping, not a design token,
 # so it lives here; every style must be listed, or the build stops rather than guessing .body.
-RELATIVE_TO = {'amount': 'largeTitle', 'large-title': 'largeTitle', 'title1': 'title', 'title2': 'title2',
+RELATIVE_TO = {'amount': 'largeTitle', 'large-title': 'largeTitle', 'popup-title': 'largeTitle',
+               'button-large': 'title2', 'popup-body': 'body', 'title1': 'title', 'title2': 'title2',
                'title3': 'title3', 'headline': 'headline', 'body': 'body', 'callout': 'callout',
                'subheadline': 'subheadline', 'footnote': 'footnote', 'caption': 'caption', 'tab-label': 'caption2'}
 WEIGHTS = {800: 'heavy', 700: 'bold', 600: 'semibold', 500: 'medium', 400: 'regular'}

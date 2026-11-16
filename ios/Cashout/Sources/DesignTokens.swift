@@ -62,7 +62,7 @@ extension ShapeStyle where Self == LinearGradient {
 // MARK: Type — Plus Jakarta Sans for UI, Nunito ExtraBold for titles, scaled like the system text styles
 enum DSTextStyle {
 /* @gen type-cases */
-    case amount, largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel
+    case amount, largeTitle, popupTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption, tabLabel, buttonLarge, popupBody
 /* @end type-cases */
 
     var spec: (size: CGFloat, weight: Font.Weight, relativeTo: Font.TextStyle) {
@@ -70,6 +70,7 @@ enum DSTextStyle {
 /* @gen type-spec */
         case .amount:      (54, .heavy, .largeTitle)
         case .largeTitle:  (34, .heavy, .largeTitle)
+        case .popupTitle:  (37, .heavy, .largeTitle)
         case .title1:      (28, .heavy, .title)
         case .title2:      (22, .heavy, .title2)
         case .title3:      (20, .heavy, .title3)
@@ -80,6 +81,8 @@ enum DSTextStyle {
         case .footnote:    (13, .medium, .footnote)
         case .caption:     (12, .semibold, .caption)
         case .tabLabel:    (10, .semibold, .caption2)
+        case .buttonLarge: (22, .bold, .title2)
+        case .popupBody:   (19, .medium, .body)
 /* @end type-spec */
         }
     }
@@ -88,8 +91,8 @@ enum DSTextStyle {
     var family: String {
         switch self {
 /* @gen type-family */
-        case .largeTitle, .title1, .title2, .title3: "Nunito-ExtraBold"
-        case .amount, .headline, .body, .callout, .subheadline, .footnote, .caption, .tabLabel: "PlusJakartaSans"
+        case .largeTitle, .popupTitle, .title1, .title2, .title3: "Nunito-ExtraBold"
+        case .amount, .headline, .body, .callout, .subheadline, .footnote, .caption, .tabLabel, .buttonLarge, .popupBody: "PlusJakartaSans"
 /* @end type-family */
         }
     }
@@ -106,7 +109,7 @@ extension Font {
 /* @gen metrics */
 enum Space { static let s1: CGFloat = 4, s2: CGFloat = 8, s3: CGFloat = 12, s4: CGFloat = 16, s5: CGFloat = 20, s6: CGFloat = 24, s8: CGFloat = 32, s10: CGFloat = 40 }
 enum Radius { static let sm: CGFloat = 8, md: CGFloat = 12, lg: CGFloat = 16, xl: CGFloat = 24, pill: CGFloat = 999 }
-enum Size { static let controlHeight: CGFloat = 66, hitTarget: CGFloat = 44, pillHeight: CGFloat = 32, iconTile: CGFloat = 40, tabBarHeight: CGFloat = 49 }
+enum Size { static let controlHeight: CGFloat = 62, hitTarget: CGFloat = 44, pillHeight: CGFloat = 32, iconTile: CGFloat = 40, tabBarHeight: CGFloat = 49 }
 /* @end metrics */
 
 // MARK: Motion — the same durations and curves the prototypes run on
