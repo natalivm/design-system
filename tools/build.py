@@ -12,6 +12,7 @@ tools/src/components.css             ->   design-system/components/onboarding.{j
 tools/src/proto.html                 ->   prototype/cashout-prototype.html
 tools/src/onboarding.html            ->   prototype/onboarding-prototype.html
 tools/src/boost.html                 ->   prototype/boost-prototype.html
+tools/src/survey.html                ->   prototype/survey-prototype.html
 tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.css also by components.css)
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
@@ -26,7 +27,7 @@ def write(p, s): open(p, 'w', encoding='utf-8').write(s)
 MIME = {'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'svg': 'image/svg+xml', 'webp': 'image/webp'}
 GENERATED = ['design-system/tokens.css', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
              'design-system/components/onboarding.css', 'prototype/cashout-prototype.html', 'prototype/onboarding-prototype.html',
-             'prototype/boost-prototype.html', 'design-system/components/SwiftTokens/preview.html',
+             'prototype/boost-prototype.html', 'prototype/survey-prototype.html', 'design-system/components/SwiftTokens/preview.html',
              'design-system/components/Typography/preview.html', 'website/index.html']
 
 
@@ -131,6 +132,8 @@ def assets_map(folder):
                        'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg', 'handshake': 'handshake.png'},
         'boost': {'banner': 'banner.jpg', 'body': 'body.jpg', 'tabbar': 'tabbar.jpg', 'logo': 'logo.png', 'topcoins': 'topcoins.png',
                   'pile': 'pile.png', 'coin': 'coin.svg', 'clock': 'clock.svg'},
+        'survey': {'home_top': 'home-top.jpg', 'home_body': 'home-body.jpg', 'tabbar': 'tabbar.jpg', 'fox': 'fox.png',
+                   'head': 'head.png', 'body_pattern': 'body-pattern.png', 'coin': 'coin.svg'},
     }[folder]
 
 
@@ -139,6 +142,7 @@ def prototypes():
     prototype('proto.html', 'cashout-prototype.html', 'prototype', {'star': os.path.join(icons, 'coin.svg'), 'tip': os.path.join(icons, 'tip96.png')})
     prototype('onboarding.html', 'onboarding-prototype.html', 'onboarding')
     prototype('boost.html', 'boost-prototype.html', 'boost')
+    prototype('survey.html', 'survey-prototype.html', 'survey')
 
 
 # ---------- previews ----------
@@ -200,7 +204,8 @@ def site():
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(os.path.join(out, 'prototype'))
     shutil.copyfile(P('website', 'index.html'), os.path.join(out, 'index.html'))
-    for src, name in (('cashout-prototype.html', 'index.html'), ('onboarding-prototype.html', 'onboarding.html'), ('boost-prototype.html', 'boost.html')):
+    for src, name in (('cashout-prototype.html', 'index.html'), ('onboarding-prototype.html', 'onboarding.html'),
+                      ('boost-prototype.html', 'boost.html'), ('survey-prototype.html', 'survey.html')):
         body = read(P('prototype', src))
         if not body.lstrip().lower().startswith('<!doctype'):
             body = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
@@ -220,4 +225,4 @@ if __name__ == '__main__':
         r = subprocess.run(['git', 'status', '--porcelain', '--'] + GENERATED, cwd=ROOT, capture_output=True, text=True)
         if r.stdout.strip():
             sys.exit('Generated files are out of date. Run `python3 tools/build.py` and commit the result:\n' + r.stdout)
-    print('built: tokens.css, components, 3 prototypes, previews, website/index.html' + (', dist/' if '--site' in args else ''))
+    print('built: tokens.css, components, 4 prototypes, previews, website/index.html' + (', dist/' if '--site' in args else ''))

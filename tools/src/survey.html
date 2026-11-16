@@ -1,0 +1,319 @@
+<title>Quick Survey Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>{{tokens_css}}</style>
+<style>
+/* Layout: a phone running the Quick Survey flow, with a scenario panel beside it.
+   Built from the Figma page "Survey System" (SURVEY FLOW): the home entry card, two questions,
+   the collect step and the multiple-answer variation. */
+:root {
+  --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2);
+  /* survey palette, measured from the Figma frames; these are not design tokens yet */
+  --sv-ink: #11478d;            /* question, labels and the footer's first line */
+  --sv-sub: #5c80b1;            /* the footer's small print */
+  --sv-answer: #d0e1f4;         /* an answer waiting to be picked */
+  --sv-go: #73c025;             /* Next and Collect */
+  --sv-track: #022c7f;          /* the unfilled part of the progress bar */
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+button { font-family: var(--font); }
+.page { min-height: 100%; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; align-items: flex-start;
+  padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* panel */
+.panel { width: 320px; max-width: 100%; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); overflow: hidden; }
+.panel .group { display: flex; flex-direction: column; }
+.panel .group:first-child { padding: 22px 22px 20px; }
+.panel h1 { margin: 0; font-size: 20px; line-height: 26px; font-weight: 700; letter-spacing: -.2px; }
+.panel h1::before { content: "Prototype"; display: block; margin-bottom: 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.panel .label { padding: 0 22px 8px; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.chips { counter-reset: sc; border-top: 1px solid var(--line); }
+.chip { counter-increment: sc; display: flex; align-items: center; gap: 14px; width: 100%; min-height: 46px; padding: 0 22px; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--muted); font: 500 15px/20px var(--font); text-align: left; cursor: pointer; transition: color .15s, background .15s; }
+.chip::before { content: counter(sc, decimal-leading-zero); font: 500 11px/14px var(--mono); letter-spacing: .08em; color: #5b6676; }
+.chip::after { content: ""; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: #0bdd66; opacity: 0; transform: scale(.4); transition: opacity .2s, transform .2s; }
+.chip:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.chip[aria-pressed="true"] { background: rgba(255,255,255,.05); color: #fff; font-weight: 600; }
+.chip[aria-pressed="true"]::after { opacity: 1; transform: none; }
+.chip:focus-visible, .playbtn:focus-visible, .reset:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.transport { margin: 20px 22px 0; padding: 4px; gap: 4px; display: grid; grid-template-columns: 1fr 1fr; border-radius: 999px; background: rgba(0,0,0,.2); border: 1px solid var(--line); }
+.playbtn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 0 12px; border: 0; border-radius: 999px; background: none; color: var(--muted); font: 600 16px/20px var(--font); cursor: pointer; transition: background .18s, color .18s; }
+.playbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.playbtn:hover { color: var(--text); }
+.playbtn[aria-pressed="true"] { background: #fff; color: #05493a; }
+.reset { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin: 8px 22px 14px; border: 0; background: none; cursor: pointer; font: 500 11px/14px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
+.reset::before { content: "\21BA"; font: 400 15px/1 var(--font); }
+.reset:hover { color: #fff; }
+
+/* device */
+.device-wrap { flex: none; }
+.device { position: relative; width: 417px; height: 876px; border-radius: 64px; background: #0c0d10; padding: 12px; box-sizing: border-box; box-shadow: 0 0 0 2px #2a2c31, 0 30px 80px rgba(0,0,0,.6), 0 0 120px rgba(20,100,255,.14); transform-origin: top left; }
+.screen { position: relative; width: 393px; height: 852px; border-radius: 52px; overflow: hidden; background: var(--blue-500); isolation: isolate; color: var(--ink); }
+.island { position: absolute; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; z-index: 90; }
+.home-indicator { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #000; z-index: 95; pointer-events: none; }
+
+/* home: the art either side of the coin strip, which is live so coins can land in it */
+.home { position: absolute; inset: 0; overflow-y: auto; scrollbar-width: none; background: var(--blue-500); padding-bottom: 84px; }
+.home::-webkit-scrollbar { display: none; }
+.home img.art { display: block; width: 393px; height: auto; user-select: none; -webkit-user-drag: none; }
+.stripwrap { background: var(--blue-500); padding: 0 7px; }
+.strip { display: flex; align-items: center; gap: 7px; height: 79px; padding: 0 7px; box-sizing: border-box; border-radius: 17px; background: #f2f2f2; color: #141414; }
+.s-coins { flex: 1; min-width: 0; padding-left: 8px; }
+.s-coins b { display: flex; align-items: center; gap: 7px; font-size: 25px; line-height: 30px; font-weight: 800; letter-spacing: -.5px; font-variant-numeric: tabular-nums; }
+.s-coins b img { width: 25px; height: 25px; }
+.s-coins small { display: block; font-size: 15px; line-height: 20px; font-weight: 600; }
+.s-conv { flex: none; width: 68px; padding: 6px 0; border-radius: 15px; background: #e7e7e7; text-align: center; }
+.s-conv b { display: block; font-size: 17px; line-height: 22px; font-weight: 800; color: #0f8f3a; }
+.s-conv small { display: block; font-size: 12px; line-height: 16px; font-weight: 600; }
+.s-cash { flex: none; width: 128px; padding: 9px 0; border-radius: 15px; background: linear-gradient(90deg, #46e752, #90f63e); text-align: center; color: #10330f; }
+.s-cash b { display: block; font-size: 22px; line-height: 27px; font-weight: 800; }
+.s-cash small { display: block; font-size: 15px; line-height: 20px; font-weight: 700; }
+.bump { animation: bump .28s var(--bouncy); }
+@keyframes bump { 50% { transform: scale(1.3); } }
+/* the Quick Survey card sits in the home art; this is its hit area */
+.survey-hit { position: absolute; left: 7px; width: 379px; height: 110px; top: 539px; border: 0; border-radius: 16px; background: none; cursor: pointer; }
+.survey-hit:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.tabbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; background: #fff; }
+.tabbar img { display: block; width: 393px; }
+
+/* the survey sheet */
+.scrim { position: absolute; inset: 0; z-index: 60; background: rgba(8,12,24,.55); opacity: 0; pointer-events: none; transition: opacity .3s var(--smooth); }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { background-image: url({{body_pattern}}); background-position: center bottom; background-size: 100% auto; background-repeat: no-repeat; position: absolute; left: 21px; right: 21px; top: 112px; min-height: 702px; display: flex; flex-direction: column; border-radius: 26px; background: #fff; box-shadow: 0 24px 60px rgba(0,8,40,.45); transform: translateY(26px) scale(.96); opacity: 0; transition: transform .38s var(--bouncy), opacity .26s var(--smooth); }
+.scrim.on .sheet { transform: none; opacity: 1; }
+.sv-head { position: relative; height: 91px; border-radius: 26px 26px 0 0; background: var(--blue-500) url({{head}}) center/cover; }
+.sv-fox { position: absolute; left: -9px; top: -61px; width: 206px; height: auto; z-index: 2; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.sv-title { position: absolute; right: 20px; bottom: 11px; font-size: 20px; line-height: 24px; font-weight: 800; font-style: italic; color: #fff; letter-spacing: .2px; }
+.sv-x { position: absolute; right: 16px; top: 15px; width: 26px; height: 26px; display: grid; place-items: center; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.sv-x svg { width: 22px; height: 22px; stroke: #fff; stroke-width: 3.4; stroke-linecap: round; }
+.sv-x:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.sv-prog { display: flex; align-items: center; gap: 10px; margin: 14px 16px 0; }
+.sv-prog b { font-size: 13px; line-height: 17px; font-weight: 800; color: var(--sv-ink); white-space: nowrap; }
+.sv-bar { flex: 1; height: 9px; border-radius: 999px; background: var(--sv-track); overflow: hidden; }
+.sv-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #1265ff, #24aaff); transition: width .45s var(--snappy); }
+.sv-q { margin: 26px 16px 0; font-size: 24px; line-height: 29px; font-weight: 700; color: var(--sv-ink); text-align: center; text-wrap: balance; }
+.sv-answers { display: flex; flex-direction: column; gap: 15px; margin: 22px 16px 0; }
+.sv-a { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 59px; padding: 8px 16px; border: 0; border-radius: 18px; background: var(--sv-answer); color: var(--sv-ink); font-size: 19px; line-height: 24px; font-weight: 600; text-align: center; cursor: pointer; transition: background .2s var(--smooth), color .2s var(--smooth), transform .2s var(--bouncy); }
+.sv-a:hover { transform: translateY(-1px); }
+.sv-a[aria-pressed="true"] { background: var(--blue-500); color: #fff; }
+.sv-a:focus-visible { outline: 3px solid var(--sv-ink); outline-offset: 2px; }
+/* the multiple-answer variation keeps a check in front of every row */
+.sv-answers[data-multi] .sv-a { justify-content: flex-start; min-height: 55px; font-size: 17px; line-height: 22px; text-align: left; }
+.sv-ck { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--sv-ink); transition: background .2s; }
+.sv-ck svg { width: 15px; height: 15px; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0; transition: opacity .18s; }
+.sv-a[aria-pressed="true"] .sv-ck { background: #fff; }
+.sv-a[aria-pressed="true"] .sv-ck svg { stroke: var(--blue-500); opacity: 1; }
+.sv-go { margin: auto 16px 0; min-height: 61px; display: flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 999px; background: var(--sv-go); color: #fff; font-size: 19px; line-height: 24px; font-weight: 700; cursor: pointer; transition: opacity .25s, transform .25s var(--bouncy); }
+.sv-go img { width: 23px; height: 23px; }
+.sv-go[hidden] { display: none; }
+.sv-go:active { transform: scale(.98); }
+.sv-go:focus-visible { outline: 3px solid var(--sv-ink); outline-offset: 2px; }
+.sv-foot { margin: 11px 14px 15px; text-align: center; }
+.sv-foot b { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 15px; line-height: 20px; font-weight: 700; color: var(--sv-ink); }
+.sv-foot b img { width: 15px; height: 15px; }
+.sv-foot span { display: block; font-size: 14px; line-height: 19px; color: var(--sv-sub); }
+
+/* flying coins, the tap marker and the toast: the same kit the other prototypes use */
+.fly { position: absolute; width: 30px; height: 30px; z-index: 80; pointer-events: none; }
+.toast { position: absolute; left: 50%; bottom: 104px; z-index: 97; transform: translate(-50%, 10px); max-width: 300px; padding: 11px 16px; border-radius: 14px; background: rgba(10,14,30,.9); color: #fff; font-size: 14px; line-height: 19px; font-weight: 600; text-align: center; opacity: 0; transition: opacity .25s, transform .25s var(--snappy); pointer-events: none; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.tap { position: absolute; z-index: 99; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: rgba(255,255,255,.5); box-shadow: 0 0 0 2px rgba(255,255,255,.85) inset; opacity: 0; transform: scale(.8); transition: opacity .2s, transform .2s; pointer-events: none; }
+.tap.show { opacity: 1; transform: none; }
+.tap.down { transform: scale(.72); background: rgba(255,255,255,.8); }
+.ring { position: absolute; z-index: 98; border: 2px solid rgba(255,255,255,.9); border-radius: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; box-shadow: 0 0 0 4px rgba(20,100,255,.35); }
+.ring.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+
+<div class="page">
+  <div class="device-wrap" id="deviceWrap">
+    <div class="device" id="device">
+      <div class="screen" id="screen">
+        <div class="island" aria-hidden="true"></div>
+        <div class="home" id="home">
+          <img class="art" src="{{home_top}}" alt="">
+          <div class="stripwrap">
+            <div class="strip">
+              <div class="s-coins"><b><span id="coins">236,378</span><img id="coinTarget" src="{{coin}}" alt=""></b><small>Game coins</small></div>
+              <div class="s-conv"><b>3h 45m</b><small>Converts</small></div>
+              <div class="s-cash"><b>$99,99</b><small>Cash out</small></div>
+            </div>
+          </div>
+          <img class="art" src="{{home_body}}" alt="Daily bonus, games, the Quick Survey card and a rewarded video">
+          <button class="survey-hit" id="surveyCard" aria-label="Quick Survey. Answer some quick questions and earn 1,500 coins"></button>
+        </div>
+        <div class="tabbar" aria-hidden="true"><img src="{{tabbar}}" alt=""></div>
+
+        <div class="scrim" id="scrim">
+          <div class="sheet" id="sheet" role="dialog" aria-label="Quick Survey">
+            <div class="sv-head">
+              <img class="sv-fox" src="{{fox}}" alt="">
+              <span class="sv-title">QUICK SURVEY</span>
+              <button class="sv-x" id="close" aria-label="Close the survey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+            <div class="sv-prog"><b id="progLabel">1 of 2</b><div class="sv-bar"><i id="barFill" style="width:50%"></i></div></div>
+            <h2 class="sv-q" id="question">What is your age group?</h2>
+            <div class="sv-answers" id="answers"></div>
+            <button class="sv-go" id="go" hidden>Next</button>
+            <p class="sv-foot"><b id="footMain">Finish the survey to get 1,500 <img src="{{coin}}" alt="coins"></b><span>Data collected is used to improve our app.</span></p>
+          </div>
+        </div>
+
+        <div class="toast" id="toast" role="status"></div>
+        <div class="ring" id="ring" aria-hidden="true"></div>
+        <div class="tap" id="tap" aria-hidden="true"></div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div class="group">
+      <h1>Quick Survey</h1>
+    </div>
+    <div class="group">
+      <span class="label">Start from</span>
+      <div class="chips" id="scenarios">
+        <button class="chip" data-s="home" aria-pressed="true">The home card</button>
+        <button class="chip" data-s="open" aria-pressed="false">Survey open</button>
+        <button class="chip" data-s="multi" aria-pressed="false">Check all that apply</button>
+        <button class="chip" data-s="done" aria-pressed="false">Already collected</button>
+      </div>
+    </div>
+    <div class="transport">
+      <button class="playbtn" id="playBtn" aria-label="Play" aria-pressed="false"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.6v10.8a.7.7 0 0 0 1.06.6l9-5.4a.7.7 0 0 0 0-1.2l-9-5.4A.7.7 0 0 0 3 1.6z"/></svg>Play</button>
+      <button class="playbtn" id="pauseBtn" aria-label="Pause" aria-pressed="true"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1.5" width="3.6" height="11" rx="1"/><rect x="8.4" y="1.5" width="3.6" height="11" rx="1"/></svg>Pause</button>
+    </div>
+    <button class="reset" id="reset">Reset</button>
+  </aside>
+</div>
+
+<script>{{kit_js}}</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var sleep = KIT.sleep, nf = new Intl.NumberFormat("en-US");
+  var REWARD = 1500, START_COINS = 236378;
+
+  /* The two questions, and the variation that takes more than one answer. */
+  var PAIR = [
+    { q: "What is your age group?", a: ["18 - 24", "25 - 39", "40 +"] },
+    { q: "Which of these 3 you\u2019d likely play?", a: ["Word Puzzle", "Solitaire", "Tetris Blocks"] }
+  ];
+  var MULTI = { q: "Check multiple answers that applies to you:", multi: true,
+                a: ["I play for fun", "I play to earn money", "I love your selection of games", "Mainly my kids use your app", "I love mature art"] };
+
+  var S, tickT;
+  function fresh(scn) {
+    return { scn: scn, open: scn !== "home" && scn !== "done", step: 0, picked: [[], []], coins: scn === "done" ? START_COINS + REWARD : START_COINS,
+             collected: scn === "done", busy: false };
+  }
+  function qs() { return S.scn === "multi" ? [PAIR[0], MULTI] : PAIR; }
+  function here() { return qs()[S.step]; }
+
+  /* ---------- render ---------- */
+  function render() {
+    var q = here(), picks = S.picked[S.step];
+    $("progLabel").textContent = (S.step + 1) + " of 2";
+    $("barFill").style.width = ((S.step + 1) / 2 * 100) + "%";
+    $("question").textContent = q.q;
+    var box = $("answers");
+    box.innerHTML = "";
+    if (q.multi) box.setAttribute("data-multi", ""); else box.removeAttribute("data-multi");
+    q.a.forEach(function (label, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "sv-a"; b.id = "a" + i;
+      b.setAttribute("aria-pressed", picks.indexOf(i) > -1 ? "true" : "false");
+      if (q.multi) b.innerHTML = '<span class="sv-ck"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4.5 4.5L19 7.5"/></svg></span>';
+      b.appendChild(document.createTextNode(label));
+      b.onclick = function () { pick(i); };
+      box.appendChild(b);
+    });
+    var last = S.step === 1, go = $("go");
+    go.hidden = picks.length === 0;
+    go.innerHTML = "";
+    if (last) {
+      go.appendChild(document.createTextNode("Collect " + nf.format(REWARD) + " "));
+      var img = document.createElement("img"); img.src = $("coinTarget").src; img.alt = ""; go.appendChild(img);
+      go.setAttribute("aria-label", "Collect " + nf.format(REWARD) + " coins");
+    } else { go.textContent = "Next"; go.removeAttribute("aria-label"); }
+    $("footMain").firstChild.nodeValue = S.collected ? "A fresh question is waiting next cycle. " : "Finish the survey to get " + nf.format(REWARD) + " ";
+    $("footMain").querySelector("img").hidden = S.collected;
+    $("coins").textContent = nf.format(S.coins);
+    $("scrim").classList.toggle("on", S.open);
+  }
+  function pick(i) {
+    var q = here(), picks = S.picked[S.step];
+    if (q.multi) { var at = picks.indexOf(i); if (at > -1) picks.splice(at, 1); else picks.push(i); }
+    else S.picked[S.step] = [i];
+    render();
+  }
+
+  /* ---------- flow ---------- */
+  function openSheet() { if (S.open) return; S.open = true; render(); }
+  function closeSheet() { S.open = false; render(); }
+  function toast(text) {
+    var t = $("toast"); t.textContent = text; t.classList.add("on");
+    clearTimeout(tickT); tickT = setTimeout(function () { t.classList.remove("on"); }, 2400);
+  }
+  function onGo() {
+    if (S.busy || S.picked[S.step].length === 0) return;
+    if (S.step === 0) { S.step = 1; render(); return; }
+    collect();
+  }
+  // The last answer pays out: the coins fly from the button into the balance, then the sheet closes.
+  function collect() {
+    S.busy = true; var sc = S;
+    S.collected = true; render();
+    KIT.flyCoins($("go"), $("coinTarget"), 14, $("coinTarget").src).then(function () {
+      if (S !== sc) return;
+      KIT.countTo($("coins"), S.coins, S.coins + REWARD, 700, function (v) { return nf.format(Math.round(v)); }, function () { return S === sc; });
+      S.coins += REWARD;
+      return sleep(650);
+    }).then(function () {
+      if (S !== sc) return;
+      closeSheet(); toast("1,500 coins added. A fresh question is waiting next cycle.");
+      S.busy = false;
+    });
+  }
+
+  /* ---------- scenarios, autoplay, reset ---------- */
+  function start(scn) {
+    KIT.stopPlay(); KIT.clearCoins(); clearTimeout(tickT); $("toast").classList.remove("on");
+    S = fresh(scn); $("home").scrollTop = scn === "home" ? 0 : 230;
+    render();
+  }
+  function current() { return $("scenarios").querySelector('[aria-pressed="true"]').getAttribute("data-s"); }
+  Array.prototype.forEach.call($("scenarios").querySelectorAll(".chip"), function (c) {
+    c.onclick = function () {
+      Array.prototype.forEach.call($("scenarios").querySelectorAll(".chip"), function (o) { o.setAttribute("aria-pressed", String(o === c)); });
+      start(c.getAttribute("data-s"));
+    };
+  });
+  $("surveyCard").onclick = openSheet;
+  $("close").onclick = closeSheet;
+  $("go").onclick = onGo;
+
+  // Autoplay taps through whatever the current scenario left on screen.
+  function autoplay() {
+    start(current());
+    KIT.autoplay(function () {
+      if (S.busy) return null;
+      if (S.collected && !S.open) return "done";
+      if (!S.open) return $("surveyCard");
+      if (S.picked[S.step].length === 0) return $("a" + (S.step === 1 && S.scn === "multi" ? 1 : S.step));
+      if (S.scn === "multi" && S.step === 1 && S.picked[1].length < 2) return $("a2");
+      return $("go");
+    });
+  }
+  KIT.wire(autoplay, function () { start(current()); });
+  KIT.overlays(["scrim"], { noFocus: [] });
+  KIT.fit();
+  start("home");
+})();
+</script>
