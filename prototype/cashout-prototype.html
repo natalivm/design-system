@@ -6,6 +6,7 @@
   --blue-500: #1464ff;
   --on-accent: #ffffff;
   --green-700: #087a5a;
+  --green-800: #06684c;
   --green-500: #0c9971;
   --green-400: #49cc3d;
   --lime-400: #60e041;
@@ -38,7 +39,7 @@
   --scrim-strong: rgba(8,10,28,0.84);
   --chip-dark: rgba(0,0,0,0.55);
   --claim-fill: #77c926;
-  --claim-ink: #ffffff;
+  --claim-ink: #0b2a00;
   --overlay: #0a0c1e;
   --shadow-card: 0 4px 24px rgba(2,38,110,0.08);
 }
@@ -128,9 +129,11 @@
   --strip: #f2f2f2; --strip-ink: #171b20;
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --snappy: cubic-bezier(0.2, 0.9, 0.3, 1); --smooth: cubic-bezier(0.4, 0, 0.2, 1); --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Unconditional, like onboarding.html and boost.html. Framed in the website the body is transparent,
+     so the iframe's own canvas shows through: without this it paints white under a light OS and the
+     white panel text disappears. */
+  color-scheme: dark;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08); color-scheme: dark; } }
-:root[data-theme="dark"] { --page: #075c46; --panel: rgba(255,255,255,.055); --text: #ffffff; --muted: rgba(255,255,255,.78); --line: rgba(255,255,255,.2); --chip: rgba(255,255,255,.08); color-scheme: dark; }
 
 html, body { height: 100%; }
 body { background: var(--page); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
@@ -187,7 +190,7 @@ body { background: var(--page); color: var(--text); font-family: var(--font); -w
 .strip-conv img { position: absolute; top: 4px; width: 25px; }
 .strip-conv b { font-size: 15px; line-height: 18px; font-weight: 800; color: var(--green-700); margin-top: 7px; font-variant-numeric: tabular-nums; }
 .strip-conv span { font-size: 12px; line-height: 14px; letter-spacing: -.01em; font-weight: 700; }
-.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: #0bdd66; color: #fff; font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
+.strip-cash { flex: none; width: 140px; height: 56px; border: 0; border-radius: 16px; cursor: pointer; background: var(--mint-400); color: var(--claim-ink); font-family: var(--font); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 150ms var(--snappy), filter 150ms var(--snappy); }
 .strip-cash b { font-size: 20px; line-height: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .strip-cash span { font-size: 13px; line-height: 16px; font-weight: 600; }
 .strip-cash:active { transform: scale(0.97); filter: brightness(0.95); }

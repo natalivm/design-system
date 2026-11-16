@@ -1,0 +1,21 @@
+{
+  "detector": {
+    "ignoreRules": [
+      "ai-color-palette",
+      "text-occlusion",
+      "buried-raster",
+      "nested-cards",
+      "cramped-padding",
+      "undersized-ui-text"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-11-16T08:39:18.994Z",
+        "reason": "Brand typeface, set in Figma and documented in tokens.json type.families.sans"
+      }
+    ]
+  }
+}

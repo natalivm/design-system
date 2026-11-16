@@ -8,6 +8,7 @@ extension Color {
     static let blue500        = Color("blue-500")
     static let onAccent       = Color("on-accent")
     static let green700       = Color("green-700")
+    static let green800       = Color("green-800")
     static let green500       = Color("green-500")
     static let green400       = Color("green-400")
     static let lime400        = Color("lime-400")
