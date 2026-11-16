@@ -16,7 +16,7 @@ tools/src/popup.css, tools/src/kit.js       are shared by the prototypes (popup.
 design-system/DesignTokens.swift     ->   SwiftTokens and Typography previews
 all of the above                     ->   the marked blocks in website/index.html
 """
-import base64, json, os, re, shutil, subprocess, sys
+import base64, hashlib, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def P(*a): return os.path.join(ROOT, *a)
@@ -24,7 +24,7 @@ def read(p): return open(p, encoding='utf-8').read()
 def write(p, s): open(p, 'w', encoding='utf-8').write(s)
 
 MIME = {'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'svg': 'image/svg+xml', 'webp': 'image/webp'}
-GENERATED = ['design-system/tokens.css', 'design-system/DesignTokens.swift', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
+GENERATED = ['design-system/tokens.css', 'design-system/DesignTokens.swift', 'ios/Cashout/Assets.xcassets', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
              'design-system/components/onboarding.css', 'prototype/cashout-prototype.html', 'prototype/onboarding-prototype.html',
              'prototype/boost-prototype.html', 'design-system/components/SwiftTokens/preview.html',
              'design-system/components/Typography/preview.html', 'website/index.html']
@@ -131,6 +131,95 @@ def design_tokens_swift():
     src = inline(src, 'motion', '\n'.join(curves), W)
 
     write(P('design-system', 'DesignTokens.swift'), src)
+
+
+# ---------- iOS asset catalog ----------
+# Every raster we own sits between 1.3x and 3x of the size it is drawn at, so each one goes in
+# the 2x slot: that is the closest honest declaration, and the views set explicit frames anyway.
+# tools/audit-assets.md records what each would need to be properly 3x.
+XCINFO = {'author': 'xcode', 'version': 1}
+
+
+def _rgba(v):
+    v = v.strip()
+    if v.startswith('#'):
+        h = v[1:]
+        if len(h) == 3:
+            h = ''.join(c * 2 for c in h)
+        return [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)] + [1.0]
+    m = re.match(r'rgba?\(([^)]+)\)', v)
+    assert m, 'colour the asset catalog cannot parse: %s' % v
+    parts = [x.strip() for x in m.group(1).split(',')]
+    return [int(parts[0]) / 255, int(parts[1]) / 255, int(parts[2]) / 255,
+            float(parts[3]) if len(parts) > 3 else 1.0]
+
+
+def _colorset(value, themes):
+    def entry(v, dark=False):
+        r, g, b, a = _rgba(v)
+        e = {'idiom': 'universal',
+             'color': {'color-space': 'srgb',
+                       'components': {k: '%.3f' % x for k, x in (('alpha', a), ('red', r), ('green', g), ('blue', b))}}}
+        if dark:
+            e['appearances'] = [{'appearance': 'luminosity', 'value': 'dark'}]
+        return e
+    light = value if isinstance(value, str) else value[themes[0]]
+    out = [entry(light)]
+    if not isinstance(value, str) and len(themes) > 1 and value.get(themes[1], light) != light:
+        out.append(entry(value[themes[1]], dark=True))
+    return {'colors': out, 'info': XCINFO}
+
+
+def ios_assets():
+    """design-system/tokens.json + tools/assets -> ios/Cashout/Assets.xcassets"""
+    t = json.load(open(P('design-system', 'tokens.json'), encoding='utf-8'))
+    themes = [x['id'] for x in t['color']['themes']]
+    root = P('ios', 'Cashout', 'Assets.xcassets')
+    if os.path.isdir(root):
+        shutil.rmtree(root)
+    for d in (root, os.path.join(root, 'Colors'), os.path.join(root, 'Images')):
+        os.makedirs(d)
+        write(os.path.join(d, 'Contents.json'), json.dumps({'info': XCINFO}, indent=2) + '\n')
+
+    for c in t['color']['tokens']:
+        d = os.path.join(root, 'Colors', c['name'] + '.colorset')
+        os.makedirs(d)
+        write(os.path.join(d, 'Contents.json'), json.dumps(_colorset(c['value'], themes), indent=2) + '\n')
+
+    # one imageset per distinct file; identical bytes in two prototype folders share a name
+    files, by_digest = [], {}
+    for folder in sorted(os.listdir(P('tools', 'assets'))):
+        fdir = P('tools', 'assets', folder)
+        if not os.path.isdir(fdir):
+            continue
+        for f in sorted(os.listdir(fdir)):
+            if os.path.splitext(f)[1].lower() not in ('.png', '.jpg', '.svg'):
+                continue
+            full = os.path.join(fdir, f)
+            digest = hashlib.sha256(open(full, 'rb').read()).hexdigest()
+            if digest in by_digest:
+                continue
+            by_digest[digest] = full
+            files.append((folder, f, full))
+
+    stems = [os.path.splitext(f)[0] for _, f, _ in files]
+    images = []
+    for folder, f, full in files:
+        stem, ext = os.path.splitext(f)
+        name = stem if stems.count(stem) == 1 else '%s-%s' % (folder, stem)
+        d = os.path.join(root, 'Images', name + '.imageset')
+        os.makedirs(d)
+        shutil.copyfile(full, os.path.join(d, f))
+        if ext.lower() == '.svg':
+            body = {'images': [{'idiom': 'universal', 'filename': f}], 'info': XCINFO,
+                    'properties': {'preserves-vector-representation': True}}
+        else:
+            body = {'images': [{'idiom': 'universal', 'scale': '1x'},
+                               {'idiom': 'universal', 'filename': f, 'scale': '2x'},
+                               {'idiom': 'universal', 'scale': '3x'}], 'info': XCINFO}
+        write(os.path.join(d, 'Contents.json'), json.dumps(body, indent=2) + '\n')
+        images.append(name)
+    return images
 
 
 # ---------- components ----------
@@ -277,7 +366,7 @@ def site():
 
 
 def build_all(with_site=False):
-    tokens_css(); design_tokens_swift(); bundle_js(); components(); prototypes(); previews(); home_page()
+    tokens_css(); design_tokens_swift(); ios_assets(); bundle_js(); components(); prototypes(); previews(); home_page()
     if with_site: site()
 
 
