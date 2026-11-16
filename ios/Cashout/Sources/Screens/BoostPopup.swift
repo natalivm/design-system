@@ -201,7 +201,7 @@ struct BoostPopup: View {
                 Text("+10,000")
                     .font(.ds(.amount))
                     .monospacedDigit()
-                    .foregroundStyle(Color.violet400)
+                    .foregroundStyle(Color.violet600)
             }
             .foregroundStyle(Color.ink)
             .padding(.horizontal, 20)

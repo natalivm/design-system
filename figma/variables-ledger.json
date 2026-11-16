@@ -109,6 +109,7 @@
     "adTag": "the chip is 32x22 and every one of its five instances now follows the label instead of leading it",
     "timePill": "both variants lost the clock icon: Kind=Clock is 32pt at 18/24, Kind=Span is 22pt at 12/16 reading \"Ends in 23:14:00\"",
     "boostPopup": "one 184pt header on all four states, the clock pinned 230 from the card top on Offer and Active, and the earned block bottom-aligned on Progress and Time over so both amounts sit 20 from the card bottom",
-    "corrections": "the coin piles were not at 300 as the first run recorded: BoostPopup held 176 and RewardCard 260. Both are 300 now, rescaled so the art grows with the frame rather than sitting small inside it."
+    "corrections": "the coin piles were not at 300 as the first run recorded: BoostPopup held 176 and RewardCard 260. Both are 300 now, rescaled so the art grows with the frame rather than sitting small inside it.",
+    "amountColour": "The earned amount on Progress and Time over is bound to brand/violet-600, not violet-400: violet-400 is the Active card’s own fill, and on white it reads 3.4:1 against violet-600’s 5.3:1. The canvas had shown violet-600 all along; the code and the Swift now agree with it."
   }
 }
