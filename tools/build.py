@@ -24,7 +24,7 @@ def read(p): return open(p, encoding='utf-8').read()
 def write(p, s): open(p, 'w', encoding='utf-8').write(s)
 
 MIME = {'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'svg': 'image/svg+xml', 'webp': 'image/webp'}
-GENERATED = ['design-system/tokens.css', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
+GENERATED = ['design-system/tokens.css', 'design-system/DesignTokens.swift', 'design-system/components/bundle.js', 'design-system/components/onboarding.js',
              'design-system/components/onboarding.css', 'prototype/cashout-prototype.html', 'prototype/onboarding-prototype.html',
              'prototype/boost-prototype.html', 'design-system/components/SwiftTokens/preview.html',
              'design-system/components/Typography/preview.html', 'website/index.html']
@@ -64,6 +64,73 @@ def tokens_css():
             out.append('.%s { font-family: var(--font-%s); font-size: %s; line-height: %s; font-weight: %s;%s }'
                        % (s['name'], s.get('family', g['family']), s['fontSize'], s['lineHeight'], s['fontWeight'], ls))
     write(P('design-system', 'tokens.css'), '\n'.join(out) + '\n')
+
+
+# ---------- iOS tokens ----------
+# How each text style scales with Dynamic Type. This is an iOS mapping, not a design token,
+# so it lives here; every style must be listed, or the build stops rather than guessing .body.
+RELATIVE_TO = {'amount': 'largeTitle', 'large-title': 'largeTitle', 'title1': 'title', 'title2': 'title2',
+               'title3': 'title3', 'headline': 'headline', 'body': 'body', 'callout': 'callout',
+               'subheadline': 'subheadline', 'footnote': 'footnote', 'caption': 'caption', 'tab-label': 'caption2'}
+WEIGHTS = {800: 'heavy', 700: 'bold', 600: 'semibold', 500: 'medium', 400: 'regular'}
+
+
+def camel(name, strip=''):
+    if strip and name.startswith(strip):
+        name = name[len(strip):]
+    head, *rest = name.split('-')
+    return head + ''.join(w[:1].upper() + w[1:] for w in rest)
+
+
+def pt(v):
+    n = float(str(v).replace('px', ''))
+    return str(int(n)) if n == int(n) else str(n)
+
+
+def design_tokens_swift():
+    t = json.load(open(P('design-system', 'tokens.json'), encoding='utf-8'))
+    src = read(P('tools', 'src', 'DesignTokens.swift'))
+    W = 'design-system/DesignTokens.swift'
+
+    pad = max(len(camel(c['name'])) for c in t['color']['tokens'])
+    colors = ['    static let %-*s = Color("%s")' % (pad, camel(c['name']), c['name']) for c in t['color']['tokens']]
+    src = inline(src, 'colors', '\n'.join(colors), W)
+
+    styles = [(s, g) for g in t['type']['groups'] for s in g['styles']]
+    missing = [s['name'] for s, _ in styles if s['name'] not in RELATIVE_TO]
+    assert not missing, 'tokens.json adds text styles with no Dynamic Type mapping in RELATIVE_TO: %s' % missing
+    src = inline(src, 'type-cases', '    case ' + ', '.join(camel(s['name']) for s, _ in styles), W)
+
+    spad = max(len(camel(s['name'])) for s, _ in styles)
+    spec = ['        case .%-*s (%s, .%s, .%s)' % (spad + 1, camel(s['name']) + ':', pt(s['fontSize']),
+                                                   WEIGHTS[s['fontWeight']], RELATIVE_TO[s['name']]) for s, _ in styles]
+    src = inline(src, 'type-spec', '\n'.join(spec), W)
+
+    display = [camel(s['name']) for s, g in styles if s.get('family', g['family']) == 'display']
+    sans = [camel(s['name']) for s, g in styles if s.get('family', g['family']) != 'display']
+    src = inline(src, 'type-family', '        case %s: "Nunito-ExtraBold"\n        case %s: "PlusJakartaSans"'
+                 % (', '.join('.' + n for n in display), ', '.join('.' + n for n in sans)), W)
+
+    def group(enum, fam, strip, rename=None):
+        items = [((rename or camel)(c['name'], strip) if rename else camel(c['name'], strip), pt(c['value']))
+                 for c in t[fam]['tokens']]
+        return 'enum %s { static let %s }' % (enum, ', '.join('%s: CGFloat = %s' % (n, v) for n, v in items))
+    metrics = [group('Space', 'spacing', 'space-', lambda n, s: 's' + n[len(s):]),
+               group('Radius', 'radius', 'radius-'), group('Size', 'size', '')]
+    src = inline(src, 'metrics', '\n'.join(metrics), W)
+
+    durs = ['%s: Double = %s' % (camel(c['name'], 'duration-'), float(c['value'].replace('ms', '')) / 1000)
+            for c in t['duration']['tokens']]
+    curves = ['enum Duration { static let %s }' % ', '.join(durs), '', 'enum Curve {']
+    for c in t['easing']['tokens']:
+        pts = c['value'][c['value'].index('(') + 1:c['value'].rindex(')')]
+        curves.append('    /// %s' % c['usage'].strip())
+        curves.append('    static func %s(_ d: Double = Duration.base) -> Animation { .timingCurve(%s, duration: d) }'
+                      % (camel(c['name'], 'easing-'), ', '.join(x.strip() for x in pts.split(','))))
+    curves.append('}')
+    src = inline(src, 'motion', '\n'.join(curves), W)
+
+    write(P('design-system', 'DesignTokens.swift'), src)
 
 
 # ---------- components ----------
@@ -172,12 +239,12 @@ def previews():
 
 
 # ---------- home page ----------
-def inline(page, name, text):
+def inline(page, name, text, where='website/index.html'):
     """Replace what sits between /* @gen name */ and /* @end name */ (each exactly once, in that order)."""
     start, end = '/* @gen %s */\n' % name, '/* @end %s */' % name
-    assert page.count(start) == 1 and page.count(end) == 1, 'website/index.html: markers for %s must appear once each' % name
+    assert page.count(start) == 1 and page.count(end) == 1, '%s: markers for %s must appear once each' % (where, name)
     a, b = page.index(start) + len(start), page.index(end)
-    assert a <= b, 'website/index.html: markers for %s are out of order' % name
+    assert a <= b, '%s: markers for %s are out of order' % (where, name)
     return page[:a] + text.rstrip('\n') + '\n' + page[b:]
 
 
@@ -210,7 +277,7 @@ def site():
 
 
 def build_all(with_site=False):
-    tokens_css(); bundle_js(); components(); prototypes(); previews(); home_page()
+    tokens_css(); design_tokens_swift(); bundle_js(); components(); prototypes(); previews(); home_page()
     if with_site: site()
 
 
