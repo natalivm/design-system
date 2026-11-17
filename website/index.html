@@ -408,136 +408,71 @@ main { min-width: 0; padding-top: 56px; }
 .strip-head h2 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
-/* newly added: its own blue band, each card carrying the context behind the component */
-#newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+/* newly added: its own blue band. One column per feature, one line per change, so five features
+   that all moved in the same two days still fit in one look. */
+#newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
+#newly .strip-head, #soon .strip-head { margin-bottom: 20px; }
 #newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
-#newly .strip-note { color: rgba(255,255,255,.62); }
-.new-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(352px, 1fr)); gap: 18px; }
-.new-card { display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.05); padding: 26px 26px 18px; transition: transform .35s cubic-bezier(.2,.8,.3,1), background .35s; }
-.new-card:hover { transform: translateY(-5px); background: rgba(255,255,255,.1); }
-.nc-text { display: grid; justify-items: start; gap: 12px; }
-.new-card h3 { display: flex; align-items: baseline; gap: 10px; margin: 0; font: 600 19px/1.2 var(--f-display); letter-spacing: -.02em; }
-.new-card h3::before { content: ""; flex: none; width: 6px; height: 6px; border: 1px solid var(--site-fg); transform: translateY(-3px); }
-/* :not(.mock *) keeps the dark-card text colour out of the light app mocks nested inside these
-   cards. Without it .new-card p (0,1,1) beat .mr-sub (0,1,0) and painted the referral card's
-   subtitle white on white. */
-.new-card p:not(.mock p) { margin: 0; font-size: 14.5px; line-height: 1.46; color: rgba(255,255,255,.82); max-width: 46ch; }
-.nc-pill { font: 400 12px/1 var(--f-mono); color: var(--site-fg); background: var(--nb-deep); border-radius: 999px; padding: 10px 15px; }
-.new-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 148px; padding: 8px 0 4px; }
-.nc-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); font: 400 11px/1.4 var(--f-mono); color: rgba(255,255,255,.6); }
-.new-tag { font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 5px 9px; }
-.new-tag.is-today { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
+#newly .strip-note { color: rgba(255,255,255,.72); }
 
-/* the mock components themselves, drawn with the app tokens so the theme switch still works */
-.mock { font-family: var(--f-display); color: var(--ink); background: var(--surface); border-radius: 20px; box-shadow: var(--site-shadow); width: 100%; box-sizing: border-box; }
-.mock b { display: block; font-size: 13.5px; line-height: 17px; font-weight: 700; }
-.mock i { display: block; font-style: normal; font-size: 11.5px; line-height: 15px; color: var(--ink-secondary); margin-top: 2px; }
-.mock-streak, .mock-toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px 12px 12px; border-radius: 999px; }
-.ms-flame { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: #fff3d6; font-size: 16px; }
-.mt-dot { flex: none; width: 10px; height: 10px; border-radius: 999px; background: var(--mint-400); box-shadow: 0 0 0 4px rgba(11,221,102,.18); }
-.mock-referral { padding: 14px; display: grid; gap: 8px; }
-.mr-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.mr-pill { font: 700 11.5px/1 var(--f-display); color: #7a5a00; background: var(--gold-400); border-radius: 999px; padding: 5px 9px; }
-.mr-sub { margin: 0; font-size: 11.5px; line-height: 15px; color: var(--ink-secondary); }
-.mr-btn { margin-top: 2px; text-align: center; font-size: 12.5px; font-weight: 700; color: var(--on-accent); background: var(--blue-500); border-radius: 999px; padding: 9px; }
-.mock-ring { display: flex; align-items: center; gap: 12px; padding: 14px; }
-.mg-ring { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: conic-gradient(var(--blue-500) 0 60%, var(--separator) 0); }
-.mg-ring span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 700; }
-.mg-ring i { display: inline; font-size: 10px; color: var(--ink-secondary); margin: 0; }
-.mock-empty { display: grid; justify-items: center; gap: 2px; padding: 18px 14px; text-align: center; }
-.me-art { display: flex; align-items: flex-end; gap: 4px; height: 26px; margin-bottom: 8px; }
-.me-art span { width: 9px; border-radius: 3px; background: var(--separator); }
-.me-art span:nth-child(1) { height: 12px; } .me-art span:nth-child(2) { height: 20px; } .me-art span:nth-child(3) { height: 15px; }
-.mock-seg { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--surface-grouped); box-shadow: none; }
-.mock-seg span { flex: 1; text-align: center; font-size: 11.5px; font-weight: 600; color: var(--ink-secondary); border-radius: 999px; padding: 8px 6px; }
-.mock-seg span.is-on { color: var(--ink); }
+/* the feature columns, shared by both bands */
+.feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(236px, 1fr)); gap: 12px; align-items: start; }
+.feat { min-width: 0; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); padding: 14px 16px 4px; }
+.feat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-bottom: 11px; }
+.feat-head h3 { margin: 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
+.feat-count { flex: none; font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); }
+.feat-list { list-style: none; margin: 0; padding: 0; }
+.feat-list li { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; column-gap: 9px; row-gap: 2px; align-items: baseline; padding: 9px 0 10px; border-top: 1px solid rgba(255,255,255,.14); }
+.ch-kind { justify-self: start; font: 400 10px/1 var(--f-mono); color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 4px 6px; white-space: nowrap; }
+.ch-kind.is-new { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
+.ch-name { min-width: 0; font: 600 13.5px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.ch-when { font: 400 10.5px/1 var(--f-mono); color: rgba(255,255,255,.7); white-space: nowrap; }
+.ch-when.is-today { color: var(--site-fg); }
+.ch-note { grid-column: 2 / -1; font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,.78); }
 
+.new-grid.anim-ready .feat { opacity: 0; }
+.new-grid.in .feat { opacity: 1; animation: riseIn .5s cubic-bezier(.2,.9,.3,1) backwards; }
+.new-grid.in .feat:nth-child(2) { animation-delay: .05s; }
+.new-grid.in .feat:nth-child(3) { animation-delay: .1s; }
+.new-grid.in .feat:nth-child(4) { animation-delay: .15s; }
+.new-grid.in .feat:nth-child(n+5) { animation-delay: .2s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(14px); } }
 
-/* each preview plays back what the component does */
-@property --mg { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
-.new-grid.anim-ready .new-card { opacity: 0; }
-.new-grid.in .new-card { opacity: 1; animation: riseIn .6s cubic-bezier(.2,.9,.3,1) backwards; }
-.new-grid.in .new-card:nth-child(2) { animation-delay: .07s; }
-.new-grid.in .new-card:nth-child(3) { animation-delay: .14s; }
-.new-grid.in .new-card:nth-child(4) { animation-delay: .21s; }
-.new-grid.in .new-card:nth-child(5) { animation-delay: .28s; }
-.new-grid.in .new-card:nth-child(6) { animation-delay: .35s; }
-@keyframes riseIn { from { opacity: 0; transform: translateY(18px) scale(.97); } }
-
-.ms-flame { animation: flicker 2.6s ease-in-out infinite; }
-@keyframes flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 34% { transform: scale(1.13) rotate(-6deg); } 67% { transform: scale(.95) rotate(5deg); } }
-
-.mock-toast { animation: toastIn 5s ease-in-out infinite; }
-@keyframes toastIn { 0% { opacity: 0; translate: 0 -16px; } 9%, 84% { opacity: 1; translate: 0 0; } 94%, 100% { opacity: 0; translate: 0 -12px; } }
-/* No ping: this dot sits in a static toast specimen and is tied to nothing live, so the pulse was
-   decorative liveness. It stays as a plain status dot. */
-@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(11,221,102,.5); } 72% { box-shadow: 0 0 0 10px rgba(11,221,102,0); } 100% { box-shadow: 0 0 0 0 rgba(11,221,102,0); } }
-
-.mr-pill { animation: pillPop 4s ease-in-out infinite; }
-@keyframes pillPop { 0%, 68%, 100% { transform: scale(1); } 77% { transform: scale(1.18); } 86% { transform: scale(.97); } }
-.mr-btn { position: relative; overflow: hidden; }
-.mr-btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 22%, rgba(255,255,255,.4) 50%, transparent 78%); translate: -130% 0; animation: sheen 3.6s ease-in-out infinite; }
-@keyframes sheen { 0%, 52% { translate: -130% 0; } 84%, 100% { translate: 130% 0; } }
-
-.mg-ring { --mg: 60%; animation: fill 4.6s cubic-bezier(.4,0,.2,1) infinite; }
-@keyframes fill { 0% { --mg: 0%; } 46%, 82% { --mg: 60%; } 98%, 100% { --mg: 0%; } }
-
-.me-art span { transform-origin: bottom; animation: bars 1.9s ease-in-out infinite; }
-.me-art span:nth-child(2) { animation-delay: -.28s; }
-.me-art span:nth-child(3) { animation-delay: -.56s; }
-@keyframes bars { 0%, 100% { scale: 1 1; } 50% { scale: 1 1.4; } }
-
-.mock-seg { position: relative; }
-.mseg-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-card); animation: segSlide 6s cubic-bezier(.5,0,.15,1) infinite; }
-@keyframes segSlide { 0%, 26% { translate: 0 0; } 33%, 59% { translate: 100% 0; } 66%, 93% { translate: 200% 0; } 100% { translate: 0 0; } }
-.mock-seg span { position: relative; z-index: 1; animation: segInk 6s steps(1, end) infinite; }
-.mock-seg span:nth-of-type(2) { animation-delay: -4s; }
-.mock-seg span:nth-of-type(3) { animation-delay: -2s; }
-@keyframes segInk { 0%, 32% { color: var(--ink); } 34%, 100% { color: var(--ink-secondary); } }
-
-/* coming soon: the plum band */
-#soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+/* coming soon: the plum band, the same columns with a status on every task */
+#soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
 #soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
-#soon .strip-note { color: rgba(255,255,255,.62); }
-.soon-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .85fr); gap: 26px; align-items: start; }
-.soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: 16px; }
-.soon-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; border: 1px dashed var(--site-line); background: rgba(255,255,255,.035); padding: 18px; animation: drift 9s ease-in-out infinite; transition: background .35s, border-color .35s; }
-.soon-card:hover { background: rgba(255,255,255,.085); border-color: rgba(255,255,255,.4); animation-play-state: paused; }
-.drift-a { animation-delay: -1s; } .drift-b { animation-delay: -4s; } .drift-c { animation-delay: -6.5s; }
-@keyframes drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-.soon-status { font: 400 11px/1 var(--f-mono); color: var(--site-faint); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; }
-.soon-status.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
-/* Dimmed with a lighter border rather than opacity: opacity multiplied into --site-faint and
-   dropped "Backlog" to 2.8:1. */
-.soon-status.is-wait { border-color: rgba(255,255,255,.12); }
-.soon-card h3 { margin: 2px 0 0; font: 600 19px/1.18 var(--f-display); letter-spacing: -.02em; }
-.soon-card h3::before { content: none; }
-.soon-card p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--site-muted); }
-.soon-bars { width: 100%; height: 3px; margin-top: 4px; background: rgba(255,255,255,.14); }
+#soon .strip-note { color: rgba(255,255,255,.72); }
+#soon .feat { border-style: dashed; }
+#soon .feat-list li { grid-template-columns: 68px minmax(0, 1fr); }
+#soon .ch-note { grid-column: 2; }
+.soon-bars { height: 3px; margin-bottom: 4px; background: rgba(255,255,255,.14); }
 .soon-bars span { display: block; height: 100%; background: var(--site-spark); }
-.soon-meta { font: 400 11px/1 var(--f-mono); color: var(--site-faint); }
+.ch-kind.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
+/* Dimmed with a lighter border rather than opacity: opacity multiplied into the label colour and
+   dropped "Backlog" under AA. */
+.ch-kind.is-wait { border-color: rgba(255,255,255,.14); }
+.ch-kind.is-done { border-color: transparent; padding-left: 0; }
+.is-done ~ .ch-name { font-weight: 500; color: rgba(255,255,255,.72); }
 
-/* the notes the team keeps sending about those flows */
-.notes { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 10px 14px 0; }
-.note-card { position: relative; width: min(100%, 310px); box-sizing: border-box; padding: 20px 18px 16px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
+/* the notes the team keeps sending about those flows: a row under the columns */
+.notes { display: flex; flex-wrap: wrap; gap: 20px; padding: 30px 6px 0; }
+.note-card { position: relative; flex: 0 1 290px; box-sizing: border-box; padding: 18px 16px 14px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
 .note-card::before { content: ""; position: absolute; top: -9px; left: 50%; width: 58px; height: 16px; transform: translateX(-50%) rotate(-2.5deg); background: rgba(255,255,255,.42); }
-.note-card p { margin: 0 0 14px; font-size: 14px; line-height: 1.42; }
+.note-card p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.42; }
 .note-by { display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--f-mono); color: rgba(21,35,29,.68); }
 .note-who { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; background: rgba(21,35,29,.15); font: 700 11px/1 var(--f-display); color: #15231d; }
 .note-card:hover { transform: rotate(0deg) scale(1.035); box-shadow: 0 26px 46px rgba(1,30,22,.42); animation-play-state: paused, paused; }
-.pop-1 { align-self: flex-start; background: #ffe98a; transform: rotate(-2.2deg); animation-delay: .1s, 0s; }
-.pop-2 { align-self: flex-end; background: #ffc6d6; transform: rotate(1.8deg); animation-delay: .26s, -2.4s; }
-.pop-3 { align-self: flex-start; background: #b9e2ff; transform: rotate(-1.2deg); animation-delay: .42s, -4.8s; }
+.pop-1 { background: #ffe98a; transform: rotate(-2.2deg); animation-delay: .1s, 0s; }
+.pop-2 { background: #ffc6d6; transform: rotate(1.8deg); animation-delay: .26s, -2.4s; }
+.pop-3 { background: #b9e2ff; transform: rotate(-1.2deg); animation-delay: .42s, -4.8s; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .soon-card, .note-card, .ms-flame, .mock-toast, .mt-dot, .mr-pill, .mr-btn::after,
-  .mg-ring, .me-art span, .mseg-thumb, .mock-seg span, .new-grid.in .new-card { animation: none; }
-  .new-grid.anim-ready .new-card { opacity: 1; }
-  .new-card:hover, .note-card:hover { transform: none; }
+  .note-card, .new-grid.in .feat { animation: none; }
+  .new-grid.anim-ready .feat { opacity: 1; }
+  .note-card:hover { transform: none; }
 }
-@media (max-width: 1000px) { .soon-wrap { grid-template-columns: minmax(0, 1fr); } .notes { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; } .note-card { align-self: auto; flex: 0 1 290px; } }
-@media (max-width: 700px) { .strip { padding-top: 56px; } .new-grid { grid-template-columns: minmax(0, 1fr); } .new-card { padding: 20px 20px 16px; } }
+@media (max-width: 700px) { .strip { padding-top: 56px; } .feat-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- panels ---------- */
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -1041,169 +976,124 @@ main { padding-top: 28px; }
     </div>
   </div>
 
-  <!-- ---------- NEWLY ADDED: what landed in the system in the last two days ---------- -->
+  <!-- ---------- NEWLY ADDED: what landed in the last two days, one column per feature ---------- -->
   <section class="strip" id="newly" aria-labelledby="newly-h">
     <div class="strip-head">
       <h2 id="newly-h">Newly added</h2>
-      <p class="strip-note">6 components since yesterday &middot; drafts, not yet in Figma</p>
+      <p class="strip-note">14 changes across 5 features since yesterday &middot; drafts, not yet in Figma</p>
     </div>
-    <div class="new-grid">
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>StreakBadge</h3>
-          <p>Counts the days in a row a player has cashed out, and how long is left before the streak breaks. It replaces the three one-off counters that were living on Home.</p>
-          <span class="nc-pill">Draft &middot; needs review</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-streak">
-            <span class="ms-flame">&#128293;</span>
-            <span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Maya &middot; used in Home, Missions</span></p>
+    <div class="feat-grid new-grid">
+      <article class="feat">
+        <div class="feat-head"><h3>Cash out</h3><span class="feat-count">4 changes &middot; 2 today</span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">ReferralCard</span><span class="ch-when is-today">Today</span><span class="ch-note">States the reward on both sides before the tap.</span></li>
+          <li><span class="ch-kind">Updated</span><span class="ch-name">AmountHero</span><span class="ch-when is-today">Today</span><span class="ch-note">Fee line moved under the amount.</span></li>
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">EmptyState</span><span class="ch-when">Yesterday</span><span class="ch-note">History before a first cash out.</span></li>
+          <li><span class="ch-kind">Fixed</span><span class="ch-name">HistoryList</span><span class="ch-when">Yesterday</span><span class="ch-note">Long payout emails no longer clip.</span></li>
+        </ul>
       </article>
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>LevelUpToast</h3>
-          <p>A short confirmation that drops in after a level, carrying the coins it paid. It dismisses itself after four seconds and never blocks a tap underneath.</p>
-          <span class="nc-pill">Draft &middot; motion spec open</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-toast">
-            <span class="mt-dot"></span>
-            <span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Dani &middot; used in Game, Home</span></p>
+      <article class="feat">
+        <div class="feat-head"><h3>Onboarding</h3><span class="feat-count">3 changes &middot; 2 today</span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">ProgressRing</span><span class="ch-when is-today">Today</span><span class="ch-note">Missions done against the number needed.</span></li>
+          <li><span class="ch-kind">Updated</span><span class="ch-name">CoachMark</span><span class="ch-when is-today">Today</span><span class="ch-note">Arrow follows the target on rotation.</span></li>
+          <li><span class="ch-kind">Fixed</span><span class="ch-name">MissionRow</span><span class="ch-when">Yesterday</span><span class="ch-note">Step counter legible on the green card.</span></li>
+        </ul>
       </article>
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>ReferralCard</h3>
-          <p>Invites a friend and states the reward on both sides before anyone taps. The share sheet wording is the one agreed on the Writing page.</p>
-          <span class="nc-pill">Ready for Figma</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-referral">
-            <div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div>
-            <p class="mr-sub">They play one level, you both get coins.</p>
-            <div class="mr-btn">Share link</div>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Robin &middot; used in Profile, Cash out</span></p>
+      <article class="feat">
+        <div class="feat-head"><h3>2x coins</h3><span class="feat-count">3 changes &middot; 1 today</span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">StreakBadge</span><span class="ch-when is-today">Today</span><span class="ch-note">Days in a row, and time left to keep it.</span></li>
+          <li><span class="ch-kind">Updated</span><span class="ch-name">EventBanner</span><span class="ch-when">Yesterday</span><span class="ch-note">Gradient restored to the Figma values.</span></li>
+          <li><span class="ch-kind">Fixed</span><span class="ch-name">FlipTimer</span><span class="ch-when">Yesterday</span><span class="ch-note">No flicker when the hour rolls over.</span></li>
+        </ul>
       </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>ProgressRing</h3>
-          <p>Shows missions done against the number needed to cash out. The ring is the one place that count appears, so Home and Missions can stop disagreeing.</p>
-          <span class="nc-pill">Draft &middot; needs review</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-ring">
-            <div class="mg-ring"><span>3<i>/5</i></span></div>
-            <span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Maya &middot; used in Missions</span></p>
+      <article class="feat">
+        <div class="feat-head"><h3>Survey</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">SegmentedPicker</span><span class="ch-when is-today">Today</span><span class="ch-note">One range at a time, remembered per screen.</span></li>
+          <li><span class="ch-kind">Updated</span><span class="ch-name">Check-all question</span><span class="ch-when">Yesterday</span><span class="ch-note">Selected count shown on the button.</span></li>
+        </ul>
       </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>EmptyState</h3>
-          <p>What History shows before a first cash out. One line of reassurance and no call to action, so an empty screen never reads as a broken one.</p>
-          <span class="nc-pill">Ready for Figma</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-empty">
-            <div class="me-art"><span></span><span></span><span></span></div>
-            <b>No cash-outs yet</b>
-            <i>Your first one shows up here.</i>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Dani &middot; used in History</span></p>
+      <article class="feat">
+        <div class="feat-head"><h3>Core</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-new">New</span><span class="ch-name">LevelUpToast</span><span class="ch-when is-today">Today</span><span class="ch-note">Dismisses itself, never blocks a tap.</span></li>
+          <li><span class="ch-kind">Updated</span><span class="ch-name">Button</span><span class="ch-when">Yesterday</span><span class="ch-note">Loading state keeps the label width.</span></li>
+        </ul>
       </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>SegmentedPicker</h3>
-          <p>Switches a list between day, week and all-time. One range at a time, and each screen remembers the range you left it on.</p>
-          <span class="nc-pill">Draft &middot; a11y check</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-seg">
-            <div class="mseg-thumb" aria-hidden="true"></div>
-            <span class="is-on">Day</span><span>Week</span><span>All time</span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Robin &middot; used in History, Leaderboard</span></p>
-      </article>
-
     </div>
   </section>
 
-  <!-- ---------- COMING SOON: flows still waiting for a redesign, with the notes we were sent ---------- -->
+  <!-- ---------- COMING SOON: the tasks still open on each flow, with the notes we were sent ---------- -->
   <section class="strip" id="soon" aria-labelledby="soon-h">
     <div class="strip-head">
       <h2 id="soon-h">Coming soon</h2>
-      <p class="strip-note">5 flows waiting to be redesigned &middot; notes from the team</p>
+      <p class="strip-note">16 tasks across 5 features &middot; notes from the team</p>
     </div>
-    <div class="soon-wrap">
-      <div class="soon-grid">
-        <article class="soon-card drift-a">
-          <span class="soon-status is-now">In design</span>
-          <h3>Leaderboard</h3>
-          <p>Weekly ranks, friend filter, the prize row at the top.</p>
-          <div class="soon-bars"><span style="width:72%"></span></div>
-          <span class="soon-meta">8 screens &middot; 72%</span>
-        </article>
-        <article class="soon-card drift-b">
-          <span class="soon-status is-now">In design</span>
-          <h3>Daily streak</h3>
-          <p>The calendar, the catch-up buy-back and the lost-streak pop-up.</p>
-          <div class="soon-bars"><span style="width:45%"></span></div>
-          <span class="soon-meta">6 screens &middot; 45%</span>
-        </article>
-        <article class="soon-card drift-c">
-          <span class="soon-status">Next up</span>
-          <h3>Profile &amp; settings</h3>
-          <p>Avatar, payout method, the whole notification list.</p>
-          <div class="soon-bars"><span style="width:12%"></span></div>
-          <span class="soon-meta">11 screens &middot; 12%</span>
-        </article>
-        <article class="soon-card drift-b">
-          <span class="soon-status">Next up</span>
-          <h3>Support chat</h3>
-          <p>Ticket states, the canned answers, the payout dispute path.</p>
-          <div class="soon-bars"><span style="width:5%"></span></div>
-          <span class="soon-meta">7 screens &middot; 5%</span>
-        </article>
-        <article class="soon-card drift-a">
-          <span class="soon-status is-wait">Backlog</span>
-          <h3>Game detail</h3>
-          <p>Cover art, the coin rate, the play button and its loading state.</p>
-          <div class="soon-bars"><span style="width:0%"></span></div>
-          <span class="soon-meta">9 screens &middot; not started</span>
-        </article>
-      </div>
+    <div class="feat-grid">
+      <article class="feat">
+        <div class="feat-head"><h3>Leaderboard</h3><span class="feat-count">1 of 4 done</span></div>
+        <div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Weekly ranks</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Prize row</span><span class="ch-note">Pinned to the top of the list.</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Friend filter</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Empty week state</span></li>
+        </ul>
+      </article>
+      <article class="feat">
+        <div class="feat-head"><h3>Daily streak</h3><span class="feat-count">1 of 3 done</span></div>
+        <div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Calendar</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Catch-up buy-back</span><span class="ch-note">Price must not read as a cash-out.</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Lost-streak pop-up</span></li>
+        </ul>
+      </article>
+      <article class="feat">
+        <div class="feat-head"><h3>Profile &amp; settings</h3><span class="feat-count">0 of 4 done</span></div>
+        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Payout method</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Avatar picker</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Notification list</span><span class="ch-note">All eleven toggles on one screen.</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Delete account</span></li>
+        </ul>
+      </article>
+      <article class="feat">
+        <div class="feat-head"><h3>Support chat</h3><span class="feat-count">0 of 3 done</span></div>
+        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Payout dispute path</span><span class="ch-note">Legal asked for this first.</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Ticket states</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Canned answers</span></li>
+        </ul>
+      </article>
+      <article class="feat">
+        <div class="feat-head"><h3>Game detail</h3><span class="feat-count">0 of 2 done</span></div>
+        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+        <ul class="feat-list">
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Cover art and coin rate</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Play button loading state</span></li>
+        </ul>
+      </article>
+    </div>
 
-      <aside class="notes" aria-label="Notes from the team">
-        <article class="note-card pop-1">
-          <p>&ldquo;Leaderboard before the Q1 launch, please. The prize row is the whole point.&rdquo;</p>
-          <div class="note-by"><span class="note-who">M</span>Maya &middot; Product</div>
-        </article>
-        <article class="note-card pop-2">
-          <p>&ldquo;Streak buy-back needs a price that does not look like a cash-out. Do not reuse AmountHero.&rdquo;</p>
-          <div class="note-by"><span class="note-who">D</span>Dani &middot; Growth</div>
-        </article>
-        <article class="note-card pop-3">
-          <p>&ldquo;Support chat can wait, but the dispute screen cannot. Legal asked twice.&rdquo;</p>
-          <div class="note-by"><span class="note-who">R</span>Robin &middot; Ops</div>
-        </article>
-      </aside>
-    </div>
+    <aside class="notes" aria-label="Notes from the team">
+      <article class="note-card pop-1">
+        <p>&ldquo;Leaderboard before the Q1 launch, please. The prize row is the whole point.&rdquo;</p>
+        <div class="note-by"><span class="note-who">M</span>Maya &middot; Product</div>
+      </article>
+      <article class="note-card pop-2">
+        <p>&ldquo;Streak buy-back needs a price that does not look like a cash-out. Do not reuse AmountHero.&rdquo;</p>
+        <div class="note-by"><span class="note-who">D</span>Dani &middot; Growth</div>
+      </article>
+      <article class="note-card pop-3">
+        <p>&ldquo;Support chat can wait, but the dispute screen cannot. Legal asked twice.&rdquo;</p>
+        <div class="note-by"><span class="note-who">R</span>Robin &middot; Ops</div>
+      </article>
+    </aside>
   </section>
 </section>
 
@@ -2251,7 +2141,7 @@ main { padding-top: 28px; }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
 
-  /* ---------- newly added: stagger the cards in when the row is reached ---------- */
+  /* ---------- newly added: stagger the feature columns in when the row is reached ---------- */
   var newGrid = document.querySelector(".new-grid");
   if (newGrid) {
     newGrid.classList.add("anim-ready");
