@@ -408,25 +408,55 @@ main { min-width: 0; padding-top: 56px; }
 .strip-head h2 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
-/* newly added: its own blue band, each card carrying the context behind the component */
-#newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
+/* newly added: its own blue band. The features run down the left; the one picked shows every
+   component it added on the right, each with its preview playing. */
+#newly { --nb: #07305a; --nb-deep: #03182f; --fx-ink: var(--nb-deep); background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
+#newly .strip-head, #soon .strip-head { margin-bottom: 22px; }
 #newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
-#newly .strip-note { color: rgba(255,255,255,.62); }
-.new-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(352px, 1fr)); gap: 18px; }
-.new-card { display: flex; flex-direction: column; gap: 20px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.05); padding: 26px 26px 18px; transition: transform .35s cubic-bezier(.2,.8,.3,1), background .35s; }
-.new-card:hover { transform: translateY(-5px); background: rgba(255,255,255,.1); }
-.nc-text { display: grid; justify-items: start; gap: 12px; }
-.new-card h3 { display: flex; align-items: baseline; gap: 10px; margin: 0; font: 600 19px/1.2 var(--f-display); letter-spacing: -.02em; }
-.new-card h3::before { content: ""; flex: none; width: 6px; height: 6px; border: 1px solid var(--site-fg); transform: translateY(-3px); }
-/* :not(.mock *) keeps the dark-card text colour out of the light app mocks nested inside these
-   cards. Without it .new-card p (0,1,1) beat .mr-sub (0,1,0) and painted the referral card's
-   subtitle white on white. */
-.new-card p:not(.mock p) { margin: 0; font-size: 14.5px; line-height: 1.46; color: rgba(255,255,255,.82); max-width: 46ch; }
-.nc-pill { font: 400 12px/1 var(--f-mono); color: var(--site-fg); background: var(--nb-deep); border-radius: 999px; padding: 10px 15px; }
-.new-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 148px; padding: 8px 0 4px; }
-.nc-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.16); font: 400 11px/1.4 var(--f-mono); color: rgba(255,255,255,.6); }
-.new-tag { font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.3); border-radius: 999px; padding: 5px 9px; }
-.new-tag.is-today { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
+#newly .strip-note { color: rgba(255,255,255,.72); }
+
+/* the feature picker, shared by both bands: a vertical tab list and the panel it controls */
+.fx { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 1fr); gap: clamp(16px, 2.4vw, 32px); align-items: start; }
+.fx-list { display: grid; gap: 6px; }
+.fx-tab { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 48px; margin: 0; padding: 12px 14px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); color: var(--site-fg); font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; text-align: left; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.fx-tab:hover { background: rgba(255,255,255,.11); }
+.fx-tab:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 2px; }
+.fx-tab[aria-selected="true"] { background: var(--site-fg); border-color: var(--site-fg); color: var(--fx-ink); }
+.fx-n { flex: none; min-width: 26px; box-sizing: border-box; padding: 5px 7px; border-radius: 999px; background: rgba(255,255,255,.16); font: 400 11px/1 var(--f-mono); text-align: center; }
+.fx-tab[aria-selected="true"] .fx-n { background: var(--fx-ink); color: var(--site-fg); }
+.fx-panel { min-width: 0; }
+.fx-panel[hidden] { display: none; }
+.fx-panel:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 4px; }
+
+/* the components a feature added: preview on top, what changed underneath */
+.nc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.nc { display: flex; flex-direction: column; min-width: 0; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); }
+.nc-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; padding: 24px 18px; overflow: hidden; }
+.nc-stage .mock { width: 100%; max-width: 300px; }
+.nc-stage .float { flex: none; }
+.nc-stage .float.flush { border-radius: 16px; background: none; }
+.nc-stage .float[data-spec^="row-"] { border-radius: 12px; }
+.nc-stage .pv-fit { max-width: none; }
+.pv-fit.is-auto { width: max-content; }
+.nc-body { display: grid; justify-items: start; gap: 6px; padding: 14px 16px 16px; border-top: 1px solid rgba(255,255,255,.14); }
+.nc-top { display: flex; align-items: center; gap: 10px; }
+.nc-body h3 { margin: 2px 0 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
+.nc-body p { margin: 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.8); }
+
+.ch-kind { justify-self: start; font: 400 10px/1 var(--f-mono); color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 4px 7px; white-space: nowrap; }
+.ch-kind.is-new { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
+.ch-name { min-width: 0; font: 600 14px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: break-word; }
+.ch-when { font: 400 10.5px/1 var(--f-mono); color: rgba(255,255,255,.7); white-space: nowrap; }
+.ch-when.is-today { color: var(--site-fg); }
+.ch-note { font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.78); }
+
+/* cards rise in when the band is reached, and again each time another feature is picked */
+.new-grid.anim-ready .nc { opacity: 0; }
+.new-grid.in .nc { opacity: 1; animation: riseIn .45s cubic-bezier(.2,.9,.3,1) backwards; }
+.new-grid.in .nc:nth-child(2) { animation-delay: .05s; }
+.new-grid.in .nc:nth-child(3) { animation-delay: .1s; }
+.new-grid.in .nc:nth-child(n+4) { animation-delay: .15s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } }
 
 /* the mock components themselves, drawn with the app tokens so the theme switch still works */
 .mock { font-family: var(--f-display); color: var(--ink); background: var(--surface); border-radius: 20px; box-shadow: var(--site-shadow); width: 100%; box-sizing: border-box; }
@@ -455,14 +485,6 @@ main { min-width: 0; padding-top: 56px; }
 
 /* each preview plays back what the component does */
 @property --mg { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
-.new-grid.anim-ready .new-card { opacity: 0; }
-.new-grid.in .new-card { opacity: 1; animation: riseIn .6s cubic-bezier(.2,.9,.3,1) backwards; }
-.new-grid.in .new-card:nth-child(2) { animation-delay: .07s; }
-.new-grid.in .new-card:nth-child(3) { animation-delay: .14s; }
-.new-grid.in .new-card:nth-child(4) { animation-delay: .21s; }
-.new-grid.in .new-card:nth-child(5) { animation-delay: .28s; }
-.new-grid.in .new-card:nth-child(6) { animation-delay: .35s; }
-@keyframes riseIn { from { opacity: 0; transform: translateY(18px) scale(.97); } }
 
 .ms-flame { animation: flicker 2.6s ease-in-out infinite; }
 @keyframes flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 34% { transform: scale(1.13) rotate(-6deg); } 67% { transform: scale(.95) rotate(5deg); } }
@@ -495,49 +517,71 @@ main { min-width: 0; padding-top: 56px; }
 .mock-seg span:nth-of-type(3) { animation-delay: -2s; }
 @keyframes segInk { 0%, 32% { color: var(--ink); } 34%, 100% { color: var(--ink-secondary); } }
 
-/* coming soon: the plum band */
-#soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(40px, 4vw, 62px) clamp(20px, 3vw, 46px); }
-#soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
-#soon .strip-note { color: rgba(255,255,255,.62); }
-.soon-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .85fr); gap: 26px; align-items: start; }
-.soon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: 16px; }
-.soon-card { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; border: 1px dashed var(--site-line); background: rgba(255,255,255,.035); padding: 18px; animation: drift 9s ease-in-out infinite; transition: background .35s, border-color .35s; }
-.soon-card:hover { background: rgba(255,255,255,.085); border-color: rgba(255,255,255,.4); animation-play-state: paused; }
-.drift-a { animation-delay: -1s; } .drift-b { animation-delay: -4s; } .drift-c { animation-delay: -6.5s; }
-@keyframes drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
-.soon-status { font: 400 11px/1 var(--f-mono); color: var(--site-faint); border: 1px solid var(--site-line); border-radius: 999px; padding: 5px 9px; }
-.soon-status.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
-/* Dimmed with a lighter border rather than opacity: opacity multiplied into --site-faint and
-   dropped "Backlog" to 2.8:1. */
-.soon-status.is-wait { border-color: rgba(255,255,255,.12); }
-.soon-card h3 { margin: 2px 0 0; font: 600 19px/1.18 var(--f-display); letter-spacing: -.02em; }
-.soon-card h3::before { content: none; }
-.soon-card p { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--site-muted); }
-.soon-bars { width: 100%; height: 3px; margin-top: 4px; background: rgba(255,255,255,.14); }
-.soon-bars span { display: block; height: 100%; background: var(--site-spark); }
-.soon-meta { font: 400 11px/1 var(--f-mono); color: var(--site-faint); }
+/* the survey question: two answers tick in, the count on the button follows them */
+.mock-check { padding: 12px; display: grid; gap: 6px; }
+.mc-opt { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--surface-grouped); font-size: 12px; font-weight: 600; }
+.mc-box { flex: none; width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1.5px solid var(--separator); }
+.mc-opt.t1 .mc-box { animation: tick1 5s steps(1, end) infinite; }
+.mc-opt.t2 .mc-box { animation: tick2 5s steps(1, end) infinite; }
+@keyframes tick1 { 0%, 22% { background: transparent; border-color: var(--separator); } 23%, 92% { background: var(--blue-500); border-color: var(--blue-500); } }
+@keyframes tick2 { 0%, 46% { background: transparent; border-color: var(--separator); } 47%, 92% { background: var(--blue-500); border-color: var(--blue-500); } }
+.mc-btn { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 4px; padding: 9px; border-radius: 999px; background: var(--blue-500); color: var(--on-accent); font-size: 12.5px; font-weight: 700; }
+.mc-count { position: relative; display: inline-grid; width: 18px; height: 18px; border-radius: 999px; background: rgba(255,255,255,.28); font-size: 11px; animation: countIn 5s steps(1, end) infinite; }
+.mc-count span { grid-area: 1 / 1; display: grid; place-items: center; }
+.mc-count span:first-child { animation: show1 5s steps(1, end) infinite; }
+.mc-count span:last-child { animation: show2 5s steps(1, end) infinite; }
+@keyframes countIn { 0%, 22% { opacity: 0; } 23%, 92% { opacity: 1; } 93%, 100% { opacity: 0; } }
+@keyframes show1 { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
+@keyframes show2 { 0%, 46% { opacity: 0; } 47%, 100% { opacity: 1; } }
 
-/* the notes the team keeps sending about those flows */
-.notes { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 10px 14px 0; }
-.note-card { position: relative; width: min(100%, 310px); box-sizing: border-box; padding: 20px 18px 16px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
+/* coming soon: the plum band, the same picker with the open tasks of the feature picked */
+#soon { --pb: #53093d; --fx-ink: #3a0529; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
+#soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
+#soon .strip-note { color: rgba(255,255,255,.72); }
+#soon .fx-tab { border-style: dashed; }
+#soon .fx-tab[aria-selected="true"] { border-style: solid; }
+.sx-head { display: flex; align-items: center; gap: 14px; min-height: 48px; }
+.sx-head .feat-count { font: 400 12px/1 var(--f-mono); color: rgba(255,255,255,.78); white-space: nowrap; }
+.soon-bars { flex: 1; max-width: 260px; height: 3px; background: rgba(255,255,255,.14); }
+.soon-bars span { display: block; height: 100%; background: var(--site-spark); }
+.sx-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255,255,255,.22); }
+.sx-list li { display: grid; grid-template-columns: 84px minmax(140px, 240px) minmax(0, 1fr); column-gap: 16px; row-gap: 3px; align-items: center; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.12); }
+.ch-kind.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
+/* Dimmed with a lighter border rather than opacity: opacity multiplied into the label colour and
+   dropped "Backlog" under AA. */
+.ch-kind.is-wait { border-color: rgba(255,255,255,.14); }
+.ch-kind.is-done { border-color: transparent; padding-left: 0; }
+.is-done ~ .ch-name { font-weight: 500; color: rgba(255,255,255,.72); }
+
+/* the notes the team keeps sending about those flows: a row under the picker */
+.notes { display: flex; flex-wrap: wrap; gap: 20px; padding: 30px 6px 0; }
+.note-card { position: relative; flex: 0 1 290px; box-sizing: border-box; padding: 18px 16px 14px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
 .note-card::before { content: ""; position: absolute; top: -9px; left: 50%; width: 58px; height: 16px; transform: translateX(-50%) rotate(-2.5deg); background: rgba(255,255,255,.42); }
-.note-card p { margin: 0 0 14px; font-size: 14px; line-height: 1.42; }
+.note-card p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.42; }
 .note-by { display: flex; align-items: center; gap: 8px; font: 500 11px/1 var(--f-mono); color: rgba(21,35,29,.68); }
 .note-who { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; background: rgba(21,35,29,.15); font: 700 11px/1 var(--f-display); color: #15231d; }
 .note-card:hover { transform: rotate(0deg) scale(1.035); box-shadow: 0 26px 46px rgba(1,30,22,.42); animation-play-state: paused, paused; }
-.pop-1 { align-self: flex-start; background: #ffe98a; transform: rotate(-2.2deg); animation-delay: .1s, 0s; }
-.pop-2 { align-self: flex-end; background: #ffc6d6; transform: rotate(1.8deg); animation-delay: .26s, -2.4s; }
-.pop-3 { align-self: flex-start; background: #b9e2ff; transform: rotate(-1.2deg); animation-delay: .42s, -4.8s; }
+.pop-1 { background: #ffe98a; transform: rotate(-2.2deg); animation-delay: .1s, 0s; }
+.pop-2 { background: #ffc6d6; transform: rotate(1.8deg); animation-delay: .26s, -2.4s; }
+.pop-3 { background: #b9e2ff; transform: rotate(-1.2deg); animation-delay: .42s, -4.8s; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .soon-card, .note-card, .ms-flame, .mock-toast, .mt-dot, .mr-pill, .mr-btn::after,
-  .mg-ring, .me-art span, .mseg-thumb, .mock-seg span, .new-grid.in .new-card { animation: none; }
-  .new-grid.anim-ready .new-card { opacity: 1; }
-  .new-card:hover, .note-card:hover { transform: none; }
+  .note-card, .new-grid.in .nc, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
+  .mseg-thumb, .mock-seg span, .mc-box, .mc-count, .mc-count span { animation: none; }
+  .mc-count span:first-child { opacity: 0; }
+  .new-grid.anim-ready .nc { opacity: 1; }
+  .note-card:hover { transform: none; }
 }
-@media (max-width: 1000px) { .soon-wrap { grid-template-columns: minmax(0, 1fr); } .notes { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; } .note-card { align-self: auto; flex: 0 1 290px; } }
-@media (max-width: 700px) { .strip { padding-top: 56px; } .new-grid { grid-template-columns: minmax(0, 1fr); } .new-card { padding: 20px 20px 16px; } }
+@media (max-width: 760px) {
+  /* the features wrap into a row of tabs above the panel */
+  .fx { grid-template-columns: minmax(0, 1fr); }
+  .fx-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fx-tab { width: auto; min-height: 40px; padding: 8px 10px 8px 12px; font-size: 14px; }
+  .sx-list li { grid-template-columns: 76px minmax(0, 1fr); align-items: baseline; }
+  .sx-list .ch-note { grid-column: 2; }
+}
+@media (max-width: 700px) { .strip { padding-top: 56px; } }
 
 /* ---------- panels ---------- */
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -1041,169 +1085,228 @@ main { padding-top: 28px; }
     </div>
   </div>
 
-  <!-- ---------- NEWLY ADDED: what landed in the system in the last two days ---------- -->
+  <!-- ---------- NEWLY ADDED: what landed in the last two days. The features run down the left;
+       the one picked shows its components on the right, each preview an animated mock or the
+       real component drawn through data-spec. The first feature starts picked. ---------- -->
   <section class="strip" id="newly" aria-labelledby="newly-h">
     <div class="strip-head">
       <h2 id="newly-h">Newly added</h2>
-      <p class="strip-note">6 components since yesterday &middot; drafts, not yet in Figma</p>
+      <p class="strip-note">14 changes across 5 features since yesterday &middot; drafts, not yet in Figma</p>
     </div>
-    <div class="new-grid">
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>StreakBadge</h3>
-          <p>Counts the days in a row a player has cashed out, and how long is left before the streak breaks. It replaces the three one-off counters that were living on Home.</p>
-          <span class="nc-pill">Draft &middot; needs review</span>
+    <div class="fx new-grid">
+      <div class="fx-list" role="tablist" aria-label="Features" aria-orientation="vertical">
+        <button type="button" class="fx-tab" role="tab" id="nt-1" aria-controls="np-1" aria-selected="true" tabindex="0"><span>Cash out</span><span class="fx-n">4<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-2" aria-controls="np-2" aria-selected="false" tabindex="-1"><span>Onboarding</span><span class="fx-n">3<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-3" aria-controls="np-3" aria-selected="false" tabindex="-1"><span>2x coins</span><span class="fx-n">3<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-4" aria-controls="np-4" aria-selected="false" tabindex="-1"><span>Survey</span><span class="fx-n">2<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-5" aria-controls="np-5" aria-selected="false" tabindex="-1"><span>Core</span><span class="fx-n">2<span class="vh"> changes</span></span></button>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-1" aria-labelledby="nt-1" tabindex="0">
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-referral"><div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div><p class="mr-sub">They play one level, you both get coins.</p><div class="mr-btn">Share link</div></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>ReferralCard</h3>
+              <p>States the reward on both sides before the tap.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:280px" data-spec="hero-earned"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when is-today">Today</span></div>
+              <h3>AmountHero</h3>
+              <p>Fee line moved under the amount.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-empty"><div class="me-art"><span></span><span></span><span></span></div><b>No cash-outs yet</b><i>Your first one shows up here.</i></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when">Yesterday</span></div>
+              <h3>EmptyState</h3>
+              <p>History before a first cash out.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:340px" data-spec="history"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>HistoryList</h3>
+              <p>Long payout emails no longer clip.</p>
+            </div>
+          </article>
         </div>
-        <div class="new-stage">
-          <div class="ui mock mock-streak">
-            <span class="ms-flame">&#128293;</span>
-            <span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span>
-          </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-2" aria-labelledby="nt-2" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-ring"><div class="mg-ring"><span>3<i>/5</i></span></div><span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>ProgressRing</h3>
+              <p>Missions done against the number needed.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:380px" data-spec="coach"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when is-today">Today</span></div>
+              <h3>CoachMark</h3>
+              <p>Arrow follows the target on rotation.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:351px" data-spec="row-progress"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>MissionRow</h3>
+              <p>Step counter legible on the green card.</p>
+            </div>
+          </article>
         </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Maya &middot; used in Home, Missions</span></p>
-      </article>
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>LevelUpToast</h3>
-          <p>A short confirmation that drops in after a level, carrying the coins it paid. It dismisses itself after four seconds and never blocks a tap underneath.</p>
-          <span class="nc-pill">Draft &middot; motion spec open</span>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-3" aria-labelledby="nt-3" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-streak"><span class="ms-flame">&#128293;</span><span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>StreakBadge</h3>
+              <p>Days in a row, and time left to keep it.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:393px" data-spec="banner-active"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>EventBanner</h3>
+              <p>Gradient restored to the Figma values.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush is-auto" data-spec="flip-large"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>FlipTimer</h3>
+              <p>No flicker when the hour rolls over.</p>
+            </div>
+          </article>
         </div>
-        <div class="new-stage">
-          <div class="ui mock mock-toast">
-            <span class="mt-dot"></span>
-            <span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span>
-          </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-4" aria-labelledby="nt-4" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-seg"><div class="mseg-thumb" aria-hidden="true"></div><span class="is-on">Day</span><span>Week</span><span>All time</span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>SegmentedPicker</h3>
+              <p>One range at a time, remembered per screen.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-check"><div class="mc-opt t1"><span class="mc-box"></span>Puzzle games</div><div class="mc-opt"><span class="mc-box"></span>Card games</div><div class="mc-opt t2"><span class="mc-box"></span>Word games</div><div class="mc-btn">Next<span class="mc-count" aria-hidden="true"><span>1</span><span>2</span></span></div></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>Check-all question</h3>
+              <p>Selected count shown on the button.</p>
+            </div>
+          </article>
         </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Dani &middot; used in Game, Home</span></p>
-      </article>
-
-      <article class="new-card" data-when="today">
-        <div class="nc-text">
-          <h3>ReferralCard</h3>
-          <p>Invites a friend and states the reward on both sides before anyone taps. The share sheet wording is the one agreed on the Writing page.</p>
-          <span class="nc-pill">Ready for Figma</span>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-5" aria-labelledby="nt-5" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-toast"><span class="mt-dot"></span><span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>LevelUpToast</h3>
+              <p>Dismisses itself, never blocks a tap.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:300px" data-spec="btn-all"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>Button</h3>
+              <p>Loading state keeps the label width.</p>
+            </div>
+          </article>
         </div>
-        <div class="new-stage">
-          <div class="ui mock mock-referral">
-            <div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div>
-            <p class="mr-sub">They play one level, you both get coins.</p>
-            <div class="mr-btn">Share link</div>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag is-today">Today</span><span>Added by Robin &middot; used in Profile, Cash out</span></p>
-      </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>ProgressRing</h3>
-          <p>Shows missions done against the number needed to cash out. The ring is the one place that count appears, so Home and Missions can stop disagreeing.</p>
-          <span class="nc-pill">Draft &middot; needs review</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-ring">
-            <div class="mg-ring"><span>3<i>/5</i></span></div>
-            <span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Maya &middot; used in Missions</span></p>
-      </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>EmptyState</h3>
-          <p>What History shows before a first cash out. One line of reassurance and no call to action, so an empty screen never reads as a broken one.</p>
-          <span class="nc-pill">Ready for Figma</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-empty">
-            <div class="me-art"><span></span><span></span><span></span></div>
-            <b>No cash-outs yet</b>
-            <i>Your first one shows up here.</i>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Dani &middot; used in History</span></p>
-      </article>
-
-      <article class="new-card" data-when="yesterday">
-        <div class="nc-text">
-          <h3>SegmentedPicker</h3>
-          <p>Switches a list between day, week and all-time. One range at a time, and each screen remembers the range you left it on.</p>
-          <span class="nc-pill">Draft &middot; a11y check</span>
-        </div>
-        <div class="new-stage">
-          <div class="ui mock mock-seg">
-            <div class="mseg-thumb" aria-hidden="true"></div>
-            <span class="is-on">Day</span><span>Week</span><span>All time</span>
-          </div>
-        </div>
-        <p class="nc-meta"><span class="new-tag">Yesterday</span><span>Added by Robin &middot; used in History, Leaderboard</span></p>
-      </article>
-
+      </div>
     </div>
   </section>
 
-  <!-- ---------- COMING SOON: flows still waiting for a redesign, with the notes we were sent ---------- -->
+  <!-- ---------- COMING SOON: the open tasks of each flow, picked the same way, with the notes we were sent ---------- -->
   <section class="strip" id="soon" aria-labelledby="soon-h">
     <div class="strip-head">
       <h2 id="soon-h">Coming soon</h2>
-      <p class="strip-note">5 flows waiting to be redesigned &middot; notes from the team</p>
+      <p class="strip-note">16 tasks across 5 features &middot; notes from the team</p>
     </div>
-    <div class="soon-wrap">
-      <div class="soon-grid">
-        <article class="soon-card drift-a">
-          <span class="soon-status is-now">In design</span>
-          <h3>Leaderboard</h3>
-          <p>Weekly ranks, friend filter, the prize row at the top.</p>
-          <div class="soon-bars"><span style="width:72%"></span></div>
-          <span class="soon-meta">8 screens &middot; 72%</span>
-        </article>
-        <article class="soon-card drift-b">
-          <span class="soon-status is-now">In design</span>
-          <h3>Daily streak</h3>
-          <p>The calendar, the catch-up buy-back and the lost-streak pop-up.</p>
-          <div class="soon-bars"><span style="width:45%"></span></div>
-          <span class="soon-meta">6 screens &middot; 45%</span>
-        </article>
-        <article class="soon-card drift-c">
-          <span class="soon-status">Next up</span>
-          <h3>Profile &amp; settings</h3>
-          <p>Avatar, payout method, the whole notification list.</p>
-          <div class="soon-bars"><span style="width:12%"></span></div>
-          <span class="soon-meta">11 screens &middot; 12%</span>
-        </article>
-        <article class="soon-card drift-b">
-          <span class="soon-status">Next up</span>
-          <h3>Support chat</h3>
-          <p>Ticket states, the canned answers, the payout dispute path.</p>
-          <div class="soon-bars"><span style="width:5%"></span></div>
-          <span class="soon-meta">7 screens &middot; 5%</span>
-        </article>
-        <article class="soon-card drift-a">
-          <span class="soon-status is-wait">Backlog</span>
-          <h3>Game detail</h3>
-          <p>Cover art, the coin rate, the play button and its loading state.</p>
-          <div class="soon-bars"><span style="width:0%"></span></div>
-          <span class="soon-meta">9 screens &middot; not started</span>
-        </article>
+    <div class="fx">
+      <div class="fx-list" role="tablist" aria-label="Features" aria-orientation="vertical">
+        <button type="button" class="fx-tab" role="tab" id="st-1" aria-controls="sp-1" aria-selected="true" tabindex="0"><span>Leaderboard</span><span class="fx-n">4<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-2" aria-controls="sp-2" aria-selected="false" tabindex="-1"><span>Daily streak</span><span class="fx-n">3<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-3" aria-controls="sp-3" aria-selected="false" tabindex="-1"><span>Profile &amp; settings</span><span class="fx-n">4<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-4" aria-controls="sp-4" aria-selected="false" tabindex="-1"><span>Support chat</span><span class="fx-n">3<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-5" aria-controls="sp-5" aria-selected="false" tabindex="-1"><span>Game detail</span><span class="fx-n">2<span class="vh"> tasks</span></span></button>
       </div>
-
-      <aside class="notes" aria-label="Notes from the team">
-        <article class="note-card pop-1">
-          <p>&ldquo;Leaderboard before the Q1 launch, please. The prize row is the whole point.&rdquo;</p>
-          <div class="note-by"><span class="note-who">M</span>Maya &middot; Product</div>
-        </article>
-        <article class="note-card pop-2">
-          <p>&ldquo;Streak buy-back needs a price that does not look like a cash-out. Do not reuse AmountHero.&rdquo;</p>
-          <div class="note-by"><span class="note-who">D</span>Dani &middot; Growth</div>
-        </article>
-        <article class="note-card pop-3">
-          <p>&ldquo;Support chat can wait, but the dispute screen cannot. Legal asked twice.&rdquo;</p>
-          <div class="note-by"><span class="note-who">R</span>Robin &middot; Ops</div>
-        </article>
-      </aside>
+      <div class="fx-panel" role="tabpanel" id="sp-1" aria-labelledby="st-1" tabindex="0">
+        <div class="sx-head"><span class="feat-count">1 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div></div>
+        <ul class="sx-list">
+          <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Weekly ranks</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Prize row</span><span class="ch-note">Pinned to the top of the list.</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Friend filter</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Empty week state</span></li>
+        </ul>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-2" aria-labelledby="st-2" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">1 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div></div>
+        <ul class="sx-list">
+          <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Calendar</span></li>
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Catch-up buy-back</span><span class="ch-note">Price must not read as a cash-out.</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Lost-streak pop-up</span></li>
+        </ul>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-3" aria-labelledby="st-3" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
+          <li><span class="ch-kind is-now">In design</span><span class="ch-name">Payout method</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Avatar picker</span></li>
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Notification list</span><span class="ch-note">All eleven toggles on one screen.</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Delete account</span></li>
+        </ul>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-4" aria-labelledby="st-4" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
+          <li><span class="ch-kind">Next up</span><span class="ch-name">Payout dispute path</span><span class="ch-note">Legal asked for this first.</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Ticket states</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Canned answers</span></li>
+        </ul>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-5" aria-labelledby="st-5" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 2 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Cover art and coin rate</span></li>
+          <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Play button loading state</span></li>
+        </ul>
+      </div>
     </div>
+
+    <aside class="notes" aria-label="Notes from the team">
+      <article class="note-card pop-1">
+        <p>&ldquo;Leaderboard before the Q1 launch, please. The prize row is the whole point.&rdquo;</p>
+        <div class="note-by"><span class="note-who">M</span>Maya &middot; Product</div>
+      </article>
+      <article class="note-card pop-2">
+        <p>&ldquo;Streak buy-back needs a price that does not look like a cash-out. Do not reuse AmountHero.&rdquo;</p>
+        <div class="note-by"><span class="note-who">D</span>Dani &middot; Growth</div>
+      </article>
+      <article class="note-card pop-3">
+        <p>&ldquo;Support chat can wait, but the dispute screen cannot. Legal asked twice.&rdquo;</p>
+        <div class="note-by"><span class="note-who">R</span>Robin &middot; Ops</div>
+      </article>
+    </aside>
   </section>
 </section>
 
@@ -2251,7 +2354,7 @@ main { padding-top: 28px; }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
 
-  /* ---------- newly added: stagger the cards in when the row is reached ---------- */
+  /* ---------- newly added: rise the cards in when the band is reached ---------- */
   var newGrid = document.querySelector(".new-grid");
   if (newGrid) {
     newGrid.classList.add("anim-ready");
@@ -2263,6 +2366,52 @@ main { padding-top: 28px; }
       newSpy.observe(newGrid);
     } else revealNew();
   }
+
+  /* ---------- feature pickers: the tab list on the left picks the panel on the right ----------
+     Real components are drawn at their app width and zoomed down when their card is narrower.
+     The zoom is worked out from the natural width (the drawn width over the current zoom), so
+     re-measuring after a zoom lands on the same value and the ResizeObserver settles. */
+  function fitPreview(f) {
+    var st = f.parentNode, cs = getComputedStyle(st);
+    var room = st.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var z = parseFloat(f.style.zoom) || 1, w = f.getBoundingClientRect().width / z;
+    if (room <= 0 || !w) return;
+    var nz = Math.min(1, room / w);
+    if (Math.abs(nz - z) > 0.002) f.style.zoom = nz === 1 ? "" : String(nz);
+  }
+  var pvFits = [].slice.call(document.querySelectorAll(".pv-fit"));
+  if (window.ResizeObserver) {
+    var pvSpy = new ResizeObserver(function (es) {
+      es.forEach(function (en) {
+        var f = en.target.classList.contains("pv-fit") ? en.target : en.target.querySelector(".pv-fit");
+        if (f) fitPreview(f);
+      });
+    });
+    pvFits.forEach(function (f) { pvSpy.observe(f); pvSpy.observe(f.parentNode); });
+  } else window.addEventListener("resize", function () { pvFits.forEach(fitPreview); });
+
+  document.querySelectorAll(".fx").forEach(function (fx) {
+    var tabs = [].slice.call(fx.querySelectorAll('[role="tab"]'));
+    function pick(t, focus) {
+      tabs.forEach(function (x) {
+        var on = x === t;
+        x.setAttribute("aria-selected", on ? "true" : "false");
+        x.tabIndex = on ? 0 : -1;
+        document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+      });
+      document.getElementById(t.getAttribute("aria-controls")).querySelectorAll(".pv-fit").forEach(fitPreview);
+      if (focus) t.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { pick(t); });
+      t.addEventListener("keydown", function (ev) {
+        var k = ev.key, j = k === "ArrowDown" || k === "ArrowRight" ? i + 1 : k === "ArrowUp" || k === "ArrowLeft" ? i - 1 : k === "Home" ? 0 : k === "End" ? tabs.length - 1 : null;
+        if (j === null) return;
+        ev.preventDefault();
+        pick(tabs[(j + tabs.length) % tabs.length], true);
+      });
+    });
+  });
 
   /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
