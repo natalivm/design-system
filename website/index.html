@@ -408,62 +408,54 @@ main { min-width: 0; padding-top: 56px; }
 .strip-head h2 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
-/* newly added: its own blue band, listed by feature so five features that all moved in the same
-   two days still fit in one look. */
-#newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
-#newly .strip-head, #soon .strip-head { margin-bottom: 20px; }
+/* newly added: its own blue band. The features run down the left; the one picked shows every
+   component it added on the right, each with its preview playing. */
+#newly { --nb: #07305a; --nb-deep: #03182f; --fx-ink: var(--nb-deep); background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
+#newly .strip-head, #soon .strip-head { margin-bottom: 22px; }
 #newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
 #newly .strip-note { color: rgba(255,255,255,.72); }
 
-/* the feature list, shared by both bands: one group per feature, its name on the left and its
-   lines to the right. A feature with two changes is just a shorter group, so nothing is left
-   standing next to it the way columns of uneven length left holes. */
-.fl { border-top: 1px solid rgba(255,255,255,.3); }
-.fl-group { display: grid; grid-template-columns: minmax(130px, 200px) minmax(0, 1fr); column-gap: clamp(16px, 2.4vw, 36px); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.3); }
-.fl-feat { display: grid; align-content: start; justify-items: start; gap: 6px; padding: 12px 0; }
-.fl-feat h3 { margin: 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
-.feat-count { font: 400 11px/1.3 var(--f-mono); color: rgba(255,255,255,.72); }
-.feat-list { list-style: none; margin: 0; padding: 0; min-width: 0; }
-.feat-list li + li { border-top: 1px solid rgba(255,255,255,.12); }
-.ch-row, #soon .feat-list li { display: grid; grid-template-columns: 72px minmax(120px, 210px) minmax(0, 1fr) 72px 10px; column-gap: 16px; row-gap: 3px; align-items: center; padding: 10px 0; }
-.ch-kind { grid-column: 1; grid-row: 1; }
-.ch-name { grid-column: 2; grid-row: 1; }
-.ch-note { grid-column: 3; grid-row: 1; }
-.ch-when { grid-column: 4; grid-row: 1; justify-self: end; }
-.ch-chev { grid-column: 5; grid-row: 1; }
-/* each line of Newly added is a button: tapping it opens the component's preview under it */
-.ch-row { width: 100%; margin: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
-.ch-row:hover .ch-name { text-decoration: underline; text-decoration-color: rgba(255,255,255,.5); text-underline-offset: 3px; }
-.ch-row:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 2px; }
-.ch-chev { align-self: center; justify-self: end; width: 6px; height: 6px; border-right: 1.5px solid rgba(255,255,255,.8); border-bottom: 1.5px solid rgba(255,255,255,.8); transform: translateY(-2px) rotate(45deg); transition: transform .25s; }
-.ch-row[aria-expanded="true"] .ch-chev { transform: translateY(1px) rotate(-135deg); }
-/* the preview sits straight on the band, lined up under the name */
-.ch-pv { display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; width: fit-content; max-width: calc(100% - 88px); margin: 0 0 0 88px; padding: 4px 0 18px; overflow: hidden; animation: pvIn .35s cubic-bezier(.2,.9,.3,1); }
-.ch-pv[hidden] { display: none; }
-@keyframes pvIn { from { opacity: 0; transform: translateY(-6px); } }
-.ch-pv .mock { width: 300px; max-width: 100%; }
-.ch-pv .float { flex: none; }
-.ch-pv .float.flush { border-radius: 16px; background: none; }
-.ch-pv .float[data-spec^="row-"] { border-radius: 12px; }
-.ch-pv .pv-fit { max-width: none; }
+/* the feature picker, shared by both bands: a vertical tab list and the panel it controls */
+.fx { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 1fr); gap: clamp(16px, 2.4vw, 32px); align-items: start; }
+.fx-list { display: grid; gap: 6px; }
+.fx-tab { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 48px; margin: 0; padding: 12px 14px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); color: var(--site-fg); font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; text-align: left; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.fx-tab:hover { background: rgba(255,255,255,.11); }
+.fx-tab:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 2px; }
+.fx-tab[aria-selected="true"] { background: var(--site-fg); border-color: var(--site-fg); color: var(--fx-ink); }
+.fx-n { flex: none; min-width: 26px; box-sizing: border-box; padding: 5px 7px; border-radius: 999px; background: rgba(255,255,255,.16); font: 400 11px/1 var(--f-mono); text-align: center; }
+.fx-tab[aria-selected="true"] .fx-n { background: var(--fx-ink); color: var(--site-fg); }
+.fx-panel { min-width: 0; }
+.fx-panel[hidden] { display: none; }
+.fx-panel:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 4px; }
+
+/* the components a feature added: preview on top, what changed underneath */
+.nc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.nc { display: flex; flex-direction: column; min-width: 0; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); }
+.nc-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; padding: 24px 18px; overflow: hidden; }
+.nc-stage .mock { width: 100%; max-width: 300px; }
+.nc-stage .float { flex: none; }
+.nc-stage .float.flush { border-radius: 16px; background: none; }
+.nc-stage .float[data-spec^="row-"] { border-radius: 12px; }
+.nc-stage .pv-fit { max-width: none; }
 .pv-fit.is-auto { width: max-content; }
-.strip-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
-.pv-all { min-height: 32px; font: 400 12px/1 var(--f-mono); color: var(--nb-deep); background: var(--site-fg); border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; }
-.pv-all:hover { background: rgba(255,255,255,.86); }
-.pv-all:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 3px; }
-.ch-kind { justify-self: start; font: 400 10px/1 var(--f-mono); color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 4px 6px; white-space: nowrap; }
+.nc-body { display: grid; justify-items: start; gap: 6px; padding: 14px 16px 16px; border-top: 1px solid rgba(255,255,255,.14); }
+.nc-top { display: flex; align-items: center; gap: 10px; }
+.nc-body h3 { margin: 2px 0 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
+.nc-body p { margin: 0; font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.8); }
+
+.ch-kind { justify-self: start; font: 400 10px/1 var(--f-mono); color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 4px 7px; white-space: nowrap; }
 .ch-kind.is-new { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
-.ch-name { min-width: 0; font: 600 13.5px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: break-word; }
+.ch-name { min-width: 0; font: 600 14px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: break-word; }
 .ch-when { font: 400 10.5px/1 var(--f-mono); color: rgba(255,255,255,.7); white-space: nowrap; }
 .ch-when.is-today { color: var(--site-fg); }
-.ch-note { font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,.78); }
+.ch-note { font-size: 13px; line-height: 1.4; color: rgba(255,255,255,.78); }
 
-.new-grid.anim-ready .fl-group { opacity: 0; }
-.new-grid.in .fl-group { opacity: 1; animation: riseIn .5s cubic-bezier(.2,.9,.3,1) backwards; }
-.new-grid.in .fl-group:nth-child(2) { animation-delay: .05s; }
-.new-grid.in .fl-group:nth-child(3) { animation-delay: .1s; }
-.new-grid.in .fl-group:nth-child(4) { animation-delay: .15s; }
-.new-grid.in .fl-group:nth-child(n+5) { animation-delay: .2s; }
+/* cards rise in when the band is reached, and again each time another feature is picked */
+.new-grid.anim-ready .nc { opacity: 0; }
+.new-grid.in .nc { opacity: 1; animation: riseIn .45s cubic-bezier(.2,.9,.3,1) backwards; }
+.new-grid.in .nc:nth-child(2) { animation-delay: .05s; }
+.new-grid.in .nc:nth-child(3) { animation-delay: .1s; }
+.new-grid.in .nc:nth-child(n+4) { animation-delay: .15s; }
 @keyframes riseIn { from { opacity: 0; transform: translateY(10px); } }
 
 /* the mock components themselves, drawn with the app tokens so the theme switch still works */
@@ -542,14 +534,18 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes show1 { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
 @keyframes show2 { 0%, 46% { opacity: 0; } 47%, 100% { opacity: 1; } }
 
-/* coming soon: the plum band, the same list with a status on every task */
-#soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
+/* coming soon: the plum band, the same picker with the open tasks of the feature picked */
+#soon { --pb: #53093d; --fx-ink: #3a0529; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
 #soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
 #soon .strip-note { color: rgba(255,255,255,.72); }
-#soon .fl-group { border-bottom-style: dashed; }
-#soon .feat-list li { grid-template-columns: 72px minmax(120px, 210px) minmax(0, 1fr); }
-.soon-bars { width: 100%; max-width: 160px; height: 3px; background: rgba(255,255,255,.14); }
+#soon .fx-tab { border-style: dashed; }
+#soon .fx-tab[aria-selected="true"] { border-style: solid; }
+.sx-head { display: flex; align-items: center; gap: 14px; min-height: 48px; }
+.sx-head .feat-count { font: 400 12px/1 var(--f-mono); color: rgba(255,255,255,.78); white-space: nowrap; }
+.soon-bars { flex: 1; max-width: 260px; height: 3px; background: rgba(255,255,255,.14); }
 .soon-bars span { display: block; height: 100%; background: var(--site-spark); }
+.sx-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(255,255,255,.22); }
+.sx-list li { display: grid; grid-template-columns: 84px minmax(140px, 240px) minmax(0, 1fr); column-gap: 16px; row-gap: 3px; align-items: center; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.12); }
 .ch-kind.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
 /* Dimmed with a lighter border rather than opacity: opacity multiplied into the label colour and
    dropped "Backlog" under AA. */
@@ -557,7 +553,7 @@ main { min-width: 0; padding-top: 56px; }
 .ch-kind.is-done { border-color: transparent; padding-left: 0; }
 .is-done ~ .ch-name { font-weight: 500; color: rgba(255,255,255,.72); }
 
-/* the notes the team keeps sending about those flows: a row under the list */
+/* the notes the team keeps sending about those flows: a row under the picker */
 .notes { display: flex; flex-wrap: wrap; gap: 20px; padding: 30px 6px 0; }
 .note-card { position: relative; flex: 0 1 290px; box-sizing: border-box; padding: 18px 16px 14px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
 .note-card::before { content: ""; position: absolute; top: -9px; left: 50%; width: 58px; height: 16px; transform: translateX(-50%) rotate(-2.5deg); background: rgba(255,255,255,.42); }
@@ -571,23 +567,19 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .note-card, .new-grid.in .fl-group, .ch-pv, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
+  .note-card, .new-grid.in .nc, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
   .mseg-thumb, .mock-seg span, .mc-box, .mc-count, .mc-count span { animation: none; }
   .mc-count span:first-child { opacity: 0; }
-  .new-grid.anim-ready .fl-group { opacity: 1; }
+  .new-grid.anim-ready .nc { opacity: 1; }
   .note-card:hover { transform: none; }
 }
-@media (max-width: 860px) {
-  /* the feature name moves above its lines; the day drops under the tag and the note under the name */
-  .fl-group { grid-template-columns: minmax(0, 1fr); }
-  .fl-feat { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; padding: 14px 0 4px; }
-  .fl-feat .soon-bars { flex-basis: 100%; max-width: none; }
-  .ch-row, #soon .feat-list li { grid-template-columns: 64px minmax(0, 1fr) 10px; align-items: baseline; }
-  #soon .feat-list li { grid-template-columns: 72px minmax(0, 1fr); }
-  .ch-when { grid-column: 1; grid-row: 2; justify-self: start; padding-top: 3px; }
-  .ch-note { grid-column: 2 / -1; grid-row: 2; }
-  .ch-chev { grid-column: 3; }
-  .ch-pv { width: auto; max-width: none; margin-left: 0; justify-content: center; padding: 4px 0 16px; }
+@media (max-width: 760px) {
+  /* the features wrap into a row of tabs above the panel */
+  .fx { grid-template-columns: minmax(0, 1fr); }
+  .fx-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fx-tab { width: auto; min-height: 40px; padding: 8px 10px 8px 12px; font-size: 14px; }
+  .sx-list li { grid-template-columns: 76px minmax(0, 1fr); align-items: baseline; }
+  .sx-list .ch-note { grid-column: 2; }
 }
 @media (max-width: 700px) { .strip { padding-top: 56px; } }
 
@@ -1093,150 +1085,212 @@ main { padding-top: 28px; }
     </div>
   </div>
 
-  <!-- ---------- NEWLY ADDED: what landed in the last two days, grouped by feature.
-       Each line is a button; its preview (an animated mock, or the real component through
-       data-spec) sits hidden under it until tapped. ---------- -->
+  <!-- ---------- NEWLY ADDED: what landed in the last two days. The features run down the left;
+       the one picked shows its components on the right, each preview an animated mock or the
+       real component drawn through data-spec. The first feature starts picked. ---------- -->
   <section class="strip" id="newly" aria-labelledby="newly-h">
     <div class="strip-head">
       <h2 id="newly-h">Newly added</h2>
-      <div class="strip-tools">
-        <p class="strip-note">14 changes across 5 features since yesterday &middot; tap a line to preview it</p>
-        <button type="button" class="pv-all" aria-pressed="false">Open all previews</button>
-      </div>
+      <p class="strip-note">14 changes across 5 features since yesterday &middot; drafts, not yet in Figma</p>
     </div>
-    <div class="fl new-grid">
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Cash out</h3><span class="feat-count">4 changes &middot; 2 today</span></div>
-        <ul class="feat-list">
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-1"><span class="ch-kind is-new">New</span><span class="ch-name">ReferralCard</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">States the reward on both sides before the tap.</span></button>
-            <div class="ch-pv" id="pv-1" hidden><div class="ui mock mock-referral"><div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div><p class="mr-sub">They play one level, you both get coins.</p><div class="mr-btn">Share link</div></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-2"><span class="ch-kind">Updated</span><span class="ch-name">AmountHero</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Fee line moved under the amount.</span></button>
-            <div class="ch-pv" id="pv-2" hidden><div class="ui float pv-fit" style="width:280px" data-spec="hero-earned"></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-3"><span class="ch-kind is-new">New</span><span class="ch-name">EmptyState</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">History before a first cash out.</span></button>
-            <div class="ch-pv" id="pv-3" hidden><div class="ui mock mock-empty"><div class="me-art"><span></span><span></span><span></span></div><b>No cash-outs yet</b><i>Your first one shows up here.</i></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-4"><span class="ch-kind">Fixed</span><span class="ch-name">HistoryList</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Long payout emails no longer clip.</span></button>
-            <div class="ch-pv" id="pv-4" hidden><div class="ui float pv-fit" style="width:340px" data-spec="history"></div></div>
-          </li>
-        </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Onboarding</h3><span class="feat-count">3 changes &middot; 2 today</span></div>
-        <ul class="feat-list">
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-5"><span class="ch-kind is-new">New</span><span class="ch-name">ProgressRing</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Missions done against the number needed.</span></button>
-            <div class="ch-pv" id="pv-5" hidden><div class="ui mock mock-ring"><div class="mg-ring"><span>3<i>/5</i></span></div><span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-6"><span class="ch-kind">Updated</span><span class="ch-name">CoachMark</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Arrow follows the target on rotation.</span></button>
-            <div class="ch-pv" id="pv-6" hidden><div class="ui float pv-fit flush" style="width:380px" data-spec="coach"></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-7"><span class="ch-kind">Fixed</span><span class="ch-name">MissionRow</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Step counter legible on the green card.</span></button>
-            <div class="ch-pv" id="pv-7" hidden><div class="ui float pv-fit flush" style="width:351px" data-spec="row-progress"></div></div>
-          </li>
-        </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>2x coins</h3><span class="feat-count">3 changes &middot; 1 today</span></div>
-        <ul class="feat-list">
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-8"><span class="ch-kind is-new">New</span><span class="ch-name">StreakBadge</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Days in a row, and time left to keep it.</span></button>
-            <div class="ch-pv" id="pv-8" hidden><div class="ui mock mock-streak"><span class="ms-flame">&#128293;</span><span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-9"><span class="ch-kind">Updated</span><span class="ch-name">EventBanner</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Gradient restored to the Figma values.</span></button>
-            <div class="ch-pv" id="pv-9" hidden><div class="ui float pv-fit flush" style="width:393px" data-spec="banner-active"></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-10"><span class="ch-kind">Fixed</span><span class="ch-name">FlipTimer</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">No flicker when the hour rolls over.</span></button>
-            <div class="ch-pv" id="pv-10" hidden><div class="ui float pv-fit flush is-auto" data-spec="flip-large"></div></div>
-          </li>
-        </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Survey</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
-        <ul class="feat-list">
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-11"><span class="ch-kind is-new">New</span><span class="ch-name">SegmentedPicker</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">One range at a time, remembered per screen.</span></button>
-            <div class="ch-pv" id="pv-11" hidden><div class="ui mock mock-seg"><div class="mseg-thumb" aria-hidden="true"></div><span class="is-on">Day</span><span>Week</span><span>All time</span></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-12"><span class="ch-kind">Updated</span><span class="ch-name">Check-all question</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Selected count shown on the button.</span></button>
-            <div class="ch-pv" id="pv-12" hidden><div class="ui mock mock-check"><div class="mc-opt t1"><span class="mc-box"></span>Puzzle games</div><div class="mc-opt"><span class="mc-box"></span>Card games</div><div class="mc-opt t2"><span class="mc-box"></span>Word games</div><div class="mc-btn">Next<span class="mc-count" aria-hidden="true"><span>1</span><span>2</span></span></div></div></div>
-          </li>
-        </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Core</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
-        <ul class="feat-list">
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-13"><span class="ch-kind is-new">New</span><span class="ch-name">LevelUpToast</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Dismisses itself, never blocks a tap.</span></button>
-            <div class="ch-pv" id="pv-13" hidden><div class="ui mock mock-toast"><span class="mt-dot"></span><span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span></div></div>
-          </li>
-          <li>
-            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-14"><span class="ch-kind">Updated</span><span class="ch-name">Button</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Loading state keeps the label width.</span></button>
-            <div class="ch-pv" id="pv-14" hidden><div class="ui float pv-fit" style="width:300px" data-spec="btn-all"></div></div>
-          </li>
-        </ul>
-      </article>
+    <div class="fx new-grid">
+      <div class="fx-list" role="tablist" aria-label="Features" aria-orientation="vertical">
+        <button type="button" class="fx-tab" role="tab" id="nt-1" aria-controls="np-1" aria-selected="true" tabindex="0"><span>Cash out</span><span class="fx-n">4<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-2" aria-controls="np-2" aria-selected="false" tabindex="-1"><span>Onboarding</span><span class="fx-n">3<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-3" aria-controls="np-3" aria-selected="false" tabindex="-1"><span>2x coins</span><span class="fx-n">3<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-4" aria-controls="np-4" aria-selected="false" tabindex="-1"><span>Survey</span><span class="fx-n">2<span class="vh"> changes</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="nt-5" aria-controls="np-5" aria-selected="false" tabindex="-1"><span>Core</span><span class="fx-n">2<span class="vh"> changes</span></span></button>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-1" aria-labelledby="nt-1" tabindex="0">
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-referral"><div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div><p class="mr-sub">They play one level, you both get coins.</p><div class="mr-btn">Share link</div></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>ReferralCard</h3>
+              <p>States the reward on both sides before the tap.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:280px" data-spec="hero-earned"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when is-today">Today</span></div>
+              <h3>AmountHero</h3>
+              <p>Fee line moved under the amount.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-empty"><div class="me-art"><span></span><span></span><span></span></div><b>No cash-outs yet</b><i>Your first one shows up here.</i></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when">Yesterday</span></div>
+              <h3>EmptyState</h3>
+              <p>History before a first cash out.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:340px" data-spec="history"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>HistoryList</h3>
+              <p>Long payout emails no longer clip.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-2" aria-labelledby="nt-2" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-ring"><div class="mg-ring"><span>3<i>/5</i></span></div><span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>ProgressRing</h3>
+              <p>Missions done against the number needed.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:380px" data-spec="coach"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when is-today">Today</span></div>
+              <h3>CoachMark</h3>
+              <p>Arrow follows the target on rotation.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:351px" data-spec="row-progress"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>MissionRow</h3>
+              <p>Step counter legible on the green card.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-3" aria-labelledby="nt-3" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-streak"><span class="ms-flame">&#128293;</span><span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>StreakBadge</h3>
+              <p>Days in a row, and time left to keep it.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush" style="width:393px" data-spec="banner-active"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>EventBanner</h3>
+              <p>Gradient restored to the Figma values.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit flush is-auto" data-spec="flip-large"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Fixed</span><span class="ch-when">Yesterday</span></div>
+              <h3>FlipTimer</h3>
+              <p>No flicker when the hour rolls over.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-4" aria-labelledby="nt-4" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-seg"><div class="mseg-thumb" aria-hidden="true"></div><span class="is-on">Day</span><span>Week</span><span>All time</span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>SegmentedPicker</h3>
+              <p>One range at a time, remembered per screen.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-check"><div class="mc-opt t1"><span class="mc-box"></span>Puzzle games</div><div class="mc-opt"><span class="mc-box"></span>Card games</div><div class="mc-opt t2"><span class="mc-box"></span>Word games</div><div class="mc-btn">Next<span class="mc-count" aria-hidden="true"><span>1</span><span>2</span></span></div></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>Check-all question</h3>
+              <p>Selected count shown on the button.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="np-5" aria-labelledby="nt-5" tabindex="0" hidden>
+        <div class="nc-grid">
+          <article class="nc">
+            <div class="nc-stage"><div class="ui mock mock-toast"><span class="mt-dot"></span><span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind is-new">New</span><span class="ch-when is-today">Today</span></div>
+              <h3>LevelUpToast</h3>
+              <p>Dismisses itself, never blocks a tap.</p>
+            </div>
+          </article>
+          <article class="nc">
+            <div class="nc-stage"><div class="ui float pv-fit" style="width:300px" data-spec="btn-all"></div></div>
+            <div class="nc-body">
+              <div class="nc-top"><span class="ch-kind">Updated</span><span class="ch-when">Yesterday</span></div>
+              <h3>Button</h3>
+              <p>Loading state keeps the label width.</p>
+            </div>
+          </article>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ---------- COMING SOON: the tasks still open on each flow, with the notes we were sent ---------- -->
+  <!-- ---------- COMING SOON: the open tasks of each flow, picked the same way, with the notes we were sent ---------- -->
   <section class="strip" id="soon" aria-labelledby="soon-h">
     <div class="strip-head">
       <h2 id="soon-h">Coming soon</h2>
       <p class="strip-note">16 tasks across 5 features &middot; notes from the team</p>
     </div>
-    <div class="fl">
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Leaderboard</h3><span class="feat-count">1 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div></div>
-        <ul class="feat-list">
+    <div class="fx">
+      <div class="fx-list" role="tablist" aria-label="Features" aria-orientation="vertical">
+        <button type="button" class="fx-tab" role="tab" id="st-1" aria-controls="sp-1" aria-selected="true" tabindex="0"><span>Leaderboard</span><span class="fx-n">4<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-2" aria-controls="sp-2" aria-selected="false" tabindex="-1"><span>Daily streak</span><span class="fx-n">3<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-3" aria-controls="sp-3" aria-selected="false" tabindex="-1"><span>Profile &amp; settings</span><span class="fx-n">4<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-4" aria-controls="sp-4" aria-selected="false" tabindex="-1"><span>Support chat</span><span class="fx-n">3<span class="vh"> tasks</span></span></button>
+        <button type="button" class="fx-tab" role="tab" id="st-5" aria-controls="sp-5" aria-selected="false" tabindex="-1"><span>Game detail</span><span class="fx-n">2<span class="vh"> tasks</span></span></button>
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-1" aria-labelledby="st-1" tabindex="0">
+        <div class="sx-head"><span class="feat-count">1 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div></div>
+        <ul class="sx-list">
           <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Weekly ranks</span></li>
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Prize row</span><span class="ch-note">Pinned to the top of the list.</span></li>
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Friend filter</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Empty week state</span></li>
         </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Daily streak</h3><span class="feat-count">1 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div></div>
-        <ul class="feat-list">
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-2" aria-labelledby="st-2" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">1 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div></div>
+        <ul class="sx-list">
           <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Calendar</span></li>
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Catch-up buy-back</span><span class="ch-note">Price must not read as a cash-out.</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Lost-streak pop-up</span></li>
         </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Profile &amp; settings</h3><span class="feat-count">0 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
-        <ul class="feat-list">
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-3" aria-labelledby="st-3" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Payout method</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Avatar picker</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Notification list</span><span class="ch-note">All eleven toggles on one screen.</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Delete account</span></li>
         </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Support chat</h3><span class="feat-count">0 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
-        <ul class="feat-list">
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-4" aria-labelledby="st-4" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
           <li><span class="ch-kind">Next up</span><span class="ch-name">Payout dispute path</span><span class="ch-note">Legal asked for this first.</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Ticket states</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Canned answers</span></li>
         </ul>
-      </article>
-      <article class="fl-group">
-        <div class="fl-feat"><h3>Game detail</h3><span class="feat-count">0 of 2 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
-        <ul class="feat-list">
+      </div>
+      <div class="fx-panel" role="tabpanel" id="sp-5" aria-labelledby="st-5" tabindex="0" hidden>
+        <div class="sx-head"><span class="feat-count">0 of 2 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
+        <ul class="sx-list">
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Cover art and coin rate</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Play button loading state</span></li>
         </ul>
-      </article>
+      </div>
     </div>
 
     <aside class="notes" aria-label="Notes from the team">
@@ -2300,7 +2354,7 @@ main { padding-top: 28px; }
     try { navigator.clipboard.writeText(text).then(function () { done(true); }, fallback); } catch (err) { fallback(); }
   });
 
-  /* ---------- newly added: stagger the feature columns in when the row is reached ---------- */
+  /* ---------- newly added: rise the cards in when the band is reached ---------- */
   var newGrid = document.querySelector(".new-grid");
   if (newGrid) {
     newGrid.classList.add("anim-ready");
@@ -2313,39 +2367,51 @@ main { padding-top: 28px; }
     } else revealNew();
   }
 
-  /* ---------- newly added: tap a line to open its preview under it ----------
-     Real components are drawn at their app width and zoomed down only when the line is narrower,
-     so they are measured each time a preview opens and again on resize. */
-  function fitPreview(pv) {
-    pv.querySelectorAll(".pv-fit").forEach(function (f) {
-      f.style.zoom = "";
-      var w = f.getBoundingClientRect().width, cs = getComputedStyle(pv);
-      var room = pv.parentNode.clientWidth - parseFloat(cs.marginLeft) - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      if (room > 0 && w > room) f.style.zoom = String(room / w);
+  /* ---------- feature pickers: the tab list on the left picks the panel on the right ----------
+     Real components are drawn at their app width and zoomed down when their card is narrower.
+     The zoom is worked out from the natural width (the drawn width over the current zoom), so
+     re-measuring after a zoom lands on the same value and the ResizeObserver settles. */
+  function fitPreview(f) {
+    var st = f.parentNode, cs = getComputedStyle(st);
+    var room = st.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var z = parseFloat(f.style.zoom) || 1, w = f.getBoundingClientRect().width / z;
+    if (room <= 0 || !w) return;
+    var nz = Math.min(1, room / w);
+    if (Math.abs(nz - z) > 0.002) f.style.zoom = nz === 1 ? "" : String(nz);
+  }
+  var pvFits = [].slice.call(document.querySelectorAll(".pv-fit"));
+  if (window.ResizeObserver) {
+    var pvSpy = new ResizeObserver(function (es) {
+      es.forEach(function (en) {
+        var f = en.target.classList.contains("pv-fit") ? en.target : en.target.querySelector(".pv-fit");
+        if (f) fitPreview(f);
+      });
     });
-  }
-  var pvRows = [].slice.call(document.querySelectorAll(".ch-row")), pvAll = document.querySelector(".pv-all");
-  function setPreview(b, open) {
-    var pv = document.getElementById(b.getAttribute("aria-controls"));
-    b.setAttribute("aria-expanded", open ? "true" : "false");
-    pv.hidden = !open;
-    if (open) fitPreview(pv);
-  }
-  function syncPvAll() {
-    if (!pvAll) return;
-    var all = pvRows.every(function (b) { return b.getAttribute("aria-expanded") === "true"; });
-    pvAll.setAttribute("aria-pressed", all ? "true" : "false");
-    pvAll.textContent = all ? "Close all previews" : "Open all previews";
-  }
-  pvRows.forEach(function (b) {
-    b.addEventListener("click", function () { setPreview(b, b.getAttribute("aria-expanded") !== "true"); syncPvAll(); });
+    pvFits.forEach(function (f) { pvSpy.observe(f); pvSpy.observe(f.parentNode); });
+  } else window.addEventListener("resize", function () { pvFits.forEach(fitPreview); });
+
+  document.querySelectorAll(".fx").forEach(function (fx) {
+    var tabs = [].slice.call(fx.querySelectorAll('[role="tab"]'));
+    function pick(t, focus) {
+      tabs.forEach(function (x) {
+        var on = x === t;
+        x.setAttribute("aria-selected", on ? "true" : "false");
+        x.tabIndex = on ? 0 : -1;
+        document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+      });
+      document.getElementById(t.getAttribute("aria-controls")).querySelectorAll(".pv-fit").forEach(fitPreview);
+      if (focus) t.focus();
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { pick(t); });
+      t.addEventListener("keydown", function (ev) {
+        var k = ev.key, j = k === "ArrowDown" || k === "ArrowRight" ? i + 1 : k === "ArrowUp" || k === "ArrowLeft" ? i - 1 : k === "Home" ? 0 : k === "End" ? tabs.length - 1 : null;
+        if (j === null) return;
+        ev.preventDefault();
+        pick(tabs[(j + tabs.length) % tabs.length], true);
+      });
+    });
   });
-  if (pvAll) pvAll.addEventListener("click", function () {
-    var open = pvAll.getAttribute("aria-pressed") !== "true";
-    pvRows.forEach(function (b) { setPreview(b, open); });
-    syncPvAll();
-  });
-  window.addEventListener("resize", function () { document.querySelectorAll(".ch-pv:not([hidden])").forEach(fitPreview); });
 
   /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
