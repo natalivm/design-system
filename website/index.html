@@ -984,7 +984,7 @@ main { padding-top: 28px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-/* ---------- Components page: search, feature filter, density and code behind an icon ---------- */
+/* ---------- Components page: features down the left, search, density and code behind an icon ---------- */
 .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .comp-bar { order: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding-bottom: 4px; }
 .comp-find { flex: 1 1 220px; min-width: 180px; max-width: 360px; }
@@ -994,9 +994,13 @@ main { padding-top: 28px; }
 .comp-find input::placeholder { color: #9ec9b4; }
 .sum { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--site-muted); }
 .comp-find input:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
-.comp-pick { display: inline-flex; align-items: center; gap: 8px; font: 400 12.5px/1 var(--f-mono); color: var(--site-muted); }
-.comp-pick select { font: 400 12.5px/1 var(--f-mono); color: var(--site-fg); background: var(--site-chip); border: 1px solid var(--site-line); border-radius: 999px; padding: 9px 12px; cursor: pointer; }
-.comp-pick select:focus-visible { outline: 2px solid var(--site-spark); outline-offset: 2px; }
+/* The same feature picker as Newly added on the Overview (.fx-list, .fx-tab): the picked feature
+   fills the grid, the others show a count. It stays in view while a long grid scrolls. */
+.comp-layout { --fx-ink: var(--site-canvas-deep); display: grid; grid-template-columns: minmax(170px, 220px) minmax(0, 1fr); gap: clamp(16px, 2.4vw, 32px); align-items: start; }
+.comp-feats { position: sticky; top: 96px; }
+.fx-tab.is-none { color: var(--site-muted); }
+.fx-tab.is-none .fx-n { background: none; }
+.comp-main { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
 .comp-count { margin-left: auto; }
 .comp-empty { order: 1; font-size: 15px; color: var(--site-muted); }
 .is-off { display: none !important; }
@@ -1017,9 +1021,6 @@ main { padding-top: 28px; }
 .comp-toggle[aria-expanded="true"] { color: var(--site-canvas-deep); background: var(--site-faint); border-color: var(--site-faint); }
 
 #components { align-items: start; }
-.comp-group { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 12px; margin: 10px 0 0; font: 600 15px/1.2 var(--f-display); letter-spacing: -.01em; color: var(--site-muted); }
-.comp-group::after { content: ""; flex: 1; height: 1px; background: var(--site-line); }
-#components:first-of-type .comp-group:first-child { margin-top: 0; }
 
 /* compact cards */
 #components.dense { grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 14px; }
@@ -1034,6 +1035,10 @@ main { padding-top: 28px; }
 #components.dense .comp.show-vars > .stage .fig ~ .fig { display: flex; }
 #components.dense .comp-vars { display: inline-block; }
 #components.dense .comp-code pre { font-size: 11.5px; max-height: 320px; overflow: auto; }
+@media (max-width: 760px) {
+  .comp-layout { grid-template-columns: minmax(0, 1fr); }
+  .comp-feats { position: static; }
+}
 @media (max-width: 460px) {
   #components.dense { grid-template-columns: minmax(0, 1fr); }
   .comp-count { margin-left: 0; }
@@ -1079,9 +1084,9 @@ main { padding-top: 28px; }
         <a class="gobtn" href="#components">Components</a>
       </div>
     </div>
-    <div class="hero-art" aria-label="Cash out sheet and countdown card">
-      <div class="ui float flush"><div data-spec="sheet-earned-bare"></div></div>
-      <div class="ui float" data-spec="count-card"></div>
+    <div class="hero-art" role="group" aria-label="Cash out sheet and countdown card">
+      <div class="ui float flush" role="group" aria-label="Cash out sheet preview"><div data-spec="sheet-earned-bare"></div></div>
+      <div class="ui float" role="group" aria-label="Countdown card preview" data-spec="count-card"></div>
     </div>
   </div>
 
@@ -1386,15 +1391,6 @@ main { padding-top: 28px; }
       <label class="vh" for="comp-q">Search components</label>
       <input id="comp-q" type="search" placeholder="Search name, summary or rule…" autocomplete="off" spellcheck="false">
     </div>
-    <label class="comp-pick"><span>Feature</span>
-      <select id="comp-feat">
-        <option value="all">All</option>
-        <option value="core">Core</option>
-        <option value="cashout">Cash out</option>
-        <option value="onboarding">Onboarding</option>
-        <option value="boost">2x coins</option>
-      </select>
-    </label>
     <p class="note comp-count" id="comp-count" role="status" aria-live="polite"></p>
     <div class="seg" role="group" aria-label="How much detail each card shows">
       <span>Detail</span>
@@ -1402,8 +1398,13 @@ main { padding-top: 28px; }
       <button type="button" data-density="full" aria-pressed="false">Full</button>
     </div>
   </div>
-  <p class="comp-empty is-off" id="comp-empty">Nothing matches that search. Clear it to see all 20 components.</p>
-  <div class="grid dense" id="components"></div>
+  <div class="comp-layout">
+    <div class="fx-list comp-feats" id="comp-feats" role="tablist" aria-label="Features" aria-orientation="vertical"></div>
+    <div class="comp-main" id="comp-main" role="tabpanel">
+      <p class="comp-empty is-off" id="comp-empty">Nothing matches that search. Clear it to see all 20 components.</p>
+      <div class="grid dense" id="components"></div>
+    </div>
+  </div>
 </section>
 
 <!-- ============================ PROTOTYPES (one tab, a list on the left) ============================ -->
@@ -1468,7 +1469,7 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-slow 400ms</span><span>easing-smooth</span><span>scrim 250ms</span></div>
         <div class="acts"><button type="button" class="pillbtn" data-code="CashoutSheet">Copy SwiftUI</button></div>
       </div>
-      <div class="stage"><div class="ui" data-spec="mo-sheet"></div></div>
+      <div class="stage"><div class="ui" role="group" aria-label="Sheet presentation preview" data-spec="mo-sheet"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1477,7 +1478,7 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-count 600ms</span><span>easing-snappy</span><span>.numericText()</span></div>
         <div class="acts"><button type="button" class="pillbtn" data-code="countUp">Copy SwiftUI</button></div>
       </div>
-      <div class="stage"><div class="ui float" style="width:320px" data-spec="mo-count"></div></div>
+      <div class="stage"><div class="ui float" style="width:320px" role="group" aria-label="Balance count-up preview" data-spec="mo-count"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1485,7 +1486,7 @@ main { padding-top: 28px; }
         <p class="desc">The only bouncy moment in the app. It marks money on the way.</p>
         <div class="chips"><span>duration-slow 400ms</span><span>easing-bouncy</span></div>
       </div>
-      <div class="stage"><div class="ui float" style="width:320px" data-spec="mo-pop"></div></div>
+      <div class="stage"><div class="ui float" style="width:320px" role="group" aria-label="Success pop preview" data-spec="mo-pop"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1494,8 +1495,8 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-fast 150ms</span><span>duration-base 250ms</span><span>easing-snappy</span></div>
       </div>
       <div class="stage">
-        <div class="ui float" style="width:260px" data-spec="btn-press"></div>
-        <div class="ui float drop" style="width:260px" data-spec="count-card"></div>
+        <div class="ui float" style="width:260px" role="group" aria-label="Press preview" data-spec="btn-press"></div>
+        <div class="ui float drop" style="width:260px" role="group" aria-label="Countdown tick preview" data-spec="count-card"></div>
       </div>
     </article>
     <article class="panel wide">
@@ -2107,11 +2108,13 @@ main { padding-top: 28px; }
   };
 
   /* ---------- build: components page ---------- */
-  /* Each component belongs to one feature; the catalogue can be searched, filtered, sorted and
-     shown compact. The SwiftUI snippet starts folded away behind the </> button in the name row. */
-  var FEATS = [["core", "Core"], ["cashout", "Cash out"], ["onboarding", "Onboarding"], ["boost", "2x coins"]];
-  var FEAT_NAME = {}, FEAT_ORDER = {};
-  FEATS.forEach(function (f, i) { FEAT_NAME[f[0]] = f[1]; FEAT_ORDER[f[0]] = i; });
+  /* Each component belongs to one feature. The features run down the left, in the same order as
+     on the Overview, and the first starts picked; the grid shows the picked feature's components,
+     searched and shown compact or full. The SwiftUI snippet starts folded away behind the </>
+     button in the name row. */
+  var FEATS = [["cashout", "Cash out"], ["onboarding", "Onboarding"], ["boost", "2x coins"], ["core", "Core"]];
+  var FEAT_NAME = {};
+  FEATS.forEach(function (f) { FEAT_NAME[f[0]] = f[1]; });
 
   var compRoot = document.getElementById("components");
   var CARDS = COMPONENTS.map(function (c) {
@@ -2146,7 +2149,7 @@ main { padding-top: 28px; }
       var fig = el("figure", "fig"), box = el("div", "ui float" + (s[3] ? " " + s[3] : ""));
       if (s[1]) box.style.width = s[1] + "px";
       box.setAttribute("data-spec", s[0]);
-      var cap = el("figcaption", "vh", s[2]);
+      var cap = el("figcaption", "vh", c.name + " preview, " + s[2]);
       fig.appendChild(cap); fig.appendChild(box); st.appendChild(fig);
     });
     a.appendChild(st);
@@ -2182,37 +2185,59 @@ main { padding-top: 28px; }
   try { savedDensity = localStorage.getItem("bp-density"); } catch (e) {}
   setDensity(savedDensity === "full" ? "full" : "dense", false);
 
-  var compQ = "", compFeat = "all";
+  var compQ = "", compFeat = FEATS[0][0];
   var compCount = document.getElementById("comp-count"), compEmpty = document.getElementById("comp-empty");
+  var compFeats = document.getElementById("comp-feats"), compMain = document.getElementById("comp-main");
+  var featTabs = FEATS.map(function (f) {
+    var b = el("button", "fx-tab"), n = el("span", "fx-n");
+    b.type = "button"; b.id = "ct-" + f[0];
+    b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "comp-main");
+    b.appendChild(el("span", null, f[1])); b.appendChild(n);
+    b.addEventListener("click", function () { compFeat = f[0]; drawComps(); });
+    compFeats.appendChild(b);
+    return { id: f[0], btn: b, n: n };
+  });
+  compFeats.addEventListener("keydown", function (ev) {
+    var from = ev.target.closest(".fx-tab"), k = ev.key;
+    var i = FEATS.findIndex(function (f) { return from ? "ct-" + f[0] === from.id : f[0] === compFeat; });
+    var j = k === "ArrowDown" || k === "ArrowRight" ? i + 1 : k === "ArrowUp" || k === "ArrowLeft" ? i - 1 : k === "Home" ? 0 : k === "End" ? FEATS.length - 1 : null;
+    if (j === null) return;
+    ev.preventDefault();
+    compFeat = FEATS[(j + FEATS.length) % FEATS.length][0];
+    drawComps();
+    document.getElementById("ct-" + compFeat).focus();
+  });
   function drawComps() {
-    var list = CARDS.filter(function (x) {
-      return (compFeat === "all" || x.c.feat === compFeat) && (!compQ || x.hay.indexOf(compQ) > -1);
+    var hits = CARDS.filter(function (x) { return !compQ || x.hay.indexOf(compQ) > -1; }), per = {};
+    hits.forEach(function (x) { per[x.c.feat] = (per[x.c.feat] || 0) + 1; });
+    /* A search with nothing in the picked feature moves to the first feature where it does find
+       something, so typing a name always shows that component. */
+    if (compQ && !per[compFeat]) {
+      var first = FEATS.filter(function (f) { return per[f[0]]; })[0];
+      if (first) compFeat = first[0];
+    }
+    var list = hits.filter(function (x) { return x.c.feat === compFeat; });
+    list.sort(function (a, b) { return a.c.name.localeCompare(b.c.name); });
+    featTabs.forEach(function (t) {
+      var on = t.id === compFeat, k = per[t.id] || 0;
+      t.btn.setAttribute("aria-selected", on ? "true" : "false");
+      t.btn.tabIndex = on ? 0 : -1;
+      t.btn.classList.toggle("is-none", !k);
+      t.n.textContent = String(k);
+      t.n.appendChild(el("span", "vh", compQ ? (k === 1 ? " match" : " matches") : (k === 1 ? " component" : " components")));
     });
-    list.sort(function (a, b) {
-      if (a.c.feat !== b.c.feat) return FEAT_ORDER[a.c.feat] - FEAT_ORDER[b.c.feat];
-      return a.c.name.localeCompare(b.c.name);
-    });
+    compMain.setAttribute("aria-labelledby", "ct-" + compFeat);
     CARDS.forEach(function (x) { x.node.classList.add("is-off"); });
-    compRoot.querySelectorAll(".comp-group").forEach(function (g) { compRoot.removeChild(g); });
-    var group = null;
-    list.forEach(function (x) {
-      /* Moving a card keeps its node, so the live previews mounted inside it keep running. */
-      if (compFeat === "all" && x.c.feat !== group) {
-        group = x.c.feat;
-        compRoot.appendChild(el("h2", "comp-group", FEAT_NAME[group]));
-      }
-      x.node.classList.remove("is-off");
-      compRoot.appendChild(x.node);
-    });
-    compCount.textContent = list.length + (list.length === 1 ? " component" : " components");
+    /* Moving a card keeps its node, so the live previews mounted inside it keep running. */
+    list.forEach(function (x) { x.node.classList.remove("is-off"); compRoot.appendChild(x.node); });
+    compCount.textContent = compQ && !hits.length ? "No matches"
+      : compQ ? list.length + " in " + FEAT_NAME[compFeat] + " · " + hits.length + " in all"
+      : list.length + (list.length === 1 ? " component" : " components");
     compEmpty.textContent = "Nothing matches that search. Clear it to see all " + CARDS.length + " components.";
-    compEmpty.classList.toggle("is-off", list.length > 0);
+    compEmpty.classList.toggle("is-off", hits.length > 0);
   }
   document.getElementById("comp-q").addEventListener("input", function (e) {
     compQ = e.target.value.trim().toLowerCase(); drawComps();
-  });
-  document.getElementById("comp-feat").addEventListener("change", function (e) {
-    compFeat = e.target.value; drawComps();
   });
   drawComps();
 
@@ -2325,15 +2350,17 @@ main { padding-top: 28px; }
   document.querySelectorAll("[data-spec]").forEach(function (node) {
     var f = SPECS[node.getAttribute("data-spec")]; if (f) ReactDOM.createRoot(node).render(f());
   });
-  /* These are specimens, not controls: every button inside one is a picture of a button. Left
-     reachable they put 26 dead stops in the tab order on Components alone, and a screen reader
-     announced "Cash out, button", "Claim, button" for things that do nothing. inert takes the
-     whole subtree out of the tab order and the accessibility tree; the preview still renders and
-     still re-themes. Applied after render so it covers the mounted tree. */
-  function sealPreviews() {
-    document.querySelectorAll(".ui").forEach(function (n) { n.inert = true; });
-  }
-  requestAnimationFrame(function () { requestAnimationFrame(sealPreviews); });
+  /* Previews are live: buttons press, the tab bar switches tabs, the missions card folds, Replay
+     replays. They were once made inert to keep pictured buttons out of the tab order, which also
+     switched all of that off, so instead each preview is a named group ("AmountHero preview,
+     Earned"; "Sheet presentation preview") and a screen reader hears its buttons as part of a
+     preview. Component cards are named by their figure caption; the cards under Newly added by
+     their heading; the rest carry role="group" and an aria-label in the markup. */
+  document.querySelectorAll(".nc .ui").forEach(function (n) {
+    var h3 = n.closest(".nc").querySelector("h3");
+    n.setAttribute("role", "group");
+    n.setAttribute("aria-label", (h3 ? h3.textContent : "Component") + " preview");
+  });
 
   /* ---------- app theme toggle (examples only; the site keeps one look) ---------- */
   function setTheme(th, save) {
