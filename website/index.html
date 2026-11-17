@@ -408,36 +408,42 @@ main { min-width: 0; padding-top: 56px; }
 .strip-head h2 { font-size: clamp(28px, 3.2vw, 44px); line-height: 1.08; letter-spacing: -.03em; font-weight: 600; margin: 0; }
 .strip-note { margin: 0; font: 400 12.5px/1.5 var(--f-mono); color: var(--site-faint); }
 
-/* newly added: its own blue band. One column per feature, one line per change, so five features
-   that all moved in the same two days still fit in one look. */
+/* newly added: its own blue band, listed by feature so five features that all moved in the same
+   two days still fit in one look. */
 #newly { --nb: #07305a; --nb-deep: #03182f; background: var(--nb); border-top: 0; margin: 40px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
 #newly .strip-head, #soon .strip-head { margin-bottom: 20px; }
 #newly .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
 #newly .strip-note { color: rgba(255,255,255,.72); }
 
-/* the feature columns, shared by both bands */
-.feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(236px, 1fr)); gap: 12px; align-items: start; }
-.feat { min-width: 0; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.05); padding: 14px 16px 4px; }
-.feat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-bottom: 11px; }
-.feat-head h3 { margin: 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
-.feat-count { flex: none; font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); }
-.feat-list { list-style: none; margin: 0; padding: 0; }
-.feat-list li { border-top: 1px solid rgba(255,255,255,.14); }
-.ch-row, #soon .feat-list li { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; column-gap: 9px; row-gap: 2px; align-items: baseline; padding: 9px 0 10px; }
+/* the feature list, shared by both bands: one group per feature, its name on the left and its
+   lines to the right. A feature with two changes is just a shorter group, so nothing is left
+   standing next to it the way columns of uneven length left holes. */
+.fl { border-top: 1px solid rgba(255,255,255,.3); }
+.fl-group { display: grid; grid-template-columns: minmax(130px, 200px) minmax(0, 1fr); column-gap: clamp(16px, 2.4vw, 36px); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.3); }
+.fl-feat { display: grid; align-content: start; justify-items: start; gap: 6px; padding: 12px 0; }
+.fl-feat h3 { margin: 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
+.feat-count { font: 400 11px/1.3 var(--f-mono); color: rgba(255,255,255,.72); }
+.feat-list { list-style: none; margin: 0; padding: 0; min-width: 0; }
+.feat-list li + li { border-top: 1px solid rgba(255,255,255,.12); }
+.ch-row, #soon .feat-list li { display: grid; grid-template-columns: 72px minmax(120px, 210px) minmax(0, 1fr) 72px 10px; column-gap: 16px; row-gap: 3px; align-items: center; padding: 10px 0; }
+.ch-kind { grid-column: 1; grid-row: 1; }
+.ch-name { grid-column: 2; grid-row: 1; }
+.ch-note { grid-column: 3; grid-row: 1; }
+.ch-when { grid-column: 4; grid-row: 1; justify-self: end; }
+.ch-chev { grid-column: 5; grid-row: 1; }
 /* each line of Newly added is a button: tapping it opens the component's preview under it */
-.ch-row { grid-template-columns: 58px minmax(0, 1fr) 10px; width: 100%; margin: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ch-row { width: 100%; margin: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .ch-row:hover .ch-name { text-decoration: underline; text-decoration-color: rgba(255,255,255,.5); text-underline-offset: 3px; }
 .ch-row:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 2px; }
 .ch-chev { align-self: center; justify-self: end; width: 6px; height: 6px; border-right: 1.5px solid rgba(255,255,255,.8); border-bottom: 1.5px solid rgba(255,255,255,.8); transform: translateY(-2px) rotate(45deg); transition: transform .25s; }
 .ch-row[aria-expanded="true"] .ch-chev { transform: translateY(1px) rotate(-135deg); }
-/* the day sits under the tag, so the name line keeps its full width and never breaks mid-word */
-.ch-row .ch-when { grid-column: 1; grid-row: 2; align-self: start; padding-top: 3px; }
-.ch-row .ch-note { grid-column: 2 / -1; grid-row: 2; }
-.ch-pv { display: flex; align-items: center; justify-content: center; min-height: 92px; margin: 0 -8px 12px; padding: 18px 12px; background: var(--nb-deep); overflow: hidden; animation: pvIn .35s cubic-bezier(.2,.9,.3,1); }
+/* the preview sits straight on the band, lined up under the name */
+.ch-pv { display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; width: fit-content; max-width: calc(100% - 88px); margin: 0 0 0 88px; padding: 4px 0 18px; overflow: hidden; animation: pvIn .35s cubic-bezier(.2,.9,.3,1); }
 .ch-pv[hidden] { display: none; }
 @keyframes pvIn { from { opacity: 0; transform: translateY(-6px); } }
+.ch-pv .mock { width: 300px; max-width: 100%; }
 .ch-pv .float { flex: none; }
-.ch-pv .float.flush { border-radius: 16px; }
+.ch-pv .float.flush { border-radius: 16px; background: none; }
 .ch-pv .float[data-spec^="row-"] { border-radius: 12px; }
 .ch-pv .pv-fit { max-width: none; }
 .pv-fit.is-auto { width: max-content; }
@@ -450,15 +456,15 @@ main { min-width: 0; padding-top: 56px; }
 .ch-name { min-width: 0; font: 600 13.5px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: break-word; }
 .ch-when { font: 400 10.5px/1 var(--f-mono); color: rgba(255,255,255,.7); white-space: nowrap; }
 .ch-when.is-today { color: var(--site-fg); }
-.ch-note { grid-column: 2 / -1; font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,.78); }
+.ch-note { font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,.78); }
 
-.new-grid.anim-ready .feat { opacity: 0; }
-.new-grid.in .feat { opacity: 1; animation: riseIn .5s cubic-bezier(.2,.9,.3,1) backwards; }
-.new-grid.in .feat:nth-child(2) { animation-delay: .05s; }
-.new-grid.in .feat:nth-child(3) { animation-delay: .1s; }
-.new-grid.in .feat:nth-child(4) { animation-delay: .15s; }
-.new-grid.in .feat:nth-child(n+5) { animation-delay: .2s; }
-@keyframes riseIn { from { opacity: 0; transform: translateY(14px); } }
+.new-grid.anim-ready .fl-group { opacity: 0; }
+.new-grid.in .fl-group { opacity: 1; animation: riseIn .5s cubic-bezier(.2,.9,.3,1) backwards; }
+.new-grid.in .fl-group:nth-child(2) { animation-delay: .05s; }
+.new-grid.in .fl-group:nth-child(3) { animation-delay: .1s; }
+.new-grid.in .fl-group:nth-child(4) { animation-delay: .15s; }
+.new-grid.in .fl-group:nth-child(n+5) { animation-delay: .2s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } }
 
 /* the mock components themselves, drawn with the app tokens so the theme switch still works */
 .mock { font-family: var(--f-display); color: var(--ink); background: var(--surface); border-radius: 20px; box-shadow: var(--site-shadow); width: 100%; box-sizing: border-box; }
@@ -536,14 +542,13 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes show1 { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
 @keyframes show2 { 0%, 46% { opacity: 0; } 47%, 100% { opacity: 1; } }
 
-/* coming soon: the plum band, the same columns with a status on every task */
+/* coming soon: the plum band, the same list with a status on every task */
 #soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
 #soon .strip-head h2 { font-size: clamp(14px, 1.6vw, 22px); letter-spacing: -.01em; }
 #soon .strip-note { color: rgba(255,255,255,.72); }
-#soon .feat { border-style: dashed; }
-#soon .feat-list li { grid-template-columns: 68px minmax(0, 1fr); }
-#soon .ch-note { grid-column: 2; }
-.soon-bars { height: 3px; margin-bottom: 4px; background: rgba(255,255,255,.14); }
+#soon .fl-group { border-bottom-style: dashed; }
+#soon .feat-list li { grid-template-columns: 72px minmax(120px, 210px) minmax(0, 1fr); }
+.soon-bars { width: 100%; max-width: 160px; height: 3px; background: rgba(255,255,255,.14); }
 .soon-bars span { display: block; height: 100%; background: var(--site-spark); }
 .ch-kind.is-now { color: var(--site-canvas-deep); background: var(--site-spark); border-color: var(--site-spark); }
 /* Dimmed with a lighter border rather than opacity: opacity multiplied into the label colour and
@@ -552,7 +557,7 @@ main { min-width: 0; padding-top: 56px; }
 .ch-kind.is-done { border-color: transparent; padding-left: 0; }
 .is-done ~ .ch-name { font-weight: 500; color: rgba(255,255,255,.72); }
 
-/* the notes the team keeps sending about those flows: a row under the columns */
+/* the notes the team keeps sending about those flows: a row under the list */
 .notes { display: flex; flex-wrap: wrap; gap: 20px; padding: 30px 6px 0; }
 .note-card { position: relative; flex: 0 1 290px; box-sizing: border-box; padding: 18px 16px 14px; color: #15231d; font-family: var(--f-display); box-shadow: 0 18px 34px rgba(1,30,22,.32); animation: pop .62s cubic-bezier(.2,1.5,.42,1) backwards, sway 7s ease-in-out infinite; transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s; }
 .note-card::before { content: ""; position: absolute; top: -9px; left: 50%; width: 58px; height: 16px; transform: translateX(-50%) rotate(-2.5deg); background: rgba(255,255,255,.42); }
@@ -566,13 +571,25 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .note-card, .new-grid.in .feat, .ch-pv, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
+  .note-card, .new-grid.in .fl-group, .ch-pv, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
   .mseg-thumb, .mock-seg span, .mc-box, .mc-count, .mc-count span { animation: none; }
   .mc-count span:first-child { opacity: 0; }
-  .new-grid.anim-ready .feat { opacity: 1; }
+  .new-grid.anim-ready .fl-group { opacity: 1; }
   .note-card:hover { transform: none; }
 }
-@media (max-width: 700px) { .strip { padding-top: 56px; } .feat-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 860px) {
+  /* the feature name moves above its lines; the day drops under the tag and the note under the name */
+  .fl-group { grid-template-columns: minmax(0, 1fr); }
+  .fl-feat { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; padding: 14px 0 4px; }
+  .fl-feat .soon-bars { flex-basis: 100%; max-width: none; }
+  .ch-row, #soon .feat-list li { grid-template-columns: 64px minmax(0, 1fr) 10px; align-items: baseline; }
+  #soon .feat-list li { grid-template-columns: 72px minmax(0, 1fr); }
+  .ch-when { grid-column: 1; grid-row: 2; justify-self: start; padding-top: 3px; }
+  .ch-note { grid-column: 2 / -1; grid-row: 2; }
+  .ch-chev { grid-column: 3; }
+  .ch-pv { width: auto; max-width: none; margin-left: 0; justify-content: center; padding: 4px 0 16px; }
+}
+@media (max-width: 700px) { .strip { padding-top: 56px; } }
 
 /* ---------- panels ---------- */
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
@@ -1076,7 +1093,7 @@ main { padding-top: 28px; }
     </div>
   </div>
 
-  <!-- ---------- NEWLY ADDED: what landed in the last two days, one column per feature.
+  <!-- ---------- NEWLY ADDED: what landed in the last two days, grouped by feature.
        Each line is a button; its preview (an animated mock, or the real component through
        data-spec) sits hidden under it until tapped. ---------- -->
   <section class="strip" id="newly" aria-labelledby="newly-h">
@@ -1087,9 +1104,9 @@ main { padding-top: 28px; }
         <button type="button" class="pv-all" aria-pressed="false">Open all previews</button>
       </div>
     </div>
-    <div class="feat-grid new-grid">
-      <article class="feat">
-        <div class="feat-head"><h3>Cash out</h3><span class="feat-count">4 changes &middot; 2 today</span></div>
+    <div class="fl new-grid">
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Cash out</h3><span class="feat-count">4 changes &middot; 2 today</span></div>
         <ul class="feat-list">
           <li>
             <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-1"><span class="ch-kind is-new">New</span><span class="ch-name">ReferralCard</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">States the reward on both sides before the tap.</span></button>
@@ -1109,8 +1126,8 @@ main { padding-top: 28px; }
           </li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Onboarding</h3><span class="feat-count">3 changes &middot; 2 today</span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Onboarding</h3><span class="feat-count">3 changes &middot; 2 today</span></div>
         <ul class="feat-list">
           <li>
             <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-5"><span class="ch-kind is-new">New</span><span class="ch-name">ProgressRing</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Missions done against the number needed.</span></button>
@@ -1126,8 +1143,8 @@ main { padding-top: 28px; }
           </li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>2x coins</h3><span class="feat-count">3 changes &middot; 1 today</span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>2x coins</h3><span class="feat-count">3 changes &middot; 1 today</span></div>
         <ul class="feat-list">
           <li>
             <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-8"><span class="ch-kind is-new">New</span><span class="ch-name">StreakBadge</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Days in a row, and time left to keep it.</span></button>
@@ -1143,8 +1160,8 @@ main { padding-top: 28px; }
           </li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Survey</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Survey</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
         <ul class="feat-list">
           <li>
             <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-11"><span class="ch-kind is-new">New</span><span class="ch-name">SegmentedPicker</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">One range at a time, remembered per screen.</span></button>
@@ -1156,8 +1173,8 @@ main { padding-top: 28px; }
           </li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Core</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Core</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
         <ul class="feat-list">
           <li>
             <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-13"><span class="ch-kind is-new">New</span><span class="ch-name">LevelUpToast</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Dismisses itself, never blocks a tap.</span></button>
@@ -1178,10 +1195,9 @@ main { padding-top: 28px; }
       <h2 id="soon-h">Coming soon</h2>
       <p class="strip-note">16 tasks across 5 features &middot; notes from the team</p>
     </div>
-    <div class="feat-grid">
-      <article class="feat">
-        <div class="feat-head"><h3>Leaderboard</h3><span class="feat-count">1 of 4 done</span></div>
-        <div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div>
+    <div class="fl">
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Leaderboard</h3><span class="feat-count">1 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:25%"></span></div></div>
         <ul class="feat-list">
           <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Weekly ranks</span></li>
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Prize row</span><span class="ch-note">Pinned to the top of the list.</span></li>
@@ -1189,18 +1205,16 @@ main { padding-top: 28px; }
           <li><span class="ch-kind">Next up</span><span class="ch-name">Empty week state</span></li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Daily streak</h3><span class="feat-count">1 of 3 done</span></div>
-        <div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Daily streak</h3><span class="feat-count">1 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:33%"></span></div></div>
         <ul class="feat-list">
           <li><span class="ch-kind is-done">&#10003; Done</span><span class="ch-name">Calendar</span></li>
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Catch-up buy-back</span><span class="ch-note">Price must not read as a cash-out.</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Lost-streak pop-up</span></li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Profile &amp; settings</h3><span class="feat-count">0 of 4 done</span></div>
-        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Profile &amp; settings</h3><span class="feat-count">0 of 4 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
         <ul class="feat-list">
           <li><span class="ch-kind is-now">In design</span><span class="ch-name">Payout method</span></li>
           <li><span class="ch-kind">Next up</span><span class="ch-name">Avatar picker</span></li>
@@ -1208,18 +1222,16 @@ main { padding-top: 28px; }
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Delete account</span></li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Support chat</h3><span class="feat-count">0 of 3 done</span></div>
-        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Support chat</h3><span class="feat-count">0 of 3 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
         <ul class="feat-list">
           <li><span class="ch-kind">Next up</span><span class="ch-name">Payout dispute path</span><span class="ch-note">Legal asked for this first.</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Ticket states</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Canned answers</span></li>
         </ul>
       </article>
-      <article class="feat">
-        <div class="feat-head"><h3>Game detail</h3><span class="feat-count">0 of 2 done</span></div>
-        <div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div>
+      <article class="fl-group">
+        <div class="fl-feat"><h3>Game detail</h3><span class="feat-count">0 of 2 done</span><div class="soon-bars" aria-hidden="true"><span style="width:0%"></span></div></div>
         <ul class="feat-list">
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Cover art and coin rate</span></li>
           <li><span class="ch-kind is-wait">Backlog</span><span class="ch-name">Play button loading state</span></li>
@@ -2302,12 +2314,13 @@ main { padding-top: 28px; }
   }
 
   /* ---------- newly added: tap a line to open its preview under it ----------
-     Real components are drawn at their app width and zoomed down to fit the column, so they are
-     measured each time a preview opens and again on resize. */
+     Real components are drawn at their app width and zoomed down only when the line is narrower,
+     so they are measured each time a preview opens and again on resize. */
   function fitPreview(pv) {
     pv.querySelectorAll(".pv-fit").forEach(function (f) {
       f.style.zoom = "";
-      var w = f.getBoundingClientRect().width, room = pv.clientWidth - 24;
+      var w = f.getBoundingClientRect().width, cs = getComputedStyle(pv);
+      var room = pv.parentNode.clientWidth - parseFloat(cs.marginLeft) - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       if (room > 0 && w > room) f.style.zoom = String(room / w);
     });
   }
