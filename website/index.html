@@ -422,10 +422,32 @@ main { min-width: 0; padding-top: 56px; }
 .feat-head h3 { margin: 0; font: 600 16px/1.2 var(--f-display); letter-spacing: -.015em; }
 .feat-count { flex: none; font: 400 11px/1 var(--f-mono); color: rgba(255,255,255,.72); }
 .feat-list { list-style: none; margin: 0; padding: 0; }
-.feat-list li { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; column-gap: 9px; row-gap: 2px; align-items: baseline; padding: 9px 0 10px; border-top: 1px solid rgba(255,255,255,.14); }
+.feat-list li { border-top: 1px solid rgba(255,255,255,.14); }
+.ch-row, #soon .feat-list li { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; column-gap: 9px; row-gap: 2px; align-items: baseline; padding: 9px 0 10px; }
+/* each line of Newly added is a button: tapping it opens the component's preview under it */
+.ch-row { grid-template-columns: 58px minmax(0, 1fr) 10px; width: 100%; margin: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ch-row:hover .ch-name { text-decoration: underline; text-decoration-color: rgba(255,255,255,.5); text-underline-offset: 3px; }
+.ch-row:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 2px; }
+.ch-chev { align-self: center; justify-self: end; width: 6px; height: 6px; border-right: 1.5px solid rgba(255,255,255,.8); border-bottom: 1.5px solid rgba(255,255,255,.8); transform: translateY(-2px) rotate(45deg); transition: transform .25s; }
+.ch-row[aria-expanded="true"] .ch-chev { transform: translateY(1px) rotate(-135deg); }
+/* the day sits under the tag, so the name line keeps its full width and never breaks mid-word */
+.ch-row .ch-when { grid-column: 1; grid-row: 2; align-self: start; padding-top: 3px; }
+.ch-row .ch-note { grid-column: 2 / -1; grid-row: 2; }
+.ch-pv { display: flex; align-items: center; justify-content: center; min-height: 92px; margin: 0 -8px 12px; padding: 18px 12px; background: var(--nb-deep); overflow: hidden; animation: pvIn .35s cubic-bezier(.2,.9,.3,1); }
+.ch-pv[hidden] { display: none; }
+@keyframes pvIn { from { opacity: 0; transform: translateY(-6px); } }
+.ch-pv .float { flex: none; }
+.ch-pv .float.flush { border-radius: 16px; }
+.ch-pv .float[data-spec^="row-"] { border-radius: 12px; }
+.ch-pv .pv-fit { max-width: none; }
+.pv-fit.is-auto { width: max-content; }
+.strip-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.pv-all { min-height: 32px; font: 400 12px/1 var(--f-mono); color: var(--nb-deep); background: var(--site-fg); border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; }
+.pv-all:hover { background: rgba(255,255,255,.86); }
+.pv-all:focus-visible { outline: 2px solid var(--site-fg); outline-offset: 3px; }
 .ch-kind { justify-self: start; font: 400 10px/1 var(--f-mono); color: rgba(255,255,255,.86); border: 1px solid rgba(255,255,255,.34); border-radius: 999px; padding: 4px 6px; white-space: nowrap; }
 .ch-kind.is-new { color: var(--nb-deep); background: var(--site-fg); border-color: var(--site-fg); }
-.ch-name { min-width: 0; font: 600 13.5px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.ch-name { min-width: 0; font: 600 13.5px/1.25 var(--f-display); letter-spacing: -.01em; overflow-wrap: break-word; }
 .ch-when { font: 400 10.5px/1 var(--f-mono); color: rgba(255,255,255,.7); white-space: nowrap; }
 .ch-when.is-today { color: var(--site-fg); }
 .ch-note { grid-column: 2 / -1; font-size: 12.5px; line-height: 1.35; color: rgba(255,255,255,.78); }
@@ -437,6 +459,82 @@ main { min-width: 0; padding-top: 56px; }
 .new-grid.in .feat:nth-child(4) { animation-delay: .15s; }
 .new-grid.in .feat:nth-child(n+5) { animation-delay: .2s; }
 @keyframes riseIn { from { opacity: 0; transform: translateY(14px); } }
+
+/* the mock components themselves, drawn with the app tokens so the theme switch still works */
+.mock { font-family: var(--f-display); color: var(--ink); background: var(--surface); border-radius: 20px; box-shadow: var(--site-shadow); width: 100%; box-sizing: border-box; }
+.mock b { display: block; font-size: 13.5px; line-height: 17px; font-weight: 700; }
+.mock i { display: block; font-style: normal; font-size: 11.5px; line-height: 15px; color: var(--ink-secondary); margin-top: 2px; }
+.mock-streak, .mock-toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px 12px 12px; border-radius: 999px; }
+.ms-flame { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: #fff3d6; font-size: 16px; }
+.mt-dot { flex: none; width: 10px; height: 10px; border-radius: 999px; background: var(--mint-400); box-shadow: 0 0 0 4px rgba(11,221,102,.18); }
+.mock-referral { padding: 14px; display: grid; gap: 8px; }
+.mr-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.mr-pill { font: 700 11.5px/1 var(--f-display); color: #7a5a00; background: var(--gold-400); border-radius: 999px; padding: 5px 9px; }
+.mr-sub { margin: 0; font-size: 11.5px; line-height: 15px; color: var(--ink-secondary); }
+.mr-btn { margin-top: 2px; text-align: center; font-size: 12.5px; font-weight: 700; color: var(--on-accent); background: var(--blue-500); border-radius: 999px; padding: 9px; }
+.mock-ring { display: flex; align-items: center; gap: 12px; padding: 14px; }
+.mg-ring { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: conic-gradient(var(--blue-500) 0 60%, var(--separator) 0); }
+.mg-ring span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 700; }
+.mg-ring i { display: inline; font-size: 10px; color: var(--ink-secondary); margin: 0; }
+.mock-empty { display: grid; justify-items: center; gap: 2px; padding: 18px 14px; text-align: center; }
+.me-art { display: flex; align-items: flex-end; gap: 4px; height: 26px; margin-bottom: 8px; }
+.me-art span { width: 9px; border-radius: 3px; background: var(--separator); }
+.me-art span:nth-child(1) { height: 12px; } .me-art span:nth-child(2) { height: 20px; } .me-art span:nth-child(3) { height: 15px; }
+.mock-seg { display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--surface-grouped); box-shadow: none; }
+.mock-seg span { flex: 1; text-align: center; font-size: 11.5px; font-weight: 600; color: var(--ink-secondary); border-radius: 999px; padding: 8px 6px; }
+.mock-seg span.is-on { color: var(--ink); }
+
+
+/* each preview plays back what the component does */
+@property --mg { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
+
+.ms-flame { animation: flicker 2.6s ease-in-out infinite; }
+@keyframes flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 34% { transform: scale(1.13) rotate(-6deg); } 67% { transform: scale(.95) rotate(5deg); } }
+
+.mock-toast { animation: toastIn 5s ease-in-out infinite; }
+@keyframes toastIn { 0% { opacity: 0; translate: 0 -16px; } 9%, 84% { opacity: 1; translate: 0 0; } 94%, 100% { opacity: 0; translate: 0 -12px; } }
+/* No ping: this dot sits in a static toast specimen and is tied to nothing live, so the pulse was
+   decorative liveness. It stays as a plain status dot. */
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(11,221,102,.5); } 72% { box-shadow: 0 0 0 10px rgba(11,221,102,0); } 100% { box-shadow: 0 0 0 0 rgba(11,221,102,0); } }
+
+.mr-pill { animation: pillPop 4s ease-in-out infinite; }
+@keyframes pillPop { 0%, 68%, 100% { transform: scale(1); } 77% { transform: scale(1.18); } 86% { transform: scale(.97); } }
+.mr-btn { position: relative; overflow: hidden; }
+.mr-btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 22%, rgba(255,255,255,.4) 50%, transparent 78%); translate: -130% 0; animation: sheen 3.6s ease-in-out infinite; }
+@keyframes sheen { 0%, 52% { translate: -130% 0; } 84%, 100% { translate: 130% 0; } }
+
+.mg-ring { --mg: 60%; animation: fill 4.6s cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes fill { 0% { --mg: 0%; } 46%, 82% { --mg: 60%; } 98%, 100% { --mg: 0%; } }
+
+.me-art span { transform-origin: bottom; animation: bars 1.9s ease-in-out infinite; }
+.me-art span:nth-child(2) { animation-delay: -.28s; }
+.me-art span:nth-child(3) { animation-delay: -.56s; }
+@keyframes bars { 0%, 100% { scale: 1 1; } 50% { scale: 1 1.4; } }
+
+.mock-seg { position: relative; }
+.mseg-thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-card); animation: segSlide 6s cubic-bezier(.5,0,.15,1) infinite; }
+@keyframes segSlide { 0%, 26% { translate: 0 0; } 33%, 59% { translate: 100% 0; } 66%, 93% { translate: 200% 0; } 100% { translate: 0 0; } }
+.mock-seg span { position: relative; z-index: 1; animation: segInk 6s steps(1, end) infinite; }
+.mock-seg span:nth-of-type(2) { animation-delay: -4s; }
+.mock-seg span:nth-of-type(3) { animation-delay: -2s; }
+@keyframes segInk { 0%, 32% { color: var(--ink); } 34%, 100% { color: var(--ink-secondary); } }
+
+/* the survey question: two answers tick in, the count on the button follows them */
+.mock-check { padding: 12px; display: grid; gap: 6px; }
+.mc-opt { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: var(--surface-grouped); font-size: 12px; font-weight: 600; }
+.mc-box { flex: none; width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1.5px solid var(--separator); }
+.mc-opt.t1 .mc-box { animation: tick1 5s steps(1, end) infinite; }
+.mc-opt.t2 .mc-box { animation: tick2 5s steps(1, end) infinite; }
+@keyframes tick1 { 0%, 22% { background: transparent; border-color: var(--separator); } 23%, 92% { background: var(--blue-500); border-color: var(--blue-500); } }
+@keyframes tick2 { 0%, 46% { background: transparent; border-color: var(--separator); } 47%, 92% { background: var(--blue-500); border-color: var(--blue-500); } }
+.mc-btn { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 4px; padding: 9px; border-radius: 999px; background: var(--blue-500); color: var(--on-accent); font-size: 12.5px; font-weight: 700; }
+.mc-count { position: relative; display: inline-grid; width: 18px; height: 18px; border-radius: 999px; background: rgba(255,255,255,.28); font-size: 11px; animation: countIn 5s steps(1, end) infinite; }
+.mc-count span { grid-area: 1 / 1; display: grid; place-items: center; }
+.mc-count span:first-child { animation: show1 5s steps(1, end) infinite; }
+.mc-count span:last-child { animation: show2 5s steps(1, end) infinite; }
+@keyframes countIn { 0%, 22% { opacity: 0; } 23%, 92% { opacity: 1; } 93%, 100% { opacity: 0; } }
+@keyframes show1 { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
+@keyframes show2 { 0%, 46% { opacity: 0; } 47%, 100% { opacity: 1; } }
 
 /* coming soon: the plum band, the same columns with a status on every task */
 #soon { --pb: #53093d; background: var(--pb); border-top: 0; margin: -28px calc(var(--gutter-r) * -1) 0 calc(var(--gutter-l) * -1); padding: clamp(32px, 3.4vw, 52px) clamp(20px, 3vw, 46px); }
@@ -468,7 +566,9 @@ main { min-width: 0; padding-top: 56px; }
 @keyframes pop { from { opacity: 0; transform: rotate(-7deg) scale(.84) translateY(18px); } }
 @keyframes sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
 @media (prefers-reduced-motion: reduce) {
-  .note-card, .new-grid.in .feat { animation: none; }
+  .note-card, .new-grid.in .feat, .ch-pv, .ms-flame, .mock-toast, .mr-pill, .mr-btn::after, .mg-ring, .me-art span,
+  .mseg-thumb, .mock-seg span, .mc-box, .mc-count, .mc-count span { animation: none; }
+  .mc-count span:first-child { opacity: 0; }
   .new-grid.anim-ready .feat { opacity: 1; }
   .note-card:hover { transform: none; }
 }
@@ -976,50 +1076,97 @@ main { padding-top: 28px; }
     </div>
   </div>
 
-  <!-- ---------- NEWLY ADDED: what landed in the last two days, one column per feature ---------- -->
+  <!-- ---------- NEWLY ADDED: what landed in the last two days, one column per feature.
+       Each line is a button; its preview (an animated mock, or the real component through
+       data-spec) sits hidden under it until tapped. ---------- -->
   <section class="strip" id="newly" aria-labelledby="newly-h">
     <div class="strip-head">
       <h2 id="newly-h">Newly added</h2>
-      <p class="strip-note">14 changes across 5 features since yesterday &middot; drafts, not yet in Figma</p>
+      <div class="strip-tools">
+        <p class="strip-note">14 changes across 5 features since yesterday &middot; tap a line to preview it</p>
+        <button type="button" class="pv-all" aria-pressed="false">Open all previews</button>
+      </div>
     </div>
     <div class="feat-grid new-grid">
       <article class="feat">
         <div class="feat-head"><h3>Cash out</h3><span class="feat-count">4 changes &middot; 2 today</span></div>
         <ul class="feat-list">
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">ReferralCard</span><span class="ch-when is-today">Today</span><span class="ch-note">States the reward on both sides before the tap.</span></li>
-          <li><span class="ch-kind">Updated</span><span class="ch-name">AmountHero</span><span class="ch-when is-today">Today</span><span class="ch-note">Fee line moved under the amount.</span></li>
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">EmptyState</span><span class="ch-when">Yesterday</span><span class="ch-note">History before a first cash out.</span></li>
-          <li><span class="ch-kind">Fixed</span><span class="ch-name">HistoryList</span><span class="ch-when">Yesterday</span><span class="ch-note">Long payout emails no longer clip.</span></li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-1"><span class="ch-kind is-new">New</span><span class="ch-name">ReferralCard</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">States the reward on both sides before the tap.</span></button>
+            <div class="ch-pv" id="pv-1" hidden><div class="ui mock mock-referral"><div class="mr-top"><b>Invite a friend</b><span class="mr-pill">+500</span></div><p class="mr-sub">They play one level, you both get coins.</p><div class="mr-btn">Share link</div></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-2"><span class="ch-kind">Updated</span><span class="ch-name">AmountHero</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Fee line moved under the amount.</span></button>
+            <div class="ch-pv" id="pv-2" hidden><div class="ui float pv-fit" style="width:280px" data-spec="hero-earned"></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-3"><span class="ch-kind is-new">New</span><span class="ch-name">EmptyState</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">History before a first cash out.</span></button>
+            <div class="ch-pv" id="pv-3" hidden><div class="ui mock mock-empty"><div class="me-art"><span></span><span></span><span></span></div><b>No cash-outs yet</b><i>Your first one shows up here.</i></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-4"><span class="ch-kind">Fixed</span><span class="ch-name">HistoryList</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Long payout emails no longer clip.</span></button>
+            <div class="ch-pv" id="pv-4" hidden><div class="ui float pv-fit" style="width:340px" data-spec="history"></div></div>
+          </li>
         </ul>
       </article>
       <article class="feat">
         <div class="feat-head"><h3>Onboarding</h3><span class="feat-count">3 changes &middot; 2 today</span></div>
         <ul class="feat-list">
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">ProgressRing</span><span class="ch-when is-today">Today</span><span class="ch-note">Missions done against the number needed.</span></li>
-          <li><span class="ch-kind">Updated</span><span class="ch-name">CoachMark</span><span class="ch-when is-today">Today</span><span class="ch-note">Arrow follows the target on rotation.</span></li>
-          <li><span class="ch-kind">Fixed</span><span class="ch-name">MissionRow</span><span class="ch-when">Yesterday</span><span class="ch-note">Step counter legible on the green card.</span></li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-5"><span class="ch-kind is-new">New</span><span class="ch-name">ProgressRing</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Missions done against the number needed.</span></button>
+            <div class="ch-pv" id="pv-5" hidden><div class="ui mock mock-ring"><div class="mg-ring"><span>3<i>/5</i></span></div><span class="mg-text"><b>Missions done</b><i>2 left to cash out</i></span></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-6"><span class="ch-kind">Updated</span><span class="ch-name">CoachMark</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Arrow follows the target on rotation.</span></button>
+            <div class="ch-pv" id="pv-6" hidden><div class="ui float pv-fit flush" style="width:380px" data-spec="coach"></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-7"><span class="ch-kind">Fixed</span><span class="ch-name">MissionRow</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Step counter legible on the green card.</span></button>
+            <div class="ch-pv" id="pv-7" hidden><div class="ui float pv-fit flush" style="width:351px" data-spec="row-progress"></div></div>
+          </li>
         </ul>
       </article>
       <article class="feat">
         <div class="feat-head"><h3>2x coins</h3><span class="feat-count">3 changes &middot; 1 today</span></div>
         <ul class="feat-list">
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">StreakBadge</span><span class="ch-when is-today">Today</span><span class="ch-note">Days in a row, and time left to keep it.</span></li>
-          <li><span class="ch-kind">Updated</span><span class="ch-name">EventBanner</span><span class="ch-when">Yesterday</span><span class="ch-note">Gradient restored to the Figma values.</span></li>
-          <li><span class="ch-kind">Fixed</span><span class="ch-name">FlipTimer</span><span class="ch-when">Yesterday</span><span class="ch-note">No flicker when the hour rolls over.</span></li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-8"><span class="ch-kind is-new">New</span><span class="ch-name">StreakBadge</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Days in a row, and time left to keep it.</span></button>
+            <div class="ch-pv" id="pv-8" hidden><div class="ui mock mock-streak"><span class="ms-flame">&#128293;</span><span class="ms-text"><b>5 day streak</b><i>Keep it alive &middot; 2h left</i></span></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-9"><span class="ch-kind">Updated</span><span class="ch-name">EventBanner</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Gradient restored to the Figma values.</span></button>
+            <div class="ch-pv" id="pv-9" hidden><div class="ui float pv-fit flush" style="width:393px" data-spec="banner-active"></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-10"><span class="ch-kind">Fixed</span><span class="ch-name">FlipTimer</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">No flicker when the hour rolls over.</span></button>
+            <div class="ch-pv" id="pv-10" hidden><div class="ui float pv-fit flush is-auto" data-spec="flip-large"></div></div>
+          </li>
         </ul>
       </article>
       <article class="feat">
         <div class="feat-head"><h3>Survey</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
         <ul class="feat-list">
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">SegmentedPicker</span><span class="ch-when is-today">Today</span><span class="ch-note">One range at a time, remembered per screen.</span></li>
-          <li><span class="ch-kind">Updated</span><span class="ch-name">Check-all question</span><span class="ch-when">Yesterday</span><span class="ch-note">Selected count shown on the button.</span></li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-11"><span class="ch-kind is-new">New</span><span class="ch-name">SegmentedPicker</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">One range at a time, remembered per screen.</span></button>
+            <div class="ch-pv" id="pv-11" hidden><div class="ui mock mock-seg"><div class="mseg-thumb" aria-hidden="true"></div><span class="is-on">Day</span><span>Week</span><span>All time</span></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-12"><span class="ch-kind">Updated</span><span class="ch-name">Check-all question</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Selected count shown on the button.</span></button>
+            <div class="ch-pv" id="pv-12" hidden><div class="ui mock mock-check"><div class="mc-opt t1"><span class="mc-box"></span>Puzzle games</div><div class="mc-opt"><span class="mc-box"></span>Card games</div><div class="mc-opt t2"><span class="mc-box"></span>Word games</div><div class="mc-btn">Next<span class="mc-count" aria-hidden="true"><span>1</span><span>2</span></span></div></div></div>
+          </li>
         </ul>
       </article>
       <article class="feat">
         <div class="feat-head"><h3>Core</h3><span class="feat-count">2 changes &middot; 1 today</span></div>
         <ul class="feat-list">
-          <li><span class="ch-kind is-new">New</span><span class="ch-name">LevelUpToast</span><span class="ch-when is-today">Today</span><span class="ch-note">Dismisses itself, never blocks a tap.</span></li>
-          <li><span class="ch-kind">Updated</span><span class="ch-name">Button</span><span class="ch-when">Yesterday</span><span class="ch-note">Loading state keeps the label width.</span></li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-13"><span class="ch-kind is-new">New</span><span class="ch-name">LevelUpToast</span><span class="ch-when is-today">Today</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Dismisses itself, never blocks a tap.</span></button>
+            <div class="ch-pv" id="pv-13" hidden><div class="ui mock mock-toast"><span class="mt-dot"></span><span class="mt-text"><b>Level 12 unlocked</b><i>+250 coins added</i></span></div></div>
+          </li>
+          <li>
+            <button type="button" class="ch-row" aria-expanded="false" aria-controls="pv-14"><span class="ch-kind">Updated</span><span class="ch-name">Button</span><span class="ch-when">Yesterday</span><span class="ch-chev" aria-hidden="true"></span><span class="ch-note">Loading state keeps the label width.</span></button>
+            <div class="ch-pv" id="pv-14" hidden><div class="ui float pv-fit" style="width:300px" data-spec="btn-all"></div></div>
+          </li>
         </ul>
       </article>
     </div>
@@ -2153,6 +2300,39 @@ main { padding-top: 28px; }
       newSpy.observe(newGrid);
     } else revealNew();
   }
+
+  /* ---------- newly added: tap a line to open its preview under it ----------
+     Real components are drawn at their app width and zoomed down to fit the column, so they are
+     measured each time a preview opens and again on resize. */
+  function fitPreview(pv) {
+    pv.querySelectorAll(".pv-fit").forEach(function (f) {
+      f.style.zoom = "";
+      var w = f.getBoundingClientRect().width, room = pv.clientWidth - 24;
+      if (room > 0 && w > room) f.style.zoom = String(room / w);
+    });
+  }
+  var pvRows = [].slice.call(document.querySelectorAll(".ch-row")), pvAll = document.querySelector(".pv-all");
+  function setPreview(b, open) {
+    var pv = document.getElementById(b.getAttribute("aria-controls"));
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+    pv.hidden = !open;
+    if (open) fitPreview(pv);
+  }
+  function syncPvAll() {
+    if (!pvAll) return;
+    var all = pvRows.every(function (b) { return b.getAttribute("aria-expanded") === "true"; });
+    pvAll.setAttribute("aria-pressed", all ? "true" : "false");
+    pvAll.textContent = all ? "Close all previews" : "Open all previews";
+  }
+  pvRows.forEach(function (b) {
+    b.addEventListener("click", function () { setPreview(b, b.getAttribute("aria-expanded") !== "true"); syncPvAll(); });
+  });
+  if (pvAll) pvAll.addEventListener("click", function () {
+    var open = pvAll.getAttribute("aria-pressed") !== "true";
+    pvRows.forEach(function (b) { setPreview(b, open); });
+    syncPvAll();
+  });
+  window.addEventListener("resize", function () { document.querySelectorAll(".ch-pv:not([hidden])").forEach(fitPreview); });
 
   /* ---------- pages: the hero is one page, each destination is another; the #hash picks it ---------- */
   var pages = [].slice.call(document.querySelectorAll(".page")), overview = pages[0];
