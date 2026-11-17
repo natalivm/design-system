@@ -1084,9 +1084,9 @@ main { padding-top: 28px; }
         <a class="gobtn" href="#components">Components</a>
       </div>
     </div>
-    <div class="hero-art" aria-label="Cash out sheet and countdown card">
-      <div class="ui float flush"><div data-spec="sheet-earned-bare"></div></div>
-      <div class="ui float" data-spec="count-card"></div>
+    <div class="hero-art" role="group" aria-label="Cash out sheet and countdown card">
+      <div class="ui float flush" role="group" aria-label="Cash out sheet preview"><div data-spec="sheet-earned-bare"></div></div>
+      <div class="ui float" role="group" aria-label="Countdown card preview" data-spec="count-card"></div>
     </div>
   </div>
 
@@ -1469,7 +1469,7 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-slow 400ms</span><span>easing-smooth</span><span>scrim 250ms</span></div>
         <div class="acts"><button type="button" class="pillbtn" data-code="CashoutSheet">Copy SwiftUI</button></div>
       </div>
-      <div class="stage"><div class="ui" data-live data-spec="mo-sheet"></div></div>
+      <div class="stage"><div class="ui" role="group" aria-label="Sheet presentation preview" data-spec="mo-sheet"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1478,7 +1478,7 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-count 600ms</span><span>easing-snappy</span><span>.numericText()</span></div>
         <div class="acts"><button type="button" class="pillbtn" data-code="countUp">Copy SwiftUI</button></div>
       </div>
-      <div class="stage"><div class="ui float" style="width:320px" data-live data-spec="mo-count"></div></div>
+      <div class="stage"><div class="ui float" style="width:320px" role="group" aria-label="Balance count-up preview" data-spec="mo-count"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1486,7 +1486,7 @@ main { padding-top: 28px; }
         <p class="desc">The only bouncy moment in the app. It marks money on the way.</p>
         <div class="chips"><span>duration-slow 400ms</span><span>easing-bouncy</span></div>
       </div>
-      <div class="stage"><div class="ui float" style="width:320px" data-live data-spec="mo-pop"></div></div>
+      <div class="stage"><div class="ui float" style="width:320px" role="group" aria-label="Success pop preview" data-spec="mo-pop"></div></div>
     </article>
     <article class="panel">
       <div>
@@ -1495,8 +1495,8 @@ main { padding-top: 28px; }
         <div class="chips"><span>duration-fast 150ms</span><span>duration-base 250ms</span><span>easing-snappy</span></div>
       </div>
       <div class="stage">
-        <div class="ui float" style="width:260px" data-live data-spec="btn-press"></div>
-        <div class="ui float drop" style="width:260px" data-spec="count-card"></div>
+        <div class="ui float" style="width:260px" role="group" aria-label="Press preview" data-spec="btn-press"></div>
+        <div class="ui float drop" style="width:260px" role="group" aria-label="Countdown tick preview" data-spec="count-card"></div>
       </div>
     </article>
     <article class="panel wide">
@@ -2034,7 +2034,7 @@ main { padding-top: 28px; }
   function MoSheet() {
     var r = useReplay(), k = r[0];
     return h("div", { style: col(14) },
-      h("div", { inert: "", style: { width: 248, height: 380, overflow: "hidden", borderRadius: 30, position: "relative", background: "radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%)", boxShadow: "var(--site-shadow)" } },
+      h("div", { style: { width: 248, height: 380, overflow: "hidden", borderRadius: 30, position: "relative", background: "radial-gradient(130% 70% at 50% -10%, #1d2b27 0%, #0b100e 55%, #060807 100%)", boxShadow: "var(--site-shadow)" } },
         h("div", { key: "s" + k, className: "co-anim-scrim-in", style: { position: "absolute", inset: 0, background: "var(--scrim)" } }),
         h("div", { key: "m" + k, className: "co-anim-sheet-in", style: { position: "absolute", left: 0, right: 0, bottom: 0 } }, h("div", { style: { zoom: 0.631, width: 393 } }, h(C.CashoutSheet, { amount: 0.32 })))),
       h(Replay, { go: r[1] }));
@@ -2047,11 +2047,11 @@ main { padding-top: 28px; }
       function f(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / 600), e = 1 - Math.pow(1 - p, 3); set(to * e); if (p < 1) raf = requestAnimationFrame(f); }
       raf = requestAnimationFrame(f); return function () { cancelAnimationFrame(raf); };
     }, [k]);
-    return h("div", { style: col(14) }, h("div", { inert: "", style: { width: "100%" } }, h(C.AmountHero, { amount: v, className: "co-btn-full" })), h(Replay, { go: r[1] }));
+    return h("div", { style: col(14) }, h(C.AmountHero, { amount: v, className: "co-btn-full" }), h(Replay, { go: r[1] }));
   }
   function MoPop() {
     var r = useReplay();
-    return h("div", { style: col(14) }, h("div", { inert: "", style: { width: "100%" } }, h("div", { key: r[0], className: "co-anim-pop", style: { width: "100%" } }, h(C.AmountHero, { state: "success", amount: 2.81 }))), h(Replay, { go: r[1] }));
+    return h("div", { style: col(14) }, h("div", { key: r[0], className: "co-anim-pop", style: { width: "100%" } }, h(C.AmountHero, { state: "success", amount: 2.81 })), h(Replay, { go: r[1] }));
   }
   var SPECS = {
     "hero-earned": function () { return h(C.AmountHero, { amount: 0.32 }, h(C.Pill, { glass: true })); },
@@ -2149,8 +2149,7 @@ main { padding-top: 28px; }
       var fig = el("figure", "fig"), box = el("div", "ui float" + (s[3] ? " " + s[3] : ""));
       if (s[1]) box.style.width = s[1] + "px";
       box.setAttribute("data-spec", s[0]);
-      if (s[0] === "tabbar") box.setAttribute("data-live", "");  // its caption asks you to tap a tab
-      var cap = el("figcaption", "vh", s[2]);
+      var cap = el("figcaption", "vh", c.name + " preview, " + s[2]);
       fig.appendChild(cap); fig.appendChild(box); st.appendChild(fig);
     });
     a.appendChild(st);
@@ -2351,18 +2350,17 @@ main { padding-top: 28px; }
   document.querySelectorAll("[data-spec]").forEach(function (node) {
     var f = SPECS[node.getAttribute("data-spec")]; if (f) ReactDOM.createRoot(node).render(f());
   });
-  /* These are specimens, not controls: every button inside one is a picture of a button. Left
-     reachable they put 26 dead stops in the tab order on Components alone, and a screen reader
-     announced "Cash out, button", "Claim, button" for things that do nothing. inert takes the
-     whole subtree out of the tab order and the accessibility tree; the preview still renders and
-     still re-themes. Applied after render so it covers the mounted tree.
-     A specimen marked data-live is a demo meant to be used, so it is left alone: the Replay demos
-     and the press demo on Motion, and the tab bar on Components. Inside the Replay demos the
-     picture is still sealed by an inert wrapper, so only the Replay button is reachable. */
-  function sealPreviews() {
-    document.querySelectorAll(".ui:not([data-live])").forEach(function (n) { n.inert = true; });
-  }
-  requestAnimationFrame(function () { requestAnimationFrame(sealPreviews); });
+  /* Previews are live: buttons press, the tab bar switches tabs, the missions card folds, Replay
+     replays. They were once made inert to keep pictured buttons out of the tab order, which also
+     switched all of that off, so instead each preview is a named group ("AmountHero preview,
+     Earned"; "Sheet presentation preview") and a screen reader hears its buttons as part of a
+     preview. Component cards are named by their figure caption; the cards under Newly added by
+     their heading; the rest carry role="group" and an aria-label in the markup. */
+  document.querySelectorAll(".nc .ui").forEach(function (n) {
+    var h3 = n.closest(".nc").querySelector("h3");
+    n.setAttribute("role", "group");
+    n.setAttribute("aria-label", (h3 ? h3.textContent : "Component") + " preview");
+  });
 
   /* ---------- app theme toggle (examples only; the site keeps one look) ---------- */
   function setTheme(th, save) {
